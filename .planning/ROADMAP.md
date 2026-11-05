@@ -64,7 +64,7 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Test Infrastructure & Automated Multi-Theme Route Crawling
-- [ ] 05-02-PLAN.md — Visual Audit Engine & Contrast Assurance
+- [x] 05-01-PLAN.md — Test Infrastructure & Automated Multi-Theme Route Crawling
+- [x] 05-02-PLAN.md — Visual Audit Engine & Contrast Assurance
 - [ ] 05-03-PLAN.md — In-Place Theme Remediation & Verification Seal
 
