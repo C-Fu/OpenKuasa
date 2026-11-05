@@ -29,11 +29,11 @@ graph TD
 
 ### Phase 3: Interactive Theme Selector Component & Header Integration
 **Goal:** Create a polished, accessible Theme Selector dropdown/popover and mount it in key application headers.
-**Plans:** 2 plans
+**Plans:** 2/2 plans executed
 
 Plans:
-- [ ] 03-01-PLAN.md — Popover primitive, ThemeMockupCard, ThemeSelector interactive popover, and tests
-- [ ] 03-02-PLAN.md — Header replacements across AppTopbar, MarketingHeader, AccountShell + Appearance page & nav registration
+- [x] 03-01-PLAN.md — Popover primitive, ThemeMockupCard, ThemeSelector interactive popover, and tests
+- [x] 03-02-PLAN.md — Header replacements across AppTopbar, MarketingHeader, AccountShell + Appearance page & nav registration
 
 ### Phase 4: Curated Themes Implementation & Sample Parity
 **Goal:** Implement the full collection of curated themes from `.planning/THEMES_LIST.md` and reference prototypes in `sample_themes/`.
