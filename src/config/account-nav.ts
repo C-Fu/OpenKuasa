@@ -8,6 +8,7 @@ import {
   KeyRound,
   LayoutGrid,
   Lock,
+  Palette,
   Puzzle,
   ScrollText,
   Sparkles,
@@ -40,6 +41,7 @@ export const ACCOUNT_SECTIONS: AccountNavSection[] = [
       { label: 'My profile', href: '/account/profile', icon: UserRound },
       { label: 'Security', href: '/account/security', icon: Lock },
       { label: 'Notifications', href: '/account/notifications', icon: Bell },
+      { label: 'Appearance', href: '/account/appearance', icon: Palette },
     ],
   },
   {

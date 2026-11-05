@@ -23,7 +23,7 @@ describe('account screens in jump-to search', () => {
 
   it('offers an owner every account screen', () => {
     const all = ACCOUNT_SECTIONS.flatMap((section) => section.items.map((item) => item.href));
-    expect(all).toHaveLength(15);
+    expect(all).toHaveLength(16);
     expect(searchHrefs('owner')).toEqual(all);
   });
 
