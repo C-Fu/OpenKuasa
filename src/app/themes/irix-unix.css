@@ -115,3 +115,12 @@
   border-bottom: 2px solid var(--sgi-bevel-light) !important;
   border-radius: 0px !important;
 }
+
+/* Scoped Primary Foreground for Bright Product Accents (D-13, D-14) */
+[data-theme='irix-unix'] [data-product='finance'],
+[data-theme='irix-unix'][data-product='finance'],
+[data-theme='irix-unix'] [data-product='crm'],
+[data-theme='irix-unix'][data-product='crm'] {
+  --primary-foreground: #1c2b36;
+}
+

@@ -113,3 +113,13 @@
   --sidebar-border: #222d36;
   --sidebar-ring: #e0b852;
 }
+
+/* Scoped Primary Foreground for Rich Product Brand Accents in Light Mode (D-13, D-14) */
+:root:not(.dark)[data-theme='executive-editorial'] [data-product],
+:root:not(.dark)[data-theme='executive-editorial'][data-product],
+[data-theme='executive-editorial']:not(.dark) [data-product],
+[data-theme='executive-editorial']:not(.dark)[data-product] {
+  --primary-foreground: #ffffff;
+}
+
+
