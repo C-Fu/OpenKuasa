@@ -75,8 +75,8 @@ export const THEME_VARIANTS = [
 ];
 
 export const CORE_AUDIT_SCREENS = [
-  '/finance',
-  '/crm',
+  '/finance/assistant',
+  '/crm/assistant',
   '/command',
   '/account/appearance',
 ];
