@@ -7,9 +7,9 @@
 [data-theme='crt-phosphor'] {
   --brand: #00ff66;
 
-  --font-sans: var(--font-sans, "Share Tech Mono", "VT323", "Courier New", monospace);
-  --font-mono: var(--font-mono, "Share Tech Mono", "Courier New", monospace);
-  --font-heading: var(--font-mono);
+  --font-sans: var(--font-vt323), "Share Tech Mono", monospace;
+  --font-mono: var(--font-chivo-mono), monospace;
+  --font-heading: var(--font-vt323), monospace;
   --radius: 0.125rem;
 
   --mk-bg: #050806;

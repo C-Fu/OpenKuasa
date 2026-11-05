@@ -1,6 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
-import { Lexend, Geist_Mono } from "next/font/google";
+import {
+  Lexend,
+  Inter,
+  Space_Grotesk,
+  Newsreader,
+  IBM_Plex_Sans,
+  IBM_Plex_Mono,
+  JetBrains_Mono,
+  Chivo_Mono,
+  Share_Tech_Mono,
+  VT323,
+  Geist_Mono,
+} from "next/font/google";
 import { ThemeSync } from "@/components/theme/theme-sync";
 import { PwaSetup } from "@/components/pwa/pwa-setup";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
@@ -9,14 +21,78 @@ import { publicConfig } from "@/lib/supabase/env";
 import { PUBLIC_CONFIG_ID, serializePublicConfig } from "@/lib/supabase/public-config";
 
 const lexend = Lexend({
-  variable: "--font-sans",
+  variable: "--font-lexend",
   subsets: ["latin"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+});
+
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  variable: "--font-ibm-plex-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+});
+
+const chivoMono = Chivo_Mono({
+  variable: "--font-chivo-mono",
+  subsets: ["latin"],
+});
+
+const shareTechMono = Share_Tech_Mono({
+  variable: "--font-share-tech-mono",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const vt323 = VT323({
+  variable: "--font-vt323",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
 });
+
+const fontVariables = [
+  lexend.variable,
+  inter.variable,
+  spaceGrotesk.variable,
+  newsreader.variable,
+  ibmPlexSans.variable,
+  ibmPlexMono.variable,
+  jetbrainsMono.variable,
+  chivoMono.variable,
+  shareTechMono.variable,
+  vt323.variable,
+  geistMono.variable,
+].join(" ");
 
 const title = 'OpenKuasa';
 const description = 'The community-built, open-source operating system for your business.';
@@ -63,7 +139,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${lexend.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${fontVariables} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">

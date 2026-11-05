@@ -7,8 +7,8 @@
 [data-theme='factory-plc'] {
   --brand: #eab308; /* Operator status yellow */
 
-  --font-sans: var(--font-sans, "DIN Pro", "Arial", sans-serif);
-  --font-mono: var(--font-mono, "Consolas", monospace);
+  --font-sans: var(--font-space-grotesk), "Arial", sans-serif;
+  --font-mono: var(--font-chivo-mono), monospace;
   --font-heading: var(--font-sans);
   --radius: 0.25rem;
 

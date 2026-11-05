@@ -7,8 +7,8 @@
 [data-theme='tactile-rackmount'] {
   --brand: #00e5ff; /* Cyan indicator LED */
 
-  --font-sans: var(--font-sans, "Chakra Petch", "DIN Alternate", -apple-system, sans-serif);
-  --font-mono: var(--font-mono, "JetBrains Mono", monospace);
+  --font-sans: var(--font-ibm-plex-sans), -apple-system, sans-serif;
+  --font-mono: var(--font-chivo-mono), monospace;
   --font-heading: var(--font-sans);
   --radius: 0.25rem;
 

@@ -7,8 +7,8 @@
 [data-theme='swiss-monochrome'] {
   --brand: #000000;
 
-  --font-sans: var(--font-sans, "Inter", "Helvetica Neue", Arial, sans-serif);
-  --font-mono: var(--font-mono, monospace);
+  --font-sans: var(--font-space-grotesk), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
   --font-heading: var(--font-sans);
   --radius: 0px;
 

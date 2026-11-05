@@ -7,8 +7,8 @@
 [data-theme='scada-command'] {
   --brand: #f59e0b; /* DEFCON Amber */
 
-  --font-sans: var(--font-sans, "Chakra Petch", "Courier New", monospace);
-  --font-mono: var(--font-mono, "Share Tech Mono", monospace);
+  --font-sans: var(--font-share-tech-mono), "Courier New", monospace;
+  --font-mono: var(--font-share-tech-mono), monospace;
   --font-heading: var(--font-mono);
   --radius: 0.125rem;
 

@@ -7,8 +7,8 @@
 [data-theme='brutalist-ledger'] {
   --brand: #0f172a;
 
-  --font-sans: var(--font-sans, "Courier New", "Courier", monospace);
-  --font-mono: var(--font-mono, "Courier New", "Courier", monospace);
+  --font-sans: var(--font-space-grotesk), monospace;
+  --font-mono: var(--font-ibm-plex-mono), monospace;
   --font-heading: var(--font-mono);
   --radius: 0px;
 

@@ -7,8 +7,8 @@
 [data-theme='irix-unix'] {
   --brand: #ffd54f; /* SGI Golden Yellow */
 
-  --font-sans: var(--font-sans, "Helvetica", "Arial", sans-serif);
-  --font-mono: var(--font-mono, "Courier New", monospace);
+  --font-sans: var(--font-ibm-plex-sans), "Helvetica", "Arial", sans-serif;
+  --font-mono: var(--font-chivo-mono), monospace;
   --font-heading: var(--font-sans);
   --radius: 0px;
 
