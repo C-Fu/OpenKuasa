@@ -61,6 +61,10 @@ Plans:
 
 ### Phase 5: Full Application Audit & Visual Verification
 **Goal:** Rigorously verify all core screens and components under every theme preset across both light and dark modes.
-- Run `/impeccable audit` across core modules (Finance, CRM, People, Reach, Command).
-- Verify contrast, typography readability, and table alignment under all themes.
-- Smoke test all route screens with `scripts/smoke-routes.mjs`.
+**Plans:** 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Test Infrastructure & Automated Multi-Theme Route Crawling
+- [ ] 05-02-PLAN.md — Visual Audit Engine & Contrast Assurance
+- [ ] 05-03-PLAN.md — In-Place Theme Remediation & Verification Seal
+
