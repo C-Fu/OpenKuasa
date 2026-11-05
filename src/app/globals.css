@@ -405,5 +405,11 @@
   .phosphor-glow {
     text-shadow: 0 0 6px rgba(0, 255, 102, 0.65), 0 0 12px rgba(0, 255, 102, 0.25);
   }
+
+  /* Universal Numerical & Tabular Sharpness Protection (D-07) */
+  table, th, td, input, code, pre, [class*="tabular-nums"], [class*="font-mono"] {
+    text-shadow: none !important;
+    filter: none !important;
+  }
 }
 

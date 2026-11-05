@@ -117,6 +117,11 @@ function parseCliArgs() {
 // In-browser evaluation function to extract contrast and sharpness metrics
 async function evaluatePageInBrowser(page) {
   return await page.evaluate(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = 1;
+    const ctx = canvas.getContext('2d');
+
     function parseRgba(colorStr) {
       if (!colorStr || colorStr === 'transparent' || colorStr === 'inherit') return null;
       const m = colorStr.match(/rgba?\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)(?:\s*,\s*([0-9.]+))?\s*\)/);
@@ -128,7 +133,20 @@ async function evaluatePageInBrowser(page) {
           a: m[4] !== undefined ? parseFloat(m[4]) : 1.0,
         };
       }
-      return null;
+      try {
+        ctx.clearRect(0, 0, 1, 1);
+        ctx.fillStyle = colorStr;
+        ctx.fillRect(0, 0, 1, 1);
+        const data = ctx.getImageData(0, 0, 1, 1).data;
+        return {
+          r: data[0],
+          g: data[1],
+          b: data[2],
+          a: data[3] / 255,
+        };
+      } catch {
+        return null;
+      }
     }
 
     function getLuminance(r, g, b) {
@@ -156,6 +174,16 @@ async function evaluatePageInBrowser(page) {
         if (bg && bg.a > 0) {
           layers.push(bg);
           if (bg.a >= 0.99) break;
+        }
+        if (style.backgroundImage && style.backgroundImage.includes('gradient')) {
+          const match = style.backgroundImage.match(/(?:lab|oklab|oklch|rgba?)\([^)]+\)/);
+          if (match) {
+            const gradBg = parseRgba(match[0]);
+            if (gradBg && gradBg.a > 0) {
+              layers.push(gradBg);
+              if (gradBg.a >= 0.99) break;
+            }
+          }
         }
         cur = cur.parentElement;
       }
