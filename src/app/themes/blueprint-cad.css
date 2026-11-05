@@ -113,3 +113,38 @@
   --sidebar-border: rgba(56, 189, 248, 0.25);
   --sidebar-ring: #38bdf8;
 }
+
+/* Blueprint CAD Drafting Canvas & Coordinate Grid */
+[data-theme='blueprint-cad'] body {
+  background-image: 
+    linear-gradient(rgba(2, 132, 199, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(2, 132, 199, 0.12) 1px, transparent 1px),
+    linear-gradient(rgba(2, 132, 199, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(2, 132, 199, 0.04) 1px, transparent 1px);
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  background-position: -1px -1px;
+}
+
+.dark[data-theme='blueprint-cad'] body,
+[data-theme='blueprint-cad'].dark body {
+  background-image: 
+    linear-gradient(rgba(56, 189, 248, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.15) 1px, transparent 1px),
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  background-position: -1px -1px;
+}
+
+/* Technical Hairline Card Precision Borders */
+[data-theme='blueprint-cad'] [data-slot='card'],
+[data-theme='blueprint-cad'] .card {
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  border-radius: 0px !important;
+  box-shadow: none !important;
+}
+
+[data-theme='blueprint-cad'] button,
+[data-theme='blueprint-cad'] [data-slot='button'] {
+  border-radius: 0px !important;
+}

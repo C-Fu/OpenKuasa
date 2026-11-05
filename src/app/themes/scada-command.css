@@ -60,3 +60,38 @@
   --sidebar-border: #223247;
   --sidebar-ring: #f59e0b;
 }
+
+/* SCADA Command Console Tactical Grid & Glow */
+[data-theme='scada-command'] body {
+  background-image: 
+    linear-gradient(rgba(31, 43, 58, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 43, 58, 0.25) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+[data-theme='scada-command'] body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(6, 8, 10, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
+  background-size: 100% 4px;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* DEFCON Amber ambient glow on telemetry headers and badges */
+[data-theme='scada-command'] h1,
+[data-theme='scada-command'] h2,
+[data-theme='scada-command'] h3,
+[data-theme='scada-command'] [data-slot='badge'] {
+  text-shadow: 0 0 6px rgba(245, 158, 11, 0.65), 0 0 12px rgba(245, 158, 11, 0.25);
+}
+
+/* Keep data tables and telemetry digits razor sharp */
+[data-theme='scada-command'] table,
+[data-theme='scada-command'] input,
+[data-theme='scada-command'] code {
+  text-shadow: none !important;
+}

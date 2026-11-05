@@ -60,3 +60,25 @@
   --sidebar-border: #423932;
   --sidebar-ring: #ffaa33;
 }
+
+/* Analog Audio Mastering Tape Deck Simulator */
+[data-theme='analog-tape'] body {
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(255, 170, 51, 0.08) 0%, transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 4px);
+}
+
+[data-theme='analog-tape'] [data-slot='card'],
+[data-theme='analog-tape'] .card {
+  background: linear-gradient(180deg, #28221d 0%, #1f1b17 100%);
+  border: 1px solid #4a3e33 !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme='analog-tape'] button,
+[data-theme='analog-tape'] [data-slot='button'] {
+  border-top: 1px solid #5a4b3e !important;
+  border-bottom: 2px solid #14110e !important;
+}

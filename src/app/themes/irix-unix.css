@@ -59,4 +59,59 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #445d6e;
   --sidebar-ring: #ffd54f;
+
+  /* SGI IRIX 4Dwm 3D Chisel Bevel Tokens */
+  --sgi-bevel-light: #8ea8b3;
+  --sgi-bevel-dark: #1b2f36;
+  --sgi-bevel-black: #0c1619;
+}
+
+/* SGI IRIX 4Dwm Scoped Skeuomorphic Rules */
+[data-theme='irix-unix'] body {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.25) 15%, transparent 16%);
+  background-size: 4px 4px;
+}
+
+/* 3D Outset on Cards & Panels */
+[data-theme='irix-unix'] [data-slot='card'],
+[data-theme='irix-unix'] .card,
+[data-theme='irix-unix'] .card-panel {
+  border-top: 2px solid var(--sgi-bevel-light) !important;
+  border-left: 2px solid var(--sgi-bevel-light) !important;
+  border-right: 2px solid var(--sgi-bevel-dark) !important;
+  border-bottom: 2px solid var(--sgi-bevel-dark) !important;
+  box-shadow: 2px 2px 0px var(--sgi-bevel-black) !important;
+  border-radius: 0px !important;
+}
+
+/* 3D Button Outset & Depressed Active State */
+[data-theme='irix-unix'] button,
+[data-theme='irix-unix'] [data-slot='button'] {
+  border-top: 2px solid var(--sgi-bevel-light) !important;
+  border-left: 2px solid var(--sgi-bevel-light) !important;
+  border-right: 2px solid var(--sgi-bevel-dark) !important;
+  border-bottom: 2px solid var(--sgi-bevel-dark) !important;
+  box-shadow: 1px 1px 0px var(--sgi-bevel-black) !important;
+  border-radius: 0px !important;
+  transition: none !important;
+}
+
+[data-theme='irix-unix'] button:active,
+[data-theme='irix-unix'] [data-slot='button']:active {
+  border-top: 2px solid var(--sgi-bevel-dark) !important;
+  border-left: 2px solid var(--sgi-bevel-dark) !important;
+  border-right: 2px solid var(--sgi-bevel-light) !important;
+  border-bottom: 2px solid var(--sgi-bevel-light) !important;
+  transform: translate(1px, 1px);
+}
+
+/* Sunken Inset on Form Inputs */
+[data-theme='irix-unix'] input,
+[data-theme='irix-unix'] textarea,
+[data-theme='irix-unix'] select {
+  border-top: 2px solid var(--sgi-bevel-dark) !important;
+  border-left: 2px solid var(--sgi-bevel-dark) !important;
+  border-right: 2px solid var(--sgi-bevel-light) !important;
+  border-bottom: 2px solid var(--sgi-bevel-light) !important;
+  border-radius: 0px !important;
 }

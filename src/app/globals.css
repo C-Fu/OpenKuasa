@@ -373,3 +373,37 @@
 /* Curated Theme Token Definitions */
 @import "./themes/index.css";
 
+@layer utilities {
+  /* CRT / SCADA pure CSS scanlines texture utility (pointer-events: none per D-02, D-11) */
+  .scanline-overlay {
+    position: relative;
+  }
+  .scanline-overlay::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+    background-size: 100% 3px;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* Architectural Blueprint CAD coordinate drafting grid utility */
+  .cad-grid-bg {
+    background-image: 
+      linear-gradient(rgba(56, 189, 248, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56, 189, 248, 0.12) 1px, transparent 1px),
+      linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+    background-position: -1px -1px;
+  }
+
+  /* Ambient CRT green phosphor text glow */
+  .phosphor-glow {
+    text-shadow: 0 0 6px rgba(0, 255, 102, 0.65), 0 0 12px rgba(0, 255, 102, 0.25);
+  }
+}
+

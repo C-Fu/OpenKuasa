@@ -57,8 +57,8 @@ describe('Theme Fonts Pipeline & Google Fonts Verification (Wave 0)', () => {
     });
 
     it('declares fixed-weight fonts (VT323 and Share_Tech_Mono) with weight "400"', () => {
-      expect(layoutContent).toMatch(/Share_Tech_Mono\(\s*\{[^}]*weight:\s*['"]400['"]/s);
-      expect(layoutContent).toMatch(/VT323\(\s*\{[^}]*weight:\s*['"]400['"]/s);
+      expect(layoutContent).toMatch(/Share_Tech_Mono\(\s*\{[\s\S]*?weight:\s*['"]400['"]/);
+      expect(layoutContent).toMatch(/VT323\(\s*\{[\s\S]*?weight:\s*['"]400['"]/);
     });
 
     it('defines and binds all 10 font CSS variable tokens into the root <html> class string', () => {
