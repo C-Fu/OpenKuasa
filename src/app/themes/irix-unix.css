@@ -1,0 +1,62 @@
+/*
+ * 90s UNIX Workstation / Silicon Graphics IRIX 4Dwm Aesthetic
+ * SGI teal/indigo chassis, directional 3D chisel bevels, gold accents.
+ * Locked mode: Dark. Radii: 0px.
+ */
+
+[data-theme='irix-unix'] {
+  --brand: #ffd54f; /* SGI Golden Yellow */
+
+  --font-sans: var(--font-sans, "Helvetica", "Arial", sans-serif);
+  --font-mono: var(--font-mono, "Courier New", monospace);
+  --font-heading: var(--font-sans);
+  --radius: 0px;
+
+  --mk-bg: #1c2b36;
+  --mk-surface: #2b3e4a;
+  --mk-surface-2: #364d5c;
+  --mk-fg: #f0f4f8;
+  --mk-muted: #95aab8;
+  --mk-subtle: #6c8494;
+  --mk-border: #445d6e;
+  --mk-accent: #ffd54f;
+
+  --pc: #ffd54f;
+  --pc-soft: rgba(255, 213, 79, 0.15);
+  --pc-ink: #ffd54f;
+
+  --background: #1c2b36;
+  --foreground: #f0f4f8;
+  --card: #2b3e4a;
+  --card-foreground: #f0f4f8;
+  --popover: #2e4350;
+  --popover-foreground: #f0f4f8;
+  --primary: #5c6bc0; /* Indigo Motif highlight */
+  --primary-foreground: #ffffff;
+  --secondary: #364d5c;
+  --secondary-foreground: #f0f4f8;
+  --muted: #243542;
+  --muted-foreground: #95aab8;
+  --accent: #ffd54f;
+  --accent-foreground: #1c2b36;
+  --destructive: #e53935;
+  --destructive-foreground: #ffffff;
+  --border: #445d6e;
+  --input: #1a2832;
+  --ring: #ffd54f;
+
+  --chart-1: #ffd54f; /* Golden yellow */
+  --chart-2: #5c6bc0; /* Motif indigo */
+  --chart-3: #26a69a; /* SGI teal */
+  --chart-4: #ef5350; /* Red */
+  --chart-5: #ab47bc; /* Violet */
+
+  --sidebar: #223440;
+  --sidebar-foreground: #f0f4f8;
+  --sidebar-primary: #ffd54f;
+  --sidebar-primary-foreground: #1c2b36;
+  --sidebar-accent: #334857;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #445d6e;
+  --sidebar-ring: #ffd54f;
+}

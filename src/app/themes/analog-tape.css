@@ -1,0 +1,62 @@
+/*
+ * Analog Tape Deck / Studio VU Console Aesthetic
+ * Champagne brushed aluminum, walnut side-panels, backlit warm amber VU meters.
+ * Locked mode: Dark. Radii: 0.375rem.
+ */
+
+[data-theme='analog-tape'] {
+  --brand: #ffaa33; /* Warm incandescent VU backlight */
+
+  --font-sans: var(--font-sans, "Futura", "Helvetica Neue", sans-serif);
+  --font-mono: var(--font-mono, "Courier New", monospace);
+  --font-heading: var(--font-sans);
+  --radius: 0.375rem;
+
+  --mk-bg: #1c1815;
+  --mk-surface: #27221e;
+  --mk-surface-2: #332d27;
+  --mk-fg: #f5ebe1;
+  --mk-muted: #a6988c;
+  --mk-subtle: #73675c;
+  --mk-border: #423932;
+  --mk-accent: #ffaa33;
+
+  --pc: #ffaa33;
+  --pc-soft: rgba(255, 170, 51, 0.15);
+  --pc-ink: #fff1d6;
+
+  --background: #1c1815;
+  --foreground: #f5ebe1;
+  --card: #27221e;
+  --card-foreground: #f5ebe1;
+  --popover: #2c2621;
+  --popover-foreground: #f5ebe1;
+  --primary: #ffaa33;
+  --primary-foreground: #1c1815;
+  --secondary: #38312b;
+  --secondary-foreground: #f5ebe1;
+  --muted: #2e2823;
+  --muted-foreground: #a6988c;
+  --accent: #d97736; /* Warm walnut accent */
+  --accent-foreground: #f5ebe1;
+  --destructive: #ef4444; /* Tape saturation peak red */
+  --destructive-foreground: #ffffff;
+  --border: #423932;
+  --input: #26211c;
+  --ring: #ffaa33;
+
+  --chart-1: #ffaa33; /* VU Meter Amber */
+  --chart-2: #d97736; /* Walnut copper */
+  --chart-3: #ef4444; /* Peak level red */
+  --chart-4: #84cc16; /* Calibration level green */
+  --chart-5: #eab308; /* Tape bias yellow */
+
+  --sidebar: #211c19;
+  --sidebar-foreground: #e0d4c8;
+  --sidebar-primary: #ffaa33;
+  --sidebar-primary-foreground: #1c1815;
+  --sidebar-accent: #302924;
+  --sidebar-accent-foreground: #ffaa33;
+  --sidebar-border: #423932;
+  --sidebar-ring: #ffaa33;
+}

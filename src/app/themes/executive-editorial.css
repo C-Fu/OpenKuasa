@@ -1,0 +1,115 @@
+/*
+ * Warm Executive Editorial ("Hardware Briefing") Aesthetic
+ * Midnight teal and petrol slate surfaces, warm parchment tone shifts, burnished brass/copper accents.
+ * Dual-mode: Parchment light & Petrol teal dark. Radii: 0.5rem.
+ */
+
+[data-theme='executive-editorial'] {
+  --brand: #c29b38;
+
+  --font-sans: var(--font-sans, "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  --font-mono: var(--font-mono, "JetBrains Mono", monospace);
+  --font-heading: "Newsreader", "Georgia", serif;
+  --radius: 0.5rem;
+
+  --mk-bg: #f8f6f0;
+  --mk-surface: #ffffff;
+  --mk-surface-2: #efebe2;
+  --mk-fg: #1c252c;
+  --mk-muted: #5c6b75;
+  --mk-subtle: #84949f;
+  --mk-border: #ded7c8;
+  --mk-accent: #c29b38;
+
+  --pc: #c29b38;
+  --pc-soft: #f9f5ec;
+  --pc-ink: #543f0c;
+
+  --background: #f8f6f0;
+  --foreground: #1c252c;
+  --card: #ffffff;
+  --card-foreground: #1c252c;
+  --popover: #ffffff;
+  --popover-foreground: #1c252c;
+  --primary: #c29b38;
+  --primary-foreground: #ffffff;
+  --secondary: #efebe2;
+  --secondary-foreground: #1c252c;
+  --muted: #efebe2;
+  --muted-foreground: #5c6b75;
+  --accent: #45b18a;
+  --accent-foreground: #ffffff;
+  --destructive: #c0392b;
+  --destructive-foreground: #ffffff;
+  --border: #ded7c8;
+  --input: #ded7c8;
+  --ring: #c29b38;
+
+  --chart-1: #c29b38; /* Burnished brass */
+  --chart-2: #45b18a; /* Accounting ledger green */
+  --chart-3: #d97736; /* Warm copper */
+  --chart-4: #2b5b75; /* Petrol blue */
+  --chart-5: #8c724b; /* Antique gold */
+
+  --sidebar: #f3efe6;
+  --sidebar-foreground: #1c252c;
+  --sidebar-primary: #c29b38;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e8e2d4;
+  --sidebar-accent-foreground: #1c252c;
+  --sidebar-border: #ded7c8;
+  --sidebar-ring: #c29b38;
+}
+
+.dark[data-theme='executive-editorial'],
+[data-theme='executive-editorial'].dark {
+  --brand: #e0b852;
+
+  --mk-bg: #0d1317;
+  --mk-surface: #12191f;
+  --mk-surface-2: #18222a;
+  --mk-fg: #f1ede4;
+  --mk-muted: #8c9fa8;
+  --mk-subtle: #5f7079;
+  --mk-border: #222d36;
+  --mk-accent: #e0b852;
+
+  --pc: #e0b852;
+  --pc-soft: rgba(224, 184, 82, 0.12);
+  --pc-ink: #fdf5df;
+
+  --background: #0d1317;
+  --foreground: #f1ede4;
+  --card: #12191f;
+  --card-foreground: #f1ede4;
+  --popover: #151d24;
+  --popover-foreground: #f1ede4;
+  --primary: #e0b852;
+  --primary-foreground: #0d1317;
+  --secondary: #1c2630;
+  --secondary-foreground: #f1ede4;
+  --muted: #18222a;
+  --muted-foreground: #8c9fa8;
+  --accent: #45b18a;
+  --accent-foreground: #0d1317;
+  --destructive: #e74c3c;
+  --destructive-foreground: #ffffff;
+  --border: #222d36;
+  --input: #222d36;
+  --ring: #e0b852;
+
+  --chart-1: #e0b852;
+  --chart-2: #45b18a;
+  --chart-3: #ea8a47;
+  --chart-4: #4a8ca8;
+  --chart-5: #a8946f;
+
+  --sidebar: #10161c;
+  --sidebar-foreground: #e3ded6;
+  --sidebar-primary: #e0b852;
+  --sidebar-primary-foreground: #0d1317;
+  --sidebar-accent: #19232c;
+  --sidebar-accent-foreground: #f1ede4;
+  --sidebar-border: #222d36;
+  --sidebar-ring: #e0b852;
+}

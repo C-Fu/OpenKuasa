@@ -1,0 +1,62 @@
+/*
+ * Tactile Hardware Rackmount / Euro-Rack Physical Faceplate
+ * Machined 19" chassis steel, countersunk screws, rocker switches.
+ * Locked mode: Dark. Radii: 0.25rem.
+ */
+
+[data-theme='tactile-rackmount'] {
+  --brand: #00e5ff; /* Cyan indicator LED */
+
+  --font-sans: var(--font-sans, "Chakra Petch", "DIN Alternate", -apple-system, sans-serif);
+  --font-mono: var(--font-mono, "JetBrains Mono", monospace);
+  --font-heading: var(--font-sans);
+  --radius: 0.25rem;
+
+  --mk-bg: #121417;
+  --mk-surface: #1a1d21;
+  --mk-surface-2: #24282e;
+  --mk-fg: #e2e8f0;
+  --mk-muted: #94a3b8;
+  --mk-subtle: #64748b;
+  --mk-border: #2e353f;
+  --mk-accent: #00e5ff;
+
+  --pc: #00e5ff;
+  --pc-soft: rgba(0, 229, 255, 0.12);
+  --pc-ink: #00e5ff;
+
+  --background: #121417;
+  --foreground: #e2e8f0;
+  --card: #1a1d21;
+  --card-foreground: #e2e8f0;
+  --popover: #1f2328;
+  --popover-foreground: #e2e8f0;
+  --primary: #00e5ff;
+  --primary-foreground: #091017;
+  --secondary: #272d36;
+  --secondary-foreground: #e2e8f0;
+  --muted: #21262f;
+  --muted-foreground: #94a3b8;
+  --accent: #ffcc00; /* Amber warning switch */
+  --accent-foreground: #121417;
+  --destructive: #ff3b30; /* Safety red cutoff */
+  --destructive-foreground: #ffffff;
+  --border: #2e353f;
+  --input: #2e353f;
+  --ring: #00e5ff;
+
+  --chart-1: #00e5ff; /* Cyan LED */
+  --chart-2: #ffcc00; /* Amber switch */
+  --chart-3: #ff3b30; /* Red cutoff */
+  --chart-4: #00ff66; /* Power rail green */
+  --chart-5: #a855f7; /* High-voltage violet */
+
+  --sidebar: #16181c;
+  --sidebar-foreground: #cbd5e1;
+  --sidebar-primary: #00e5ff;
+  --sidebar-primary-foreground: #091017;
+  --sidebar-accent: #232830;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #2e353f;
+  --sidebar-ring: #00e5ff;
+}

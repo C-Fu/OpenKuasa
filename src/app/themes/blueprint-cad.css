@@ -1,0 +1,115 @@
+/*
+ * Deconstructed Blueprint / Architectural CAD Spec Sheet
+ * Cyanotype drafting blueprint, coordinate gridlines, technical annotations.
+ * Dual-mode: Drafting paper light & Deep Cyanotype dark. Radii: 0px.
+ */
+
+[data-theme='blueprint-cad'] {
+  --brand: #0284c7;
+
+  --font-sans: var(--font-sans, "Consolas", "Courier New", monospace);
+  --font-mono: var(--font-mono, "Consolas", monospace);
+  --font-heading: var(--font-mono);
+  --radius: 0px;
+
+  --mk-bg: #f0f7ff;
+  --mk-surface: #ffffff;
+  --mk-surface-2: #e0effe;
+  --mk-fg: #0c4a6e;
+  --mk-muted: #38bdf8;
+  --mk-subtle: #7dd3fc;
+  --mk-border: #bae6fd;
+  --mk-accent: #0284c7;
+
+  --pc: #0284c7;
+  --pc-soft: #e0f2fe;
+  --pc-ink: #075985;
+
+  --background: #f0f7ff;
+  --foreground: #0c4a6e;
+  --card: #ffffff;
+  --card-foreground: #0c4a6e;
+  --popover: #ffffff;
+  --popover-foreground: #0c4a6e;
+  --primary: #0284c7;
+  --primary-foreground: #ffffff;
+  --secondary: #e0f2fe;
+  --secondary-foreground: #0369a1;
+  --muted: #e0f2fe;
+  --muted-foreground: #0284c7;
+  --accent: #0369a1;
+  --accent-foreground: #ffffff;
+  --destructive: #e11d48;
+  --destructive-foreground: #ffffff;
+  --border: #bae6fd;
+  --input: #bae6fd;
+  --ring: #0284c7;
+
+  --chart-1: #0284c7;
+  --chart-2: #0284c7;
+  --chart-3: #0369a1;
+  --chart-4: #075985;
+  --chart-5: #0c4a6e;
+
+  --sidebar: #e9f4ff;
+  --sidebar-foreground: #0369a1;
+  --sidebar-primary: #0284c7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #dbeafe;
+  --sidebar-accent-foreground: #075985;
+  --sidebar-border: #bae6fd;
+  --sidebar-ring: #0284c7;
+}
+
+.dark[data-theme='blueprint-cad'],
+[data-theme='blueprint-cad'].dark {
+  --brand: #38bdf8;
+
+  --mk-bg: #071526;
+  --mk-surface: #0b1f36;
+  --mk-surface-2: #102a48;
+  --mk-fg: #e0f2fe;
+  --mk-muted: #7dd3fc;
+  --mk-subtle: #38bdf8;
+  --mk-border: rgba(56, 189, 248, 0.25);
+  --mk-accent: #38bdf8;
+
+  --pc: #38bdf8;
+  --pc-soft: rgba(56, 189, 248, 0.12);
+  --pc-ink: #38bdf8;
+
+  --background: #071526;
+  --foreground: #e0f2fe;
+  --card: #0b1f36;
+  --card-foreground: #e0f2fe;
+  --popover: #0d243f;
+  --popover-foreground: #e0f2fe;
+  --primary: #38bdf8;
+  --primary-foreground: #071526;
+  --secondary: #133357;
+  --secondary-foreground: #e0f2fe;
+  --muted: #0e2744;
+  --muted-foreground: #7dd3fc;
+  --accent: #0284c7;
+  --accent-foreground: #ffffff;
+  --destructive: #f43f5e;
+  --destructive-foreground: #ffffff;
+  --border: rgba(56, 189, 248, 0.25);
+  --input: rgba(56, 189, 248, 0.3);
+  --ring: #38bdf8;
+
+  --chart-1: #38bdf8;
+  --chart-2: #7dd3fc;
+  --chart-3: #bae6fd;
+  --chart-4: #0284c7;
+  --chart-5: #facc15;
+
+  --sidebar: #091a2e;
+  --sidebar-foreground: #bae6fd;
+  --sidebar-primary: #38bdf8;
+  --sidebar-primary-foreground: #071526;
+  --sidebar-accent: #112d4d;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(56, 189, 248, 0.25);
+  --sidebar-ring: #38bdf8;
+}

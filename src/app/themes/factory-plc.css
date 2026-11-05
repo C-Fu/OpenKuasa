@@ -1,0 +1,62 @@
+/*
+ * Japanese Industrial PLC / Factory HMI Touchscreen
+ * Industrial gray-green enclosure, caution yellow indicators, emergency-stop red.
+ * Locked mode: Dark. Radii: 0.25rem.
+ */
+
+[data-theme='factory-plc'] {
+  --brand: #eab308; /* Operator status yellow */
+
+  --font-sans: var(--font-sans, "DIN Pro", "Arial", sans-serif);
+  --font-mono: var(--font-mono, "Consolas", monospace);
+  --font-heading: var(--font-sans);
+  --radius: 0.25rem;
+
+  --mk-bg: #191e1b;
+  --mk-surface: #222925;
+  --mk-surface-2: #2d3631;
+  --mk-fg: #f4f6f4;
+  --mk-muted: #8b968f;
+  --mk-subtle: #5f6963;
+  --mk-border: #3c4741;
+  --mk-accent: #eab308;
+
+  --pc: #eab308;
+  --pc-soft: rgba(234, 179, 8, 0.15);
+  --pc-ink: #fef08a;
+
+  --background: #191e1b;
+  --foreground: #f4f6f4;
+  --card: #222925;
+  --card-foreground: #f4f6f4;
+  --popover: #262e2a;
+  --popover-foreground: #f4f6f4;
+  --primary: #eab308;
+  --primary-foreground: #191e1b;
+  --secondary: #2f3933;
+  --secondary-foreground: #f4f6f4;
+  --muted: #27302b;
+  --muted-foreground: #8b968f;
+  --accent: #22c55e; /* Line active green */
+  --accent-foreground: #191e1b;
+  --destructive: #dc2626; /* E-stop Red */
+  --destructive-foreground: #ffffff;
+  --border: #3c4741;
+  --input: #1e2420;
+  --ring: #eab308;
+
+  --chart-1: #eab308; /* Yellow */
+  --chart-2: #22c55e; /* Green */
+  --chart-3: #dc2626; /* E-stop Red */
+  --chart-4: #0284c7; /* Cyan pump */
+  --chart-5: #a855f7; /* Feed conveyor */
+
+  --sidebar: #1e2421;
+  --sidebar-foreground: #d1d5db;
+  --sidebar-primary: #eab308;
+  --sidebar-primary-foreground: #191e1b;
+  --sidebar-accent: #2c3631;
+  --sidebar-accent-foreground: #fef08a;
+  --sidebar-border: #3c4741;
+  --sidebar-ring: #eab308;
+}
