@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISO SPEC // DWG-NO: HL-2026-MYS-04 // SOVEREIGN CLUSTER BLUEPRINT</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            cad: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* CAD Drawing Blueprint & Diazo Whiteprint Variables */
+    :root {
+      --cad-bg: #070e1c;
+      --cad-grid-major: rgba(56, 189, 248, 0.15);
+      --cad-grid-minor: rgba(56, 189, 248, 0.05);
+      --cad-line: #38bdf8;
+      --cad-line-dim: #1e3a5f;
+      --cad-text: #e0f2fe;
+      --cad-muted: #7dd3fc;
+      --cad-accent: #f59e0b;
+      --cad-danger: #f87171;
+      --cad-success: #34d399;
+      --cad-panel: rgba(11, 23, 42, 0.92);
+      --cad-ruler: #0a1526;
+      --cad-ruler-txt: #38bdf8;
+    }
+
+    /* Diazo Whiteprint (Architectural Drafting Vellum/Parchment) */
+    .diazo-mode {
+      --cad-bg: #f5f2e9;
+      --cad-grid-major: rgba(18, 53, 91, 0.18);
+      --cad-grid-minor: rgba(18, 53, 91, 0.06);
+      --cad-line: #1e3a8a;
+      --cad-line-dim: #93c5fd;
+      --cad-text: #0f172a;
+      --cad-muted: #334155;
+      --cad-accent: #b45309;
+      --cad-danger: #b91c1c;
+      --cad-success: #047857;
+      --cad-panel: rgba(255, 255, 255, 0.94);
+      --cad-ruler: #ebe5d5;
+      --cad-ruler-txt: #1e3a8a;
+    }
+
+    body {
+      background-color: var(--cad-bg);
+      color: var(--cad-text);
+      font-family: 'Space Grotesk', sans-serif;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      background-image: 
+        linear-gradient(var(--cad-grid-major) 1px, transparent 1px),
+        linear-gradient(90deg, var(--cad-grid-major) 1px, transparent 1px),
+        linear-gradient(var(--cad-grid-minor) 1px, transparent 1px),
+        linear-gradient(90deg, var(--cad-grid-minor) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+    }
+
+    .cad-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* CAD Hairline Precision Borders */
+    .cad-border {
+      border: 1px solid var(--cad-line);
+    }
+    .cad-border-dim {
+      border: 1px solid var(--cad-line-dim);
+    }
+
+    /* Crosshair Target Mark */
+    .crosshair-mark {
+      position: relative;
+    }
+    .crosshair-mark::before, .crosshair-mark::after {
+      content: '';
+      position: absolute;
+      background-color: var(--cad-line);
+      pointer-events: none;
+    }
+    .crosshair-mark::before {
+      width: 14px;
+      height: 1px;
+      top: 50%;
+      left: -7px;
+    }
+    .crosshair-mark::after {
+      height: 14px;
+      width: 1px;
+      left: 50%;
+      top: -7px;
+    }
+
+    /* CAD Dimension Leader Lines */
+    .dim-line {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .dim-line::before, .dim-line::after {
+      content: '|';
+      color: var(--cad-line);
+      font-size: 10px;
+    }
+    .dim-line-bar {
+      flex: 1;
+      height: 1px;
+      background-color: var(--cad-line);
+      margin: 0 4px;
+    }
+
+    /* Drafting Slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      width: 100%;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 2px;
+      background: var(--cad-line);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 18px;
+      width: 18px;
+      border-radius: 0;
+      background: var(--cad-bg);
+      border: 2px solid var(--cad-line);
+      cursor: pointer;
+      margin-top: -8px;
+      transform: rotate(45deg);
+      box-shadow: 0 0 8px var(--cad-line);
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 18px;
+      width: 18px;
+      border-radius: 0;
+      background: var(--cad-bg);
+      border: 2px solid var(--cad-line);
+      cursor: pointer;
+      transform: rotate(45deg);
+    }
+
+    /* Custom Technical Checkbox */
+    .cad-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--cad-line);
+      background-color: transparent;
+      display: inline-grid;
+      place-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cad-checkbox:checked {
+      background-color: var(--cad-line);
+    }
+    .cad-checkbox:checked::before {
+      content: '✕';
+      color: var(--cad-bg);
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col p-2 sm:p-4 select-none">
+
+  <!-- ========================================================================= -->
+  <!-- 1. CAD RULER FRAME & COORDINATE BORDER (A1 - F12)                         -->
+  <!-- ========================================================================= -->
+  <div class="flex-1 flex flex-col cad-border rounded-none relative bg-[var(--cad-panel)] backdrop-blur-md shadow-2xl">
+    
+    <!-- Top Coordinate Bar -->
+    <div class="h-6 border-b border-[var(--cad-line)] flex items-center justify-between px-3 text-[10px] cad-mono uppercase tracking-widest text-[var(--cad-ruler-txt)] bg-[var(--cad-ruler)]">
+      <div class="flex items-center space-x-6">
+        <span class="font-bold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[var(--cad-line)] inline-block"></span> ISO-128-CAD // SPEC DRAWING</span>
+        <span class="hidden md:inline">REF: REG-MYS-4U</span>
+        <span class="hidden lg:inline text-[var(--cad-accent)]">[TOLERANCE: +/- 0.00% DRIFT]</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span>X-COORD: 101.424 E</span>
+        <span>Y-COORD: 03.158 N</span>
+        <span class="font-bold text-[var(--cad-success)]">GRID LOCKED</span>
+      </div>
+    </div>
+
+    <!-- Main Drawing Stage (Wrapped with Top & Left Coordinate Calipers) -->
+    <div class="flex-1 flex flex-col p-4 sm:p-6 space-y-6">
+
+      <!-- ===================================================================== -->
+      <!-- TOP SCHEMATIC DISPATCH & DRAWING CONTROLS                             -->
+      <!-- ===================================================================== -->
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--cad-line-dim)] pb-4">
+        
+        <div>
+          <div class="flex items-center space-x-3">
+            <span class="text-xs cad-mono px-2 py-0.5 border border-[var(--cad-line)] text-[var(--cad-line)] font-bold">
+              DWG NO: HL-2026-MYS-04
+            </span>
+            <span class="text-xs cad-mono text-[var(--cad-muted)]">REV: 2.4.0-FINAL</span>
+            <span class="text-xs cad-mono text-[var(--cad-accent)]">SECURITY: CONFIDENTIAL</span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--cad-text)] mt-1 flex items-center gap-2">
+            <span>SOVEREIGN CLUSTER AMORTIZATION & PINOUT SCHEMATIC</span>
+            <span class="text-xs font-normal cad-mono text-[var(--cad-muted)]">[SCALE 1:1]</span>
+          </h1>
+        </div>
+
+        <!-- Mode Switches & Caliper Audio -->
+        <div class="flex items-center space-x-3">
+          
+          <!-- Blueprint / Diazo Toggle -->
+          <div class="flex border border-[var(--cad-line)] p-0.5 text-xs cad-mono">
+            <button id="btn-cyanotype" onclick="setCadMode('cyanotype')" class="px-2.5 py-1 bg-[var(--cad-line)] text-[var(--cad-bg)] font-bold">
+              CYANOTYPE (BLUE)
+            </button>
+            <button id="btn-diazo" onclick="setCadMode('diazo')" class="px-2.5 py-1 text-[var(--cad-text)] hover:text-[var(--cad-line)] transition">
+              DIAZO (VELLUM)
+            </button>
+          </div>
+
+          <!-- Synthetic Measurement Tone Trigger -->
+          <button onclick="playCaliperTone()" class="px-3 py-1 border border-[var(--cad-line-dim)] hover:border-[var(--cad-line)] text-[var(--cad-text)] text-xs cad-mono flex items-center gap-1.5 transition">
+            <svg class="w-3.5 h-3.5 text-[var(--cad-line)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path>
+            </svg>
+            <span>CALIPER SOUND</span>
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- SECTION A: PARAMETRIC AMORTIZATION ENGINE & DRAFTING SLIDER           -->
+      <!-- ===================================================================== -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left: Drafting Input Variables & SaaS Bill Audit (Cols 1-7) -->
+        <div class="lg:col-span-7 space-y-5">
+          
+          <!-- Headcount Dimension Caliper -->
+          <div class="cad-border p-4 bg-[var(--cad-panel)] relative">
+            <div class="absolute -top-2.5 left-4 px-2 bg-[var(--cad-bg)] text-[10px] cad-mono text-[var(--cad-line)] uppercase tracking-wider font-bold">
+              DIMENSION 01 // SEAT CAPACITY CALIBRATION
+            </div>
+
+            <!-- Dimension Leader Line Visual -->
+            <div class="dim-line text-[11px] cad-mono text-[var(--cad-line)] my-2">
+              <div class="dim-line-bar"></div>
+              <span class="px-2 bg-[var(--cad-bg)] font-bold" id="caliper-display">|<-- 15 USER SEATS -->|</span>
+              <div class="dim-line-bar"></div>
+            </div>
+
+            <!-- Dynamic Slider -->
+            <div class="py-2">
+              <input type="range" id="seatSlider" min="5" max="100" value="15" step="1" oninput="handleSeatChange(this.value)">
+              <div class="flex justify-between text-[10px] cad-mono text-[var(--cad-muted)] mt-2">
+                <span>05 SEATS (MICRO SME)</span>
+                <span>25 SEATS</span>
+                <span>50 SEATS (MID-MARKET)</span>
+                <span>100 SEATS (CAMPUS)</span>
+              </div>
+            </div>
+
+            <!-- Engineering Quick Select Buttons -->
+            <div class="grid grid-cols-3 gap-2 pt-2 text-xs cad-mono">
+              <button onclick="setSeats(5)" id="btn-seat-5" class="py-1.5 px-2 border border-[var(--cad-line-dim)] hover:border-[var(--cad-line)] text-center transition">
+                SPEC-A: 5 SEATS
+              </button>
+              <button onclick="setSeats(15)" id="btn-seat-15" class="py-1.5 px-2 border border-[var(--cad-line)] bg-[var(--cad-line)] text-[var(--cad-bg)] font-bold text-center transition">
+                SPEC-B: 15 SEATS
+              </button>
+              <button onclick="setSeats(50)" id="btn-seat-50" class="py-1.5 px-2 border border-[var(--cad-line-dim)] hover:border-[var(--cad-line)] text-center transition">
+                SPEC-C: 50 SEATS
+              </button>
+            </div>
+          </div>
+
+          <!-- Replaceable System Modules Matrix -->
+          <div class="cad-border p-4 bg-[var(--cad-panel)] relative">
+            <div class="absolute -top-2.5 left-4 px-2 bg-[var(--cad-bg)] text-[10px] cad-mono text-[var(--cad-line)] uppercase tracking-wider font-bold">
+              SUBSYSTEM ALLOCATION // REPLACED THIRD-PARTY SAAS
+            </div>
+
+            <div class="space-y-2 pt-1" id="saasSubsystems">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Engineering Calculation Block & Vector Trajectory Plot (Cols 8-12) -->
+        <div class="lg:col-span-5 space-y-5">
+          
+          <!-- Tolerance & Calculation Readout Sheet -->
+          <div class="cad-border p-5 bg-[var(--cad-panel)] space-y-4">
+            <div class="flex items-center justify-between border-b border-[var(--cad-line-dim)] pb-2 text-xs cad-mono">
+              <span class="text-[var(--cad-line)] font-bold">PARAMETRIC COMPUTATION OUTPUT</span>
+              <span class="text-[var(--cad-success)]">MALAYSIAN DIGITAL SST (8%)</span>
+            </div>
+
+            <!-- Line Item Formulas -->
+            <div class="space-y-2.5 text-xs cad-mono">
+              
+              <div class="flex justify-between items-baseline">
+                <span class="text-[var(--cad-muted)]">MONTHLY CLOUD SAAS BILL:</span>
+                <span class="font-bold text-[var(--cad-danger)] text-sm" id="calc-cloud-gross">RM 1,514.00</span>
+              </div>
+
+              <div class="flex justify-between items-baseline">
+                <span class="text-[var(--cad-muted)]">APPLIANCE OPEX (65W TNB TARIFF B):</span>
+                <span class="font-bold text-[var(--cad-text)]" id="calc-homelab-opex">RM 24.30 /mo</span>
+              </div>
+
+              <div class="flex justify-between items-baseline border-t border-[var(--cad-line-dim)] pt-2">
+                <span class="text-[var(--cad-text)] font-semibold">NET CAPITAL RETAINED (MONTHLY):</span>
+                <span class="font-bold text-[var(--cad-success)] text-base" id="calc-net-monthly">RM 1,489.70</span>
+              </div>
+
+              <div class="flex justify-between items-baseline">
+                <span class="text-[var(--cad-muted)]">ONE-TIME HARDWARE CAPEX:</span>
+                <span class="font-bold text-[var(--cad-accent)]" id="calc-hardware-capex">RM 10,000.00</span>
+              </div>
+
+              <div class="flex justify-between items-baseline border-t border-[var(--cad-line-dim)] pt-2 text-[var(--cad-accent)]">
+                <span class="font-bold">BREAKEVEN CROSSOVER (MONTHS):</span>
+                <span class="font-bold text-lg" id="calc-breakeven">6.7 MONTHS</span>
+              </div>
+
+              <div class="flex justify-between items-baseline text-[var(--cad-success)]">
+                <span>36-MONTH CUMULATIVE RECOVERY:</span>
+                <span class="font-bold text-sm" id="calc-3yr-cumulative">RM 43,629.00</span>
+              </div>
+
+            </div>
+
+            <!-- Orthographic Vector SVG Curve Plot -->
+            <div class="pt-3 border-t border-[var(--cad-line-dim)]">
+              <div class="flex justify-between text-[10px] cad-mono text-[var(--cad-muted)] mb-1">
+                <span>AMORTIZATION TRAJECTORY VECTOR (0 - 36 MO)</span>
+                <span class="text-[var(--cad-line)]" id="cad-crossover-tag">CROSSOVER: M7</span>
+              </div>
+              
+              <div class="border border-[var(--cad-line-dim)] bg-[var(--cad-bg)] p-2">
+                <svg id="cadChart" viewBox="0 0 320 110" class="w-full h-24 overflow-visible">
+                  <!-- SVG elements rendered dynamically -->
+                </svg>
+                <div class="flex justify-between text-[9px] cad-mono text-[var(--cad-muted)] border-t border-[var(--cad-line-dim)] mt-1 pt-1">
+                  <span class="text-[var(--cad-danger)]">── CLOUD EXPENDITURE</span>
+                  <span class="text-[var(--cad-success)]">── SOVEREIGN HARDWARE</span>
+                  <span class="text-[var(--cad-accent)]">✛ CROSSOVER POINT</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- SECTION B: SYSTEM ARCHITECTURE TOPOLOGY & NODE PINOUT SPEC            -->
+      <!-- ===================================================================== -->
+      <div class="cad-border p-4 bg-[var(--cad-panel)] space-y-4">
+        
+        <div class="flex flex-wrap items-center justify-between border-b border-[var(--cad-line-dim)] pb-2 gap-2">
+          <div>
+            <span class="text-[10px] cad-mono text-[var(--cad-line)] uppercase tracking-wider font-bold block">
+              SCHEMATIC TOPOLOGY // HIGH-SPEED BUS ARCHITECTURE
+            </span>
+            <span class="text-xs text-[var(--cad-muted)]">Click any schematic node to inspect engineering pinouts, port assignments, and data retention rules.</span>
+          </div>
+          <span class="text-xs cad-mono text-[var(--cad-success)] font-bold">
+            BUS CLOCK: 10GbE SFP+ // ISOLATION: 100%
+          </span>
+        </div>
+
+        <!-- Node Layout Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3" id="nodesContainer">
+          <!-- Dynamic nodes -->
+        </div>
+
+        <!-- Pinout Telemetry Terminal Inspector (Expands on node click) -->
+        <div class="p-4 border border-[var(--cad-line)] bg-[var(--cad-bg)] cad-mono text-xs space-y-3" id="nodeInspector">
+          <div class="flex flex-wrap items-center justify-between border-b border-[var(--cad-line-dim)] pb-2 text-[var(--cad-line)] font-bold">
+            <span id="inspectNodeTitle">PINOUT SCHEMATIC: NEXTCLOUD ENTERPRISE (NODE 01)</span>
+            <span class="text-[10px] text-[var(--cad-success)]">STATUS: SIGNAL LOCK</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-[11px]">
+            <div>
+              <span class="text-[var(--cad-muted)] block">PORT BINDING:</span>
+              <span class="font-bold text-[var(--cad-text)]" id="inspectPort">443 / TCP (HTTPS / TLS 1.3)</span>
+            </div>
+            <div>
+              <span class="text-[var(--cad-muted)] block">MEMORY FOOTPRINT:</span>
+              <span class="font-bold text-[var(--cad-text)]" id="inspectMem">1024 MB (DDR5 ECC REG)</span>
+            </div>
+            <div>
+              <span class="text-[var(--cad-muted)] block">DISPLACED CLOUD SAAS:</span>
+              <span class="font-bold text-[var(--cad-danger)]" id="inspectReplaces">Microsoft 365 + OneDrive</span>
+            </div>
+            <div>
+              <span class="text-[var(--cad-muted)] block">JURISDICTIONAL AUDIT:</span>
+              <span class="font-bold text-[var(--cad-success)]" id="inspectJurisdiction">100% Sovereign NVMe ZFS</span>
+            </div>
+          </div>
+
+          <p class="text-xs text-[var(--cad-muted)] pt-1 border-t border-[var(--cad-line-dim)]" id="inspectDesc">
+            Primary sovereign collaboration layer. Handles encrypted document vaults, synchronized calendar shares, Kanban workflow cards, and peer-to-peer WebRTC video channels without external telemetry exposure.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- SECTION C: ISO STANDARD TITLE BLOCK (BOTTOM RIGHT ENGINEERING STAMP)  -->
+      <!-- ===================================================================== -->
+      <div class="grid grid-cols-1 md:grid-cols-12 cad-border text-xs cad-mono bg-[var(--cad-panel)] mt-6">
+        
+        <!-- Left: Drawing Legend -->
+        <div class="md:col-span-6 p-4 border-b md:border-b-0 md:border-r border-[var(--cad-line-dim)] space-y-2">
+          <div class="font-bold text-[var(--cad-line)] uppercase tracking-wider text-[11px]">GENERAL TECHNICAL NOTES & REGISTRATION:</div>
+          <p class="text-[10px] text-[var(--cad-muted)] leading-relaxed">
+            1. All electrical calculations benchmarked against Tenaga Nasional Berhad (TNB) Low Voltage Commercial Tariff B (RM 0.509/kWh). <br>
+            2. Sovereign cluster architecture completely eliminates third-party telemetry, adhering to Personal Data Protection Act 2010 (PDPA) compliance guidelines. <br>
+            3. Amortization calculations include statutory 8% Malaysian Digital Service Tax (SST) on SaaS billing.
+          </p>
+        </div>
+
+        <!-- Right: Official ISO Title Block Table -->
+        <div class="md:col-span-6 grid grid-cols-3 border-t md:border-t-0 border-[var(--cad-line-dim)] text-[11px]">
+          
+          <div class="p-2 border-r border-b border-[var(--cad-line-dim)]">
+            <span class="text-[9px] text-[var(--cad-muted)] block">ORGANIZATION:</span>
+            <span class="font-bold text-[var(--cad-text)]">HOMELAB.MY</span>
+          </div>
+
+          <div class="p-2 border-r border-b border-[var(--cad-line-dim)]">
+            <span class="text-[9px] text-[var(--cad-muted)] block">DRAWING TITLE:</span>
+            <span class="font-bold text-[var(--cad-line)]">SOVEREIGN SPEC</span>
+          </div>
+
+          <div class="p-2 border-b border-[var(--cad-line-dim)]">
+            <span class="text-[9px] text-[var(--cad-muted)] block">REVISION:</span>
+            <span class="font-bold text-[var(--cad-accent)]">REV 2.4.0</span>
+          </div>
+
+          <div class="p-2 border-r border-[var(--cad-line-dim)]">
+            <span class="text-[9px] text-[var(--cad-muted)] block">APPROVED BY:</span>
+            <span class="font-bold text-[var(--cad-text)]">CHIEF ENG.</span>
+          </div>
+
+          <div class="p-2 border-r border-[var(--cad-line-dim)]">
+            <span class="text-[9px] text-[var(--cad-muted)] block">DATE CODE:</span>
+            <span class="font-bold text-[var(--cad-text)]">2026-11-03</span>
+          </div>
+
+          <div class="p-2 bg-[var(--cad-line)] text-[var(--cad-bg)] flex flex-col justify-center items-center font-bold">
+            <span class="text-[9px] tracking-widest uppercase">CERTIFIED</span>
+            <span class="text-xs tracking-wider">SOVEREIGN</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bottom Coordinate Bar -->
+    <div class="h-6 border-t border-[var(--cad-line)] flex items-center justify-between px-3 text-[10px] cad-mono uppercase tracking-widest text-[var(--cad-ruler-txt)] bg-[var(--cad-ruler)]">
+      <span>GRID: 20mm x 20mm // CAD-PROJ-82</span>
+      <span>ISO 5457 / FORM A1 COMPLIANT</span>
+      <span>PAGE 01 / 01</span>
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: PARAMETRIC CAD ENGINE & AUDIO SYNTHESIS                      -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. Audio Caliper Click Synthesis (Web Audio API)
+    // -------------------------------------------------------------------------
+    let audioCtx = null;
+    function playCaliperTone() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      } catch (e) {
+        // Audio fallback
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Blueprint CAD Theme Mode Switcher
+    // -------------------------------------------------------------------------
+    function setCadMode(mode) {
+      playCaliperTone();
+      const body = document.body;
+      const btnCyan = document.getElementById('btn-cyanotype');
+      const btnDiazo = document.getElementById('btn-diazo');
+
+      if (mode === 'diazo') {
+        body.classList.add('diazo-mode');
+        btnDiazo.className = "px-2.5 py-1 bg-[var(--cad-line)] text-[var(--cad-bg)] font-bold";
+        btnCyan.className = "px-2.5 py-1 text-[var(--cad-text)] hover:text-[var(--cad-line)] transition";
+      } else {
+        body.classList.remove('diazo-mode');
+        btnCyan.className = "px-2.5 py-1 bg-[var(--cad-line)] text-[var(--cad-bg)] font-bold";
+        btnDiazo.className = "px-2.5 py-1 text-[var(--cad-text)] hover:text-[var(--cad-line)] transition";
+      }
+      renderCadChart();
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. SaaS Subsystem Matrix Data
+    // -------------------------------------------------------------------------
+    const subsystems = [
+      { id: 'm365', name: 'Productivity & Office Collaboration', alt: 'Microsoft 365 / Google Workspace', cost: 32, type: 'seat', active: true },
+      { id: 'acct', name: 'Accounting & e-Invoicing (LHDN)', alt: 'AutoCount Cloud / Xero / QuickBooks', cost: 80, type: 'fixed', active: true },
+      { id: 'vault', name: 'High-Density Storage (1TB/User)', alt: 'SharePoint / 1TB Google Drive', cost: 27, type: 'seat', active: true },
+      { id: 'n8n', name: 'Workflow Automation Orchestration', alt: 'Zapier Team / Make.com', cost: 150, type: 'fixed', active: true },
+      { id: 'wiki', name: 'Engineering Knowledge Base & SOPs', alt: 'Notion Team / Atlassian Confluence', cost: 45, type: 'seat', active: true },
+      { id: 'pdf', name: 'Secure Client-Side Document Tools', alt: 'Adobe Acrobat Pro DC Cloud', cost: 75, type: 'seat', active: true }
+    ];
+
+    // -------------------------------------------------------------------------
+    // 4. CAD Nodes Topology Data
+    // -------------------------------------------------------------------------
+    const cadNodes = [
+      { id: 'nc', label: 'NEXTCLOUD', port: '443/HTTPS', mem: '1024 MB', replaces: 'M365 & Drive', desc: 'Enterprise sovereign productivity suite. Files, Talk, Deck, and real-time Markdown document collaboration.' },
+      { id: 'dm', label: 'DOCMOST', port: '3000/TCP', mem: '512 MB', replaces: 'Notion Team', desc: 'Centralized engineering knowledge base with hierarchical page trees and real-time collaborative Markdown editing.' },
+      { id: 'in', label: 'INVOICE NINJA', port: '8000/TCP', mem: '512 MB', replaces: 'Xero / QB Online', desc: 'Self-hosted invoicing, recurring billing, audit-compliant ledger, and automated e-invoice compliance.' },
+      { id: 'ac', label: 'AUTOCOUNT VM', port: '3389/RDP', mem: '8192 MB', replaces: 'Cloud Windows VM', desc: 'Dedicated bare-metal Windows 10 virtual machine running AutoCount Accounting Server and MS SQL Database.' },
+      { id: 'n8', label: 'N8N ENGINE', port: '5678/WEBHOOK', mem: '512 MB', replaces: 'Zapier ($150/mo)', desc: 'Visual node orchestration engine handling live database syncing, CRM webhooks, and automated messaging.' },
+      { id: 'bp', label: 'BENTO PDF', port: '8080/WASM', mem: '128 MB', replaces: 'Adobe Acrobat Pro', desc: 'Client-side WebAssembly document engine. Split, merge, OCR, and redact without file exposure to foreign clouds.' },
+      { id: 'ex', label: 'EXCALIDRAW', port: '5000/TCP', mem: '256 MB', replaces: 'Miro / Mural', desc: 'Infinite collaborative sketch canvas for system architecture diagrams, sprint flows, and team wireframes.' }
+    ];
+
+    let activeNodeIndex = 0;
+    let currentSeats = 15;
+
+    // -------------------------------------------------------------------------
+    // 5. Interactive Calculations
+    // -------------------------------------------------------------------------
+    function handleSeatChange(val) {
+      currentSeats = parseInt(val);
+      document.getElementById('caliper-display').innerText = `|<-- ${currentSeats < 10 ? '0' + currentSeats : currentSeats} USER SEATS -->|`;
+      updatePresetHighlights();
+      playCaliperTone();
+      recalculate();
+    }
+
+    function setSeats(val) {
+      currentSeats = val;
+      document.getElementById('seatSlider').value = val;
+      document.getElementById('caliper-display').innerText = `|<-- ${currentSeats < 10 ? '0' + currentSeats : currentSeats} USER SEATS -->|`;
+      updatePresetHighlights();
+      playCaliperTone();
+      recalculate();
+    }
+
+    function updatePresetHighlights() {
+      [5, 15, 50].forEach(s => {
+        const btn = document.getElementById(`btn-seat-${s}`);
+        if (s === currentSeats) {
+          btn.className = "py-1.5 px-2 border border-[var(--cad-line)] bg-[var(--cad-line)] text-[var(--cad-bg)] font-bold text-center transition";
+        } else {
+          btn.className = "py-1.5 px-2 border border-[var(--cad-line-dim)] hover:border-[var(--cad-line)] text-center transition";
+        }
+      });
+    }
+
+    function toggleSubsystem(idx) {
+      subsystems[idx].active = !subsystems[idx].active;
+      playCaliperTone();
+      renderSubsystems();
+      recalculate();
+    }
+
+    function renderSubsystems() {
+      const container = document.getElementById('saasSubsystems');
+      container.innerHTML = subsystems.map((sub, idx) => `
+        <div class="flex items-center justify-between p-2 border border-[var(--cad-line-dim)] hover:border-[var(--cad-line)] bg-[var(--cad-bg)] transition">
+          <div class="flex items-center space-x-3">
+            <input type="checkbox" class="cad-checkbox" ${sub.active ? 'checked' : ''} onchange="toggleSubsystem(${idx})">
+            <div>
+              <span class="text-xs font-bold text-[var(--cad-text)] block">${sub.name}</span>
+              <span class="text-[10px] cad-mono text-[var(--cad-muted)]">DISPLACES: ${sub.alt}</span>
+            </div>
+          </div>
+          <span class="text-xs cad-mono font-bold text-[var(--cad-line)]">
+            RM ${sub.cost} ${sub.type === 'seat' ? '/ seat' : '/ co'}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    function recalculate() {
+      const seats = currentSeats;
+      let rawCloud = 0;
+      subsystems.forEach(s => {
+        if (s.active) {
+          if (s.type === 'seat') rawCloud += (s.cost * seats);
+          else rawCloud += s.cost;
+        }
+      });
+
+      const sst = rawCloud * 0.08;
+      const totalCloud = rawCloud + sst;
+      const opex = 24.30; // 65W Continuous @ TNB Tariff B
+      const netMonthly = Math.max(0, totalCloud - opex);
+
+      let capex = 10000;
+      if (seats <= 5) capex = 6000;
+      else if (seats > 30) capex = 22000;
+
+      const breakeven = netMonthly > 0 ? (capex / netMonthly) : 999;
+      const cumulative3Yr = (totalCloud * 36) - (capex + (opex * 36));
+
+      document.getElementById('calc-cloud-gross').innerText = `RM ${Math.round(totalCloud).toLocaleString()}.00`;
+      document.getElementById('calc-net-monthly').innerText = `RM ${netMonthly.toFixed(2)}`;
+      document.getElementById('calc-hardware-capex').innerText = `RM ${capex.toLocaleString()}.00`;
+      document.getElementById('calc-breakeven').innerText = breakeven < 40 ? `${breakeven.toFixed(1)} MONTHS` : 'N/A';
+      document.getElementById('calc-3yr-cumulative').innerText = `RM ${Math.max(0, Math.round(cumulative3Yr)).toLocaleString()}.00`;
+
+      renderCadChart(totalCloud, capex, opex, breakeven);
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. SVG CAD Orthographic Vector Trajectory
+    // -------------------------------------------------------------------------
+    function renderCadChart(monthlyCloud = 1514, capex = 10000, monthlyOpex = 24.30, breakeven = 6.7) {
+      const svg = document.getElementById('cadChart');
+      const w = 320;
+      const h = 100;
+      const pad = 16;
+
+      const maxVal = Math.max(monthlyCloud * 36, capex + (monthlyOpex * 36), 12000);
+      const getX = (m) => pad + (m / 36) * (w - pad * 2);
+      const getY = (val) => h - pad - (val / maxVal) * (h - pad * 2);
+
+      const be = Math.min(36, Math.max(0, breakeven));
+      const crossX = getX(be);
+      const crossY = getY(monthlyCloud * be);
+
+      document.getElementById('cad-crossover-tag').innerText = 
+        be < 36 ? `CROSSOVER: MONTH ${be.toFixed(1)}` : 'EXTENDED PAYBACK';
+
+      svg.innerHTML = `
+        <!-- CAD Hairline Grid -->
+        <line x1="${pad}" y1="${getY(0)}" x2="${w - pad}" y2="${getY(0)}" stroke="var(--cad-line-dim)" stroke-width="1" />
+        <line x1="${pad}" y1="${getY(maxVal/2)}" x2="${w - pad}" y2="${getY(maxVal/2)}" stroke="var(--cad-line-dim)" stroke-dasharray="2,2" stroke-width="1" />
+        <line x1="${pad}" y1="${getY(maxVal)}" x2="${w - pad}" y2="${getY(maxVal)}" stroke="var(--cad-line-dim)" stroke-dasharray="2,2" stroke-width="1" />
+        
+        <!-- Cloud Trajectory (Danger Red) -->
+        <line x1="${getX(0)}" y1="${getY(0)}" x2="${getX(36)}" y2="${getY(monthlyCloud * 36)}" stroke="var(--cad-danger)" stroke-width="2" />
+        
+        <!-- Sovereign Appliance Amortization (Success Green) -->
+        <line x1="${getX(0)}" y1="${getY(capex)}" x2="${getX(36)}" y2="${getY(capex + (monthlyOpex * 36))}" stroke="var(--cad-success)" stroke-width="2" />
+
+        ${be < 36 ? `
+          <!-- Crosshair Crossover Marker -->
+          <line x1="${crossX}" y1="${h - pad}" x2="${crossX}" y2="${crossY}" stroke="var(--cad-accent)" stroke-dasharray="2,2" stroke-width="1" />
+          <circle cx="${crossX}" cy="${crossY}" r="4" fill="var(--cad-bg)" stroke="var(--cad-accent)" stroke-width="2" />
+          <text x="${Math.min(w - 75, crossX + 6)}" y="${crossY - 6}" fill="var(--cad-accent)" font-size="9" font-family="'JetBrains Mono', monospace">M${be.toFixed(1)} (RM 0)</text>
+        ` : ''}
+
+        <text x="${getX(0)}" y="${h - 4}" fill="var(--cad-muted)" font-size="8" font-family="'JetBrains Mono', monospace">0M</text>
+        <text x="${getX(18)}" y="${h - 4}" fill="var(--cad-muted)" font-size="8" font-family="'JetBrains Mono', monospace">18M</text>
+        <text x="${getX(36) - 14}" y="${h - 4}" fill="var(--cad-muted)" font-size="8" font-family="'JetBrains Mono', monospace">36M</text>
+      `;
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. Topology Nodes & Pinout Inspector
+    // -------------------------------------------------------------------------
+    function renderNodes() {
+      const container = document.getElementById('nodesContainer');
+      container.innerHTML = cadNodes.map((n, idx) => `
+        <div onclick="selectNode(${idx})" class="p-2.5 border ${activeNodeIndex === idx ? 'border-[var(--cad-line)] bg-[var(--cad-line)]/10 font-bold' : 'border-[var(--cad-line-dim)] hover:border-[var(--cad-line)]'} bg-[var(--cad-bg)] cursor-pointer transition text-center space-y-1">
+          <div class="text-[10px] cad-mono text-[var(--cad-muted)]">NODE 0${idx+1}</div>
+          <div class="text-xs font-bold text-[var(--cad-text)] truncate">${n.label}</div>
+          <div class="text-[9px] cad-mono text-[var(--cad-line)]">${n.port}</div>
+        </div>
+      `).join('');
+    }
+
+    function selectNode(idx) {
+      activeNodeIndex = idx;
+      playCaliperTone();
+      const n = cadNodes[idx];
+      document.getElementById('inspectNodeTitle').innerText = `PINOUT SCHEMATIC: ${n.label} (NODE 0${idx+1})`;
+      document.getElementById('inspectPort').innerText = `${n.port} (ISOLATED)`;
+      document.getElementById('inspectMem').innerText = `${n.mem} (ALLOCATED)`;
+      document.getElementById('inspectReplaces').innerText = n.replaces;
+      document.getElementById('inspectDesc').innerText = n.desc;
+      renderNodes();
+    }
+
+    // -------------------------------------------------------------------------
+    // 8. Init Application
+    // -------------------------------------------------------------------------
+    window.onload = function() {
+      renderSubsystems();
+      renderNodes();
+      selectNode(0);
+      recalculate();
+    };
+  </script>
+</body>
+</html>

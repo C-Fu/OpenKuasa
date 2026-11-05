@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRATCOM // HOMELAB.MY SOVEREIGN DEFENSE COMMAND</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Orbitron:wght@600;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            tactical: ['"Chakra Petch"', 'sans-serif'],
+            radar: ['"Orbitron"', 'sans-serif'],
+            mono: ['"Share Tech Mono"', 'monospace']
+          },
+          colors: {
+            scada: {
+              pitch: '#06080a',
+              chassis: '#0b0f14',
+              surface: '#11171f',
+              panel: '#151d27',
+              border: '#1f2b3a',
+              borderBright: '#2f4259',
+              amber: '#ffaa00',
+              amberDim: '#664400',
+              cyan: '#00e5ff',
+              cyanDim: '#004f59',
+              red: '#ff3344',
+              green: '#00ff66',
+              text: '#d3e2ee',
+              muted: '#62778d'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #06080a;
+      color: #d3e2ee;
+      font-family: 'Chakra Petch', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      background-image: 
+        linear-gradient(rgba(31, 43, 58, 0.25) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31, 43, 58, 0.25) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .scada-mono { font-family: 'Share Tech Mono', monospace; }
+    .scada-radar { font-family: 'Orbitron', sans-serif; }
+
+    /* Tactical Bevel & Cut Corner Styling */
+    .clip-corner {
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+    .clip-corner-tl {
+      clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+    }
+
+    /* Radar Sweep Animation */
+    @keyframes radarSweep {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .radar-beam {
+      animation: radarSweep 4s linear infinite;
+      transform-origin: center center;
+    }
+
+    /* Range Input Customization */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      width: 100%;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 6px;
+      background: #11171f;
+      border: 1px solid #00e5ff;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 12px;
+      background: #ffaa00;
+      border: 1px solid #fff;
+      cursor: ew-resize;
+      margin-top: -8px;
+      box-shadow: 0 0 10px #ffaa00;
+      clip-path: polygon(0 20%, 50% 0, 100% 20%, 100% 80%, 50% 100%, 0 80%);
+    }
+
+    /* Custom Tactical Checkbox */
+    .tactical-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #00e5ff;
+      background: #0b0f14;
+      display: inline-grid;
+      place-content: center;
+      cursor: pointer;
+    }
+    .tactical-checkbox:checked {
+      background: #00e5ff;
+    }
+    .tactical-checkbox:checked::before {
+      content: '▲';
+      color: #06080a;
+      font-size: 10px;
+      line-height: 1;
+    }
+
+    /* Blinking Tactical Indicator */
+    @keyframes alertBlink {
+      0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px #ff3344); }
+      50% { opacity: 0.3; filter: none; }
+    }
+    .alert-beacon {
+      animation: alertBlink 1.2s infinite;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col p-2 md:p-3 space-y-2 border-2 border-scada-border">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP DEFCON CLASSIFICATION & STRATEGIC TELEMETRY BANNER                 -->
+  <!-- ========================================================================= -->
+  <header class="bg-scada-chassis border-2 border-scada-borderBright p-2 flex flex-wrap items-center justify-between gap-3 shadow-2xl relative">
+    
+    <!-- Classification Warning Header -->
+    <div class="absolute -top-3 left-4 bg-scada-red text-black text-[9px] scada-mono font-bold tracking-widest px-2 py-0.5 border border-white">
+      RESTRICTED // MALAYSIAN PDPA 2010 SOVEREIGN TERRITORY // NOFORN
+    </div>
+
+    <!-- Machine ID & Callout -->
+    <div class="flex items-center space-x-3 pt-1">
+      <div class="w-9 h-9 bg-scada-surface border-2 border-scada-cyan flex items-center justify-center text-scada-cyan font-bold scada-radar text-lg shadow-[0_0_10px_rgba(0,229,255,0.4)]">
+        HL
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="text-sm sm:text-base font-bold tracking-widest uppercase text-white scada-radar">
+            STRATCOM // HOMELAB-MY SOVEREIGN GRID
+          </h1>
+          <span class="text-[9px] scada-mono bg-scada-amber/20 border border-scada-amber text-scada-amber px-1.5">
+            NODE: KL-CENTRAL-01
+          </span>
+        </div>
+        <p class="text-[10px] scada-mono text-scada-muted">
+          HARDWARE SECURITY PERIMETER // ZERO FOREIGN CLOUD AIR-GAP ISOLATION
+        </p>
+      </div>
+    </div>
+
+    <!-- DEFCON Threat Rating & Tactical Dual Clocks -->
+    <div class="flex flex-wrap items-center gap-2 scada-mono text-xs">
+      
+      <!-- DEFCON 5 Status -->
+      <div class="flex items-center bg-scada-surface border border-scada-border px-2.5 py-1 space-x-2">
+        <span class="text-[10px] text-scada-muted">THREAT CONDITION:</span>
+        <span class="text-scada-green font-bold text-xs scada-radar">DEFCON 5 [NOMINAL]</span>
+        <span class="w-2 h-2 rounded-full bg-scada-green alert-beacon"></span>
+      </div>
+
+      <!-- Quorum -->
+      <div class="flex items-center bg-scada-surface border border-scada-border px-2.5 py-1 space-x-2">
+        <span class="text-[10px] text-scada-muted">PERIMETER QUORUM:</span>
+        <span class="text-scada-cyan font-bold" id="header-quorum">23/23 LOCKED</span>
+      </div>
+
+      <!-- Dual Clocks -->
+      <div class="bg-scada-pitch border border-scada-border px-2.5 py-1 flex items-center space-x-3 text-[11px]">
+        <span>UTC: <span class="text-scada-cyan" id="clock-utc">00:00:00</span></span>
+        <span>MYT: <span class="text-scada-amber font-bold" id="clock-myt">08:00:00</span></span>
+      </div>
+
+      <!-- Tactical Audio Engine Toggle -->
+      <button onclick="toggleAudio()" id="btn-audio" class="bg-scada-panel border border-scada-borderBright hover:border-scada-cyan text-scada-muted hover:text-scada-cyan px-2.5 py-1 text-[10px] transition">
+        AUDIO: <span id="audio-state">MUTE</span>
+      </button>
+
+      <!-- Threat Alert Trigger -->
+      <button onclick="triggerThreatCycle()" class="bg-scada-amber/10 border border-scada-amber text-scada-amber hover:bg-scada-amber hover:text-black font-bold px-2 py-1 text-[10px] transition">
+        [THREAT TEST]
+      </button>
+
+    </div>
+
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN SPLIT TACTICAL OPERATING CONSOLE (12 COLS)                       -->
+  <!-- ========================================================================= -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-2 min-h-0">
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- LEFT PANEL: DEFENSIVE INFRASTRUCTURE PERIMETER (Cols 1-4)             -->
+    <!-- --------------------------------------------------------------------- -->
+    <aside class="lg:col-span-4 bg-scada-chassis border border-scada-border flex flex-col overflow-hidden">
+      
+      <!-- Panel Header & Mini Radar Screen -->
+      <div class="p-2.5 bg-scada-surface border-b border-scada-border flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <div class="w-2 h-2 bg-scada-cyan"></div>
+          <span class="text-xs font-bold uppercase tracking-widest text-white scada-radar">
+            DEFENSIVE PERIMETER NODES
+          </span>
+        </div>
+        <span class="text-[10px] scada-mono text-scada-green">[ENCRYPTED]</span>
+      </div>
+
+      <!-- Live SCADA Circular Radar Telemetry Sweep -->
+      <div class="p-3 bg-scada-pitch border-b border-scada-border flex items-center space-x-4">
+        
+        <!-- SVG Radar Display -->
+        <div class="relative w-24 h-24 flex-shrink-0 border-2 border-scada-cyanDim rounded-full bg-[#030d0f] overflow-hidden flex items-center justify-center">
+          <!-- Concentric range rings -->
+          <div class="absolute w-16 h-16 border border-scada-cyanDim/50 rounded-full"></div>
+          <div class="absolute w-8 h-8 border border-scada-cyanDim/40 rounded-full"></div>
+          <!-- Crosshairs -->
+          <div class="absolute w-full h-[1px] bg-scada-cyanDim/60"></div>
+          <div class="absolute h-full w-[1px] bg-scada-cyanDim/60"></div>
+          <!-- Rotating Sweeper Cone -->
+          <div class="radar-beam absolute w-full h-full">
+            <div class="w-1/2 h-1/2 bg-gradient-to-tr from-transparent via-scada-cyan/10 to-scada-cyan/40"></div>
+          </div>
+          <!-- Radar Targets (Cluster Nodes) -->
+          <div class="absolute top-6 left-7 w-1.5 h-1.5 bg-scada-green rounded-full shadow-[0_0_4px_#00ff66]"></div>
+          <div class="absolute bottom-5 right-8 w-1.5 h-1.5 bg-scada-cyan rounded-full shadow-[0_0_4px_#00e5ff]"></div>
+          <div class="absolute top-12 right-5 w-1.5 h-1.5 bg-scada-amber rounded-full shadow-[0_0_4px_#ffaa00]"></div>
+        </div>
+
+        <!-- Radar Stats -->
+        <div class="space-y-1 text-[11px] scada-mono">
+          <div class="text-scada-muted">AIR-GAP SCANNER: <span class="text-scada-green">ACTIVE</span></div>
+          <div class="text-scada-muted">LATENCY: <span class="text-scada-cyan">1.8ms (IN-HQ)</span></div>
+          <div class="text-scada-muted">EXPOSURE: <span class="text-scada-green">0.00% CLOUD LEAK</span></div>
+          <div class="text-scada-muted">FOREIGN LAW: <span class="text-scada-amber">IMMUNE (NO CLOUD ACT)</span></div>
+        </div>
+
+      </div>
+
+      <!-- Tactical Node Inventory (Scrollable) -->
+      <div class="flex-1 overflow-y-auto divide-y divide-scada-border scada-mono text-xs" id="tactical-node-list">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Node Inventory Footer -->
+      <div class="p-2 bg-scada-surface border-t border-scada-border flex items-center justify-between text-[10px] scada-mono text-scada-muted">
+        <span>INTERFACE: DOCKER_CONTAINER_VFS</span>
+        <span class="text-scada-cyan" id="selected-service-code">CODE: NC-HUB</span>
+      </div>
+
+    </aside>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- CENTER/RIGHT PANEL: TACTICAL AUDIT & BREACH AMORTIZATION (Cols 5-12)  -->
+    <!-- --------------------------------------------------------------------- -->
+    <main class="lg:col-span-8 flex flex-col space-y-2 overflow-y-auto">
+
+      <!-- TOP TELEMETRIC IMPACT HUD STRIP -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        
+        <!-- Stat 1: Cloud Extortion Avoided -->
+        <div class="bg-scada-chassis border border-scada-border p-3 relative clip-corner">
+          <div class="text-[10px] scada-mono text-scada-muted uppercase">RECURRING SAAS EXTORTION TAX RETRACTED</div>
+          <div class="text-xl sm:text-2xl font-bold text-scada-green scada-radar mt-1" id="hud-tax-saved">
+            RM 2,000,034
+          </div>
+          <div class="text-[9px] scada-mono text-scada-muted mt-0.5">
+            RETAINED ACROSS 20+ MALAYSIAN SMES
+          </div>
+        </div>
+
+        <!-- Stat 2: Breakeven Amortization -->
+        <div class="bg-scada-chassis border border-scada-border p-3 relative clip-corner">
+          <div class="text-[10px] scada-mono text-scada-muted uppercase">SOVEREIGN CAPEX BREAKEVEN HORIZON</div>
+          <div class="text-xl sm:text-2xl font-bold text-scada-amber scada-radar mt-1" id="hud-breakeven">
+            8.5 MONTHS
+          </div>
+          <div class="text-[9px] scada-mono text-scada-muted mt-0.5" id="hud-monthly-retain">
+            THEN RM 1,172 / MO CASH RETAINED
+          </div>
+        </div>
+
+        <!-- Stat 3: 3-Year Capital Reserve -->
+        <div class="bg-scada-chassis border border-scada-border p-3 relative clip-corner">
+          <div class="text-[10px] scada-mono text-scada-muted uppercase">36-MONTH STRATEGIC CAPITAL RESERVE</div>
+          <div class="text-xl sm:text-2xl font-bold text-scada-cyan scada-radar mt-1" id="hud-3yr-reserve">
+            RM 32,187
+          </div>
+          <div class="text-[9px] scada-mono text-scada-muted mt-0.5">
+            NET HARDWARE INVESTMENT YIELD
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MAIN TACTICAL EXPENDITURE AUDIT ENGINE -->
+      <div class="bg-scada-chassis border border-scada-border p-4 flex-1 space-y-4">
+        
+        <div class="flex flex-wrap items-center justify-between border-b border-scada-border pb-2 gap-2">
+          <div>
+            <h2 class="text-sm font-bold tracking-wider uppercase text-white scada-radar flex items-center gap-2">
+              <span class="text-scada-amber">▲</span> TACTICAL SAAS EXPENDITURE INTERCEPTION AUDIT
+            </h2>
+            <p class="text-xs text-scada-muted scada-mono mt-0.5">
+              PARAMETRIC BREACH ASSESSMENT: INTERCEPT RECURRING US CLOUD TAXATION (INCL. 8% SST)
+            </p>
+          </div>
+          <div class="px-2 py-0.5 bg-scada-surface border border-scada-border text-[10px] scada-mono text-scada-cyan">
+            TNB TARIFF B // 65W CONTINUOUS
+          </div>
+        </div>
+
+        <!-- Calibration Inputs Layout -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4">
+
+          <!-- Left: Operator Headcount & Presets (Cols 1-7) -->
+          <div class="xl:col-span-7 space-y-4">
+            
+            <!-- Seat Range Control -->
+            <div class="p-3 bg-scada-surface border border-scada-border space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-white scada-mono">
+                  [PARAM 01] ACTIVE OPERATOR SEAT DEPLOYMENT:
+                </span>
+                <span class="text-sm font-bold text-scada-amber scada-radar bg-scada-pitch px-2 py-0.5 border border-scada-amber/40" id="seat-readout">
+                  15 OPERATORS
+                </span>
+              </div>
+
+              <!-- Preset Macro Buttons -->
+              <div class="grid grid-cols-3 gap-2 text-xs scada-mono">
+                <button onclick="setSeats(5)" id="btn-seat-5" class="p-1.5 bg-scada-pitch border border-scada-border text-scada-muted hover:border-scada-cyan hover:text-scada-cyan transition">
+                  [SQUAD: 5]
+                </button>
+                <button onclick="setSeats(15)" id="btn-seat-15" class="p-1.5 bg-scada-amber/20 border border-scada-amber text-scada-amber font-bold transition">
+                  [PLATOON: 15]
+                </button>
+                <button onclick="setSeats(50)" id="btn-seat-50" class="p-1.5 bg-scada-pitch border border-scada-border text-scada-muted hover:border-scada-cyan hover:text-scada-cyan transition">
+                  [REGIMENT: 50]
+                </button>
+              </div>
+
+              <!-- Slider -->
+              <input type="range" id="seatRange" min="1" max="100" value="15" oninput="onSeatInput(this.value)">
+
+              <div class="flex justify-between text-[9px] scada-mono text-scada-muted">
+                <span>01 UNIT</span>
+                <span>25 UNITS</span>
+                <span>50 UNITS</span>
+                <span>100 UNITS (ENTERPRISE PERIMETER)</span>
+              </div>
+            </div>
+
+            <!-- Intercepted SaaS Licenses Matrix -->
+            <div class="p-3 bg-scada-surface border border-scada-border space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-white scada-mono">
+                  [PARAM 02] INTERCEPT CLOUD VENDOR LICENSES:
+                </span>
+                <span class="text-[10px] scada-mono text-scada-cyan">TACTICAL TOGGLE</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs scada-mono" id="saas-checklist">
+                <!-- Checkboxes populated via JS -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right: Strategic Balance Sheet Terminal (Cols 8-12) -->
+          <div class="xl:col-span-5 bg-scada-surface border border-scada-border p-4 flex flex-col justify-between space-y-4">
+            
+            <div class="space-y-3 scada-mono text-xs">
+              
+              <div class="border-b border-scada-border pb-2 flex justify-between items-center">
+                <span class="font-bold text-white scada-radar text-[11px]">FINANCIAL INTERCEPTION MATRIX</span>
+                <span class="text-[9px] text-scada-green font-bold">STATUS: RECOVERED</span>
+              </div>
+
+              <!-- Line 1: Cloud SaaS Bill -->
+              <div class="flex justify-between items-baseline">
+                <span class="text-scada-muted">MONTHLY CLOUD SAAS EXTORTION:</span>
+                <div class="text-right">
+                  <span class="text-base font-bold text-scada-red scada-radar" id="val-cloud-bill">RM 1,196</span>
+                  <span class="text-[9px] text-scada-muted block" id="val-cloud-sst">Incl. 8% Digital SST (RM 89)</span>
+                </div>
+              </div>
+
+              <!-- Line 2: Homelab Power -->
+              <div class="flex justify-between items-baseline pt-1 border-t border-scada-border/60">
+                <span class="text-scada-muted">LOCAL GRID DRAW (TNB 65W):</span>
+                <div class="text-right">
+                  <span class="text-sm font-bold text-scada-text">RM 24 / mo</span>
+                  <span class="text-[9px] text-scada-muted block">TNB Tariff B Commercial</span>
+                </div>
+              </div>
+
+              <!-- Line 3: Net Cash Retained -->
+              <div class="flex justify-between items-baseline pt-1 border-t border-scada-border/60">
+                <span class="text-white font-bold">NET MONTHLY CAPITAL SAVED:</span>
+                <div class="text-right">
+                  <span class="text-lg font-bold text-scada-green scada-radar" id="val-net-monthly">RM 1,172</span>
+                  <span class="text-[9px] text-scada-muted block">Retained in HQ Account</span>
+                </div>
+              </div>
+
+              <!-- Line 4: 1X Hardware Capex -->
+              <div class="flex justify-between items-baseline pt-1 border-t border-scada-border/60">
+                <span class="text-scada-muted">ONE-TIME HARDWARE ASSET CAPEX:</span>
+                <div class="text-right">
+                  <span class="text-sm font-bold text-scada-amber scada-radar" id="val-capex">RM 10,000</span>
+                  <span class="text-[9px] text-scada-muted block" id="val-capex-tier">Tier: 15-Seat Appliance</span>
+                </div>
+              </div>
+
+              <!-- Payback Horizon Gauge -->
+              <div class="p-2.5 bg-scada-pitch border border-scada-border space-y-1.5 mt-2">
+                <div class="flex justify-between items-center text-[11px]">
+                  <span class="text-scada-muted">AMORTIZATION HORIZON:</span>
+                  <span class="font-bold text-scada-amber scada-radar" id="val-breakeven-pill">8.5 MONTHS</span>
+                </div>
+                
+                <!-- Analog Segmented LED Fuel Bar -->
+                <div class="flex gap-1 h-3" id="segmented-bar">
+                  <!-- Rendered via JS -->
+                </div>
+
+                <div class="text-[9px] text-scada-muted pt-1">
+                  At month 9, hardware amortizes to 100% equity ownership. Zero monthly software rent.
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Commission Action CTA -->
+            <button onclick="triggerDispatch()" class="w-full py-2.5 bg-scada-panel border-2 border-scada-cyan hover:bg-scada-cyan hover:text-black text-scada-cyan text-xs font-bold scada-mono tracking-widest uppercase transition active:translate-y-0.5 shadow-[0_0_12px_rgba(0,229,255,0.2)]">
+              [COMMISSION SOVEREIGN HARDWARE DEPLOYMENT]
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- BOTTOM PANEL: TACTICAL PROTOCOL & AIR-GAP RUNBOOK -->
+      <div class="bg-scada-chassis border border-scada-border p-3.5 space-y-2">
+        
+        <div class="flex flex-wrap items-center justify-between border-b border-scada-border pb-1.5 gap-2">
+          <div class="flex items-center space-x-2 text-xs scada-mono">
+            <span class="text-scada-green animate-pulse">■</span>
+            <span class="font-bold text-white scada-radar tracking-wider">
+              AIR-GAP RUNBOOK & CLUSTER TELEMETRY DOSSIER
+            </span>
+          </div>
+          <span class="text-[10px] scada-mono text-scada-muted" id="dossier-socket">
+            CONTAINER SOCKET: tcp://127.0.0.1:8443
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs scada-mono" id="dossier-cards">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. FOOTER TELEMETRIC SYSTEM HEALTH RIBBON                                 -->
+  <!-- ========================================================================= -->
+  <footer class="bg-scada-chassis border border-scada-border px-3 py-1 text-[11px] scada-mono flex flex-wrap items-center justify-between text-scada-muted gap-2">
+    <div class="flex items-center space-x-3">
+      <span class="text-scada-cyan">SYS_UPTIME: 142D 18H 34M</span>
+      <span>|</span>
+      <span>ENCRYPTION: AES-256-GCM / WIREGUARD</span>
+      <span class="hidden sm:inline">|</span>
+      <span class="hidden sm:inline">GOVERNANCE: MALAYSIA PDPA-2010 CERTIFIED</span>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <span class="w-2 h-2 rounded-full bg-scada-green alert-beacon"></span>
+      <span class="text-white font-bold">ALL 23 DEFENSE PODS IN QUORUM LOCK</span>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: TACTICAL SIMULATION, AUDIO SYNTHESIS & FINANCIAL MATRIX       -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. Web Audio Engine: Tactical Command Beeps & Switches
+    // -------------------------------------------------------------------------
+    let audioActive = false;
+    let audioContext = null;
+
+    function initAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playTacticalSound(freq = 900, type = 'sine', duration = 0.04) {
+      if (!audioActive) return;
+      try {
+        initAudio();
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+        gain.gain.setValueAtTime(0.08, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.start();
+        osc.stop(audioContext.currentTime + duration);
+      } catch (e) {
+        // Fallback
+      }
+    }
+
+    function toggleAudio() {
+      audioActive = !audioActive;
+      const state = document.getElementById('audio-state');
+      const btn = document.getElementById('btn-audio');
+      if (audioActive) {
+        initAudio();
+        state.innerText = 'ARMED';
+        btn.classList.add('border-scada-cyan', 'text-scada-cyan');
+        playTacticalSound(1200, 'square', 0.06);
+      } else {
+        state.innerText = 'MUTE';
+        btn.classList.remove('border-scada-cyan', 'text-scada-cyan');
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Tactical Defensive Perimeter Nodes (Cluster Fleet)
+    // -------------------------------------------------------------------------
+    const defensiveNodes = [
+      {
+        id: 'nc',
+        code: 'NC-HUB-30',
+        name: 'Nextcloud Sovereign Hub',
+        clearance: 'RESTRICTED // L4',
+        port: '8443 / TLS 1.3',
+        replaces: 'Microsoft 365 / Google Workspace (RM 32 / seat)',
+        desc: 'Sovereign command document vaults, encrypted WebRTC comms, and project Kanban decks. Total local data residency.',
+        isolation: '100% AIR-GAP ZFS'
+      },
+      {
+        id: 'dm',
+        code: 'DM-WIKI-02',
+        name: 'Docmost Tactical Wiki',
+        clearance: 'CONFIDENTIAL // L3',
+        port: '3000 / HTTP',
+        replaces: 'Notion Team / Atlassian Confluence (RM 45 / seat)',
+        desc: 'Centralized defense SOP wiki, Markdown tables, and real-time operational knowledge base without cloud storage leaks.',
+        isolation: 'LOCAL POSTGRES'
+      },
+      {
+        id: 'bp',
+        code: 'BP-SUITE-01',
+        name: 'BentoPDF Tool Suite',
+        clearance: 'SECRET // L2',
+        port: '8080 / WASM',
+        replaces: 'Adobe Acrobat Pro DC Cloud (RM 65 / seat)',
+        desc: 'Client-side WebAssembly PDF OCR, redaction, signature, and cryptographic merging with zero off-premise transmissions.',
+        isolation: 'CLIENT-SIDE WASM'
+      },
+      {
+        id: 'in',
+        code: 'IN-NINJA-04',
+        name: 'Invoice Ninja Portal',
+        clearance: 'FIN-AUDIT // L3',
+        port: '8000 / HTTP',
+        replaces: 'Xero / QuickBooks Online (RM 80 / mo)',
+        desc: 'LHDN e-invoicing compliance node, automated payment gateway reconciliation, and client billing ledger.',
+        isolation: 'MARIADB ON-PREM'
+      },
+      {
+        id: 'ac',
+        code: 'AC-WIN10-09',
+        name: 'AutoCount Win10 KVM',
+        clearance: 'FIN-AUDIT // L4',
+        port: '3389 / RDP',
+        replaces: 'Azure Virtual Desktop (RM 350 / mo)',
+        desc: 'Dedicated Windows 10 virtual machine executing AutoCount Accounting Server and MS SQL Database on bare metal NVMe.',
+        isolation: 'KVM HARDWARE HYPERVISOR'
+      },
+      {
+        id: 'n8',
+        code: 'N8-ORCH-07',
+        name: 'n8n Automation Engine',
+        clearance: 'OPERATIONS // L3',
+        port: '5678 / WEBHOOK',
+        replaces: 'Zapier Team / Make.com (RM 150 / mo)',
+        desc: 'Visual node orchestration graph handling autonomous database migrations, CRM synchronization, and messaging pipelines.',
+        isolation: 'ENCRYPTED WEBHOOK BUS'
+      },
+      {
+        id: 'ex',
+        code: 'EX-BOARD-03',
+        name: 'Excalidraw Whiteboard',
+        clearance: 'INTEL // L2',
+        port: '5000 / HTTP',
+        replaces: 'Miro / Mural Enterprise (RM 40 / seat)',
+        desc: 'Tactical collaborative canvas for network diagramming, defense wireframes, and live architecture planning.',
+        isolation: 'EPHEMERAL WEBRTC'
+      }
+    ];
+
+    let selectedNodeIndex = 0;
+    let currentSeats = 15;
+
+    // SaaS Interception Catalog
+    const saasMatrix = [
+      { id: 'saas-m365', name: 'Productivity (M365 / Workspace)', price: 32, type: 'seat', checked: true, alt: 'Office 365' },
+      { id: 'saas-acct', name: 'Accounting & e-Invoicing (Xero)', price: 80, type: 'fixed', checked: true, alt: 'Xero/QB' },
+      { id: 'saas-drive', name: '1TB Cloud Drive (SharePoint)', price: 27, type: 'seat', checked: true, alt: 'OneDrive/Dropbox' },
+      { id: 'saas-auto', name: 'Workflow Automator (Zapier)', price: 150, type: 'fixed', checked: true, alt: 'Zapier/Make' },
+      { id: 'saas-wiki', name: 'Engineering Wiki (Notion)', price: 45, type: 'seat', checked: true, alt: 'Notion/Confluence' },
+      { id: 'saas-pdf', name: 'PDF Security (Acrobat Pro)', price: 65, type: 'seat', checked: false, alt: 'Adobe Acrobat' }
+    ];
+
+    // -------------------------------------------------------------------------
+    // 3. Render Tactical Node Inventory
+    // -------------------------------------------------------------------------
+    function renderNodeList() {
+      const container = document.getElementById('tactical-node-list');
+      container.innerHTML = defensiveNodes.map((node, idx) => {
+        const isSelected = selectedNodeIndex === idx;
+        return `
+          <div 
+            onclick="selectNode(${idx})"
+            class="p-2.5 cursor-pointer transition flex items-center justify-between ${
+              isSelected 
+                ? 'bg-scada-surface border-l-4 border-l-scada-cyan' 
+                : 'bg-scada-chassis hover:bg-scada-surface/60 border-l-4 border-l-transparent'
+            }"
+          >
+            <div class="space-y-0.5">
+              <div class="flex items-center space-x-2">
+                <span class="text-[9px] px-1 py-0.2 bg-scada-pitch border border-scada-border text-scada-amber">${node.code}</span>
+                <span class="font-bold text-xs ${isSelected ? 'text-white' : 'text-scada-text'}">${node.name}</span>
+              </div>
+              <div class="text-[10px] text-scada-muted truncate max-w-[240px]">REPLACES: ${node.replaces.split('(')[0]}</div>
+            </div>
+            <div class="text-right">
+              <span class="text-[9px] text-scada-cyan bg-scada-pitch px-1.5 py-0.5 border border-scada-border">${node.port.split(' ')[0]}</span>
+              <span class="block text-[8px] text-scada-green mt-0.5">LOCKED</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectNode(idx) {
+      selectedNodeIndex = idx;
+      playTacticalSound(800 + idx * 60, 'sine', 0.03);
+      const node = defensiveNodes[idx];
+      document.getElementById('selected-service-code').innerText = `CODE: ${node.code}`;
+      document.getElementById('dossier-socket').innerText = `CONTAINER SOCKET: tcp://127.0.0.1:${node.port.split(' ')[0]}`;
+      renderNodeList();
+      renderDossier(node);
+    }
+
+    function renderDossier(node) {
+      const container = document.getElementById('dossier-cards');
+      container.innerHTML = `
+        <div class="p-2.5 bg-scada-pitch border border-scada-border space-y-1">
+          <span class="text-[10px] text-scada-muted block">SECURITY CLEARANCE</span>
+          <span class="font-bold text-scada-amber scada-radar text-xs">${node.clearance}</span>
+          <span class="text-[10px] text-scada-text block mt-1">${node.name}</span>
+        </div>
+
+        <div class="p-2.5 bg-scada-pitch border border-scada-border space-y-1">
+          <span class="text-[10px] text-scada-muted block">INTERCEPTED SAAS SUBSCRIPTION</span>
+          <span class="font-bold text-scada-red text-xs truncate block">${node.replaces}</span>
+          <span class="text-[10px] text-scada-green block">0.00% RECURRING THIRD-PARTY FEE</span>
+        </div>
+
+        <div class="p-2.5 bg-scada-pitch border border-scada-border space-y-1">
+          <span class="text-[10px] text-scada-muted block">DATA ISOLATION PROTOCOL</span>
+          <span class="font-bold text-scada-cyan text-xs">${node.isolation}</span>
+          <span class="text-[10px] text-scada-muted block">MALAYSIAN PDPA 2010 COMPLIANT</span>
+        </div>
+
+        <div class="p-2.5 bg-scada-pitch border border-scada-border flex flex-col justify-between">
+          <div>
+            <span class="text-[10px] text-scada-muted block">OPERATIONAL PORT BINDING</span>
+            <span class="font-bold text-white text-xs">${node.port}</span>
+          </div>
+          <button onclick="launchSocketDirect('${node.name}')" class="mt-2 py-1 bg-scada-cyan/20 border border-scada-cyan text-scada-cyan hover:bg-scada-cyan hover:text-black font-bold text-[10px] tracking-wider transition">
+            [ENGAGE RUNBOOK]
+          </button>
+        </div>
+      `;
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Financial Interception Engine & Amortization
+    // -------------------------------------------------------------------------
+    function renderSaaSChecklist() {
+      const container = document.getElementById('saas-checklist');
+      container.innerHTML = saasMatrix.map((item, idx) => `
+        <label class="flex items-center space-x-2 p-2 bg-scada-pitch border border-scada-border cursor-pointer hover:border-scada-borderBright transition">
+          <input 
+            type="checkbox" 
+            class="tactical-checkbox" 
+            ${item.checked ? 'checked' : ''} 
+            onchange="toggleSaaSItem(${idx})"
+          >
+          <div class="flex-1">
+            <div class="flex justify-between items-center text-white">
+              <span class="font-bold truncate text-[11px]">${item.name}</span>
+              <span class="text-scada-amber">RM ${item.price}</span>
+            </div>
+            <div class="text-[9px] text-scada-muted">Intercept: ${item.alt}</div>
+          </div>
+        </label>
+      `).join('');
+    }
+
+    function toggleSaaSItem(idx) {
+      saasMatrix[idx].checked = !saasMatrix[idx].checked;
+      playTacticalSound(650, 'square', 0.02);
+      calculateFinancials();
+    }
+
+    function onSeatInput(val) {
+      currentSeats = parseInt(val);
+      document.getElementById('seat-readout').innerText = `${currentSeats < 10 ? '0' + currentSeats : currentSeats} OPERATORS`;
+      updateSeatPresetsUI();
+      playTacticalSound(500 + currentSeats * 6, 'sine', 0.015);
+      calculateFinancials();
+    }
+
+    function setSeats(n) {
+      currentSeats = n;
+      document.getElementById('seatRange').value = n;
+      document.getElementById('seat-readout').innerText = `${currentSeats < 10 ? '0' + currentSeats : currentSeats} OPERATORS`;
+      updateSeatPresetsUI();
+      playTacticalSound(900, 'square', 0.03);
+      calculateFinancials();
+    }
+
+    function updateSeatPresetsUI() {
+      [5, 15, 50].forEach(p => {
+        const btn = document.getElementById('btn-seat-' + p);
+        if (p === currentSeats) {
+          btn.className = "p-1.5 bg-scada-amber/20 border border-scada-amber text-scada-amber font-bold transition";
+        } else {
+          btn.className = "p-1.5 bg-scada-pitch border border-scada-border text-scada-muted hover:border-scada-cyan hover:text-scada-cyan transition";
+        }
+      });
+    }
+
+    function calculateFinancials() {
+      const seats = currentSeats;
+      let rawMonthly = 0;
+
+      saasMatrix.forEach(item => {
+        if (item.checked) {
+          if (item.type === 'seat') rawMonthly += (item.price * seats);
+          else rawMonthly += item.price;
+        }
+      });
+
+      const sst = rawMonthly * 0.08;
+      const grossCloud = Math.round(rawMonthly + sst);
+      const homelabOpex = 24.00; // TNB 65W
+      const netMonthly = Math.max(0, grossCloud - homelabOpex);
+
+      let capex = 10000;
+      let capexTier = 'Tier: 15-Seat Appliance';
+      if (seats <= 5) {
+        capex = 6500;
+        capexTier = 'Tier: Squad Appliance (5-Seat)';
+      } else if (seats > 30) {
+        capex = 18000;
+        capexTier = 'Tier: Regiment High-Availability (50-Seat)';
+      }
+
+      const breakeven = netMonthly > 0 ? (capex / netMonthly).toFixed(1) : '∞';
+      const threeYrNet = (netMonthly * 36) - capex;
+
+      // Update DOM
+      document.getElementById('val-cloud-bill').innerText = `RM ${grossCloud.toLocaleString()}`;
+      document.getElementById('val-cloud-sst').innerText = `Incl. 8% Digital SST (RM ${Math.round(sst).toLocaleString()})`;
+      document.getElementById('val-net-monthly').innerText = `RM ${Math.round(netMonthly).toLocaleString()}`;
+      document.getElementById('val-capex').innerText = `RM ${capex.toLocaleString()}`;
+      document.getElementById('val-capex-tier').innerText = capexTier;
+
+      document.getElementById('hud-breakeven').innerText = `${breakeven} MONTHS`;
+      document.getElementById('val-breakeven-pill').innerText = `${breakeven} MONTHS`;
+      document.getElementById('hud-monthly-retain').innerText = `THEN RM ${Math.round(netMonthly).toLocaleString()} / MO CASH RETAINED`;
+      document.getElementById('hud-3yr-reserve').innerText = `RM ${Math.max(0, Math.round(threeYrNet)).toLocaleString()}`;
+
+      renderSegmentedBar(parseFloat(breakeven) || 12);
+    }
+
+    function renderSegmentedBar(months) {
+      const bar = document.getElementById('segmented-bar');
+      const cells = 20;
+      const activeCount = Math.max(1, Math.min(20, Math.round((1 - (months / 24)) * 20)));
+
+      let html = '';
+      for (let i = 0; i < cells; i++) {
+        let color = 'bg-[#151d27]';
+        if (i < activeCount) {
+          if (i < 12) color = 'bg-scada-green shadow-[0_0_4px_#00ff66]';
+          else if (i < 17) color = 'bg-scada-amber shadow-[0_0_4px_#ffaa00]';
+          else color = 'bg-scada-red shadow-[0_0_4px_#ff3344]';
+        }
+        html += `<span class="flex-1 ${color} inline-block"></span>`;
+      }
+      bar.innerHTML = html;
+    }
+
+    function triggerDispatch() {
+      playTacticalSound(1100, 'square', 0.08);
+      alert('STRATCOM DISPATCH: Sovereign Hardware Bill of Materials generated. Commissioning on-premise installation team.');
+    }
+
+    function launchSocketDirect(name) {
+      playTacticalSound(950, 'sine', 0.05);
+      alert(`AIR-GAP BRIDGE: Establishing secure encrypted TLS handshake to ${name}.`);
+    }
+
+    function triggerThreatCycle() {
+      playTacticalSound(400, 'sawtooth', 0.12);
+      const q = document.getElementById('header-quorum');
+      q.innerHTML = '<span class="text-scada-red animate-pulse">AIR-GAP SWEEP IN PROGRESS...</span>';
+      setTimeout(() => {
+        q.innerText = '23/23 LOCKED';
+        playTacticalSound(1200, 'sine', 0.04);
+      }, 900);
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. System Dual Clocks & Accrual Ticker
+    // -------------------------------------------------------------------------
+    function startClocks() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById('clock-utc').innerText = now.toUTCString().split(' ')[4];
+        
+        // MYT is UTC+8
+        const myt = new Date(now.getTime() + (8 * 3600 * 1000));
+        document.getElementById('clock-myt').innerText = myt.toUTCString().split(' ')[4];
+      }, 1000);
+
+      let saved = 2000034;
+      setInterval(() => {
+        saved += Math.floor(Math.random() * 3) + 1;
+        document.getElementById('hud-tax-saved').innerText = `RM ${saved.toLocaleString()}`;
+      }, 3000);
+    }
+
+    // Init
+    window.onload = function() {
+      renderNodeList();
+      selectNode(0);
+      renderSaaSChecklist();
+      calculateFinancials();
+      startClocks();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HomeLAB.my // STUDER A800-MYS MASTERING CONSOLE</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Space Grotesk, Syne, JetBrains Mono, Playfair for classic Hi-Fi engraving -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:ital,wght@0,300;0,400;0,600;0,800;1,400&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['"Chivo Mono"', 'monospace'],
+            sans: ['"Space Grotesk"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif']
+          },
+          colors: {
+            deck: {
+              walnut: '#2b1b14',
+              walnutDark: '#1a100b',
+              champagne: '#c8b693',
+              champagneLight: '#ded1b4',
+              gunmetal: '#1c1f24',
+              gunmetalDark: '#121417',
+              meterAmber: '#ffaa33',
+              meterGlow: '#fff3cc',
+              faderSlot: '#0a0b0d',
+              lampRed: '#ff2a2a',
+              lampGreen: '#24e073',
+              lampAmber: '#f59e0b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ======================================================================= */
+    /* ANALOG TAPE DECK & MASTERING CONSOLE STYLING                           */
+    /* ======================================================================= */
+    :root {
+      --needle-cloud: -20deg;
+      --needle-homelab: 12deg;
+    }
+
+    body {
+      background-color: #0c0e11;
+      color: #ded1b4;
+      font-family: 'Space Grotesk', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(38, 25, 18, 0.4) 0%, rgba(8, 10, 12, 0.98) 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.5) 2px, rgba(0, 0, 0, 0.5) 4px);
+    }
+
+    /* Natural Walnut Wood Side-Cheek Texture */
+    .wood-grain {
+      background: linear-gradient(90deg, #1c100a 0%, #3a2217 25%, #2a1810 50%, #452b1e 75%, #180e09 100%);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.9);
+      border: 1px solid #4a3022;
+    }
+
+    /* Brushed Anodized Gunmetal Aluminum Chassis */
+    .metal-chassis {
+      background: linear-gradient(180deg, #282d34 0%, #1c2025 50%, #16191d 100%);
+      border: 1px solid #3d444e;
+      box-shadow: 
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        inset 0 0 40px rgba(0,0,0,0.6),
+        0 15px 35px rgba(0,0,0,0.9);
+    }
+
+    /* Champagne Brushed Gold Front-Panel Inset */
+    .champagne-panel {
+      background: linear-gradient(180deg, #ded1b4 0%, #b8a37d 50%, #9e8965 100%);
+      color: #1a1611;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.5);
+    }
+
+    /* Machined Flush Flat-Head Bezel Screws */
+    .bezel-screw {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #555e69 0%, #1e2227 80%);
+      border: 1px solid #2b3138;
+      position: relative;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.7);
+    }
+    .bezel-screw::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 15%;
+      right: 15%;
+      height: 1.5px;
+      background: #0f1215;
+      transform: translateY(-50%) rotate(38deg);
+      box-shadow: 0 0.5px 0.5px rgba(255,255,255,0.2);
+    }
+
+    /* Tape Reel Physical Geometry */
+    .tape-reel {
+      border-radius: 50%;
+      box-shadow: 
+        0 8px 24px rgba(0,0,0,0.8),
+        inset 0 0 20px rgba(0,0,0,0.9),
+        0 0 0 3px #181c22;
+      position: relative;
+    }
+    .reel-window {
+      clip-path: polygon(50% 50%, 20% 0, 80% 0);
+    }
+
+    /* Smooth Reel Rotation */
+    @keyframes reelSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .spinning-15ips {
+      animation: reelSpin 2.6s linear infinite;
+    }
+    .spinning-30ips {
+      animation: reelSpin 1.3s linear infinite;
+    }
+    .spinning-rewind {
+      animation: reelSpin 0.6s linear infinite reverse;
+    }
+    .spinning-paused {
+      animation-play-state: paused !important;
+    }
+
+    /* Backlit Analog VU Meter Chamber */
+    .vu-meter-chamber {
+      background: radial-gradient(circle at 50% 90%, #fff7d6 0%, #ffc86b 40%, #e69d30 80%, #7d4905 100%);
+      border: 3px solid #14171a;
+      box-shadow: 
+        inset 0 0 25px rgba(0,0,0,0.7),
+        0 0 15px rgba(255, 170, 51, 0.25),
+        0 4px 10px rgba(0,0,0,0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* VU Meter Needle with Smooth Inertia Physics */
+    .vu-needle {
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      width: 2px;
+      height: 105px;
+      background: #111;
+      transform-origin: bottom center;
+      transition: transform 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      box-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+    }
+    .vu-needle::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -2px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #cc2200;
+    }
+
+    /* Studio 100mm Potentiometer Fader */
+    .fader-slot {
+      background: #090a0d;
+      border: 2px solid #2a3038;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.95);
+      position: relative;
+    }
+    .fader-cap {
+      width: 48px;
+      height: 32px;
+      background: linear-gradient(180deg, #58616d 0%, #373d45 35%, #1e2226 70%, #30353c 100%);
+      border: 1px solid #14171a;
+      border-radius: 2px;
+      box-shadow: 
+        0 6px 12px rgba(0,0,0,0.8),
+        inset 0 1px 1px rgba(255,255,255,0.4),
+        inset 0 -1px 2px rgba(0,0,0,0.8);
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: grab;
+      touch-action: none;
+    }
+    .fader-cap:active {
+      cursor: grabbing;
+      filter: brightness(1.1);
+    }
+    .fader-cap-indicator {
+      width: 100%;
+      height: 2px;
+      background: #ffcc00;
+      box-shadow: 0 0 4px #ffcc00;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Solenoid Push-Switch Button with Jewel Lamp */
+    .studio-switch {
+      background: linear-gradient(180deg, #373e46 0%, #202428 100%);
+      border: 2px solid #4a545e;
+      border-bottom-color: #121417;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.08s ease;
+    }
+    .studio-switch:active, .studio-switch.pressed {
+      transform: translateY(2px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.9), inset 0 2px 4px rgba(0,0,0,0.8);
+      background: linear-gradient(180deg, #181b1f 0%, #2a3036 100%);
+    }
+    .jewel-lamp {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid #111;
+      background: #331515;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
+      display: inline-block;
+    }
+    .jewel-lamp.lit-red {
+      background: #ff2233;
+      box-shadow: 0 0 10px #ff2233, inset 0 1px 2px #fff;
+    }
+    .jewel-lamp.lit-green {
+      background: #00ff66;
+      box-shadow: 0 0 10px #00ff66, inset 0 1px 2px #fff;
+    }
+    .jewel-lamp.lit-amber {
+      background: #ffaa00;
+      box-shadow: 0 0 10px #ffaa00, inset 0 1px 2px #fff;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen p-2 sm:p-4 lg:p-8 flex flex-col justify-center items-center">
+
+  <!-- ========================================================================= -->
+  <!-- MASTERING DECK CABINET (WALNUT WOOD SIDES & BRUSHED GUNMETAL FRONT)       -->
+  <!-- ========================================================================= -->
+  <div class="w-full max-w-7xl wood-grain p-2.5 sm:p-5 rounded-lg shadow-2xl flex flex-col space-y-4">
+
+    <!-- MAIN CHASSIS ENCLOSURE -->
+    <div class="metal-chassis rounded p-3 sm:p-6 text-deck-champagne relative flex flex-col space-y-6">
+
+      <!-- FLUSH CORNER BEZEL SCREWS -->
+      <div class="bezel-screw absolute top-3 left-3"></div>
+      <div class="bezel-screw absolute top-3 right-3"></div>
+      <div class="bezel-screw absolute bottom-3 left-3"></div>
+      <div class="bezel-screw absolute bottom-3 right-3"></div>
+
+      <!-- ======================================================================= -->
+      <!-- 1. TOP MASTERING METRICS & MACHINE MODEL HEADER                         -->
+      <!-- ======================================================================= -->
+      <header class="border-b-2 border-[#2b333d] pb-4 flex flex-wrap items-center justify-between gap-4 px-2">
+        
+        <!-- Hi-Fi Machine Plate -->
+        <div class="flex items-center space-x-3.5">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-black via-[#373e48] to-[#6c7887] border-2 border-[#485360] flex items-center justify-center shadow-lg">
+            <span class="font-serif font-black text-xl italic text-amber-200">H</span>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-black text-lg sm:text-xl tracking-tight text-white font-serif uppercase">
+                HOMELAB.MY // A800-MYS
+              </span>
+              <span class="text-[10px] font-mono px-2 py-0.5 bg-black border border-amber-600/40 text-amber-400 font-bold rounded">
+                MASTERING CONSOLE
+              </span>
+            </div>
+            <p class="text-[11px] font-mono text-stone-400">
+              HIGH-FIDELITY LOCAL SILICON DATA RESIDENCY // ZERO STREAMING RECURRING TAX
+            </p>
+          </div>
+        </div>
+
+        <!-- Telemetry Broadcast Indicators -->
+        <div class="flex flex-wrap items-center gap-3 sm:gap-6 font-mono text-xs">
+          
+          <!-- Master Quorum Tape Lock -->
+          <div class="flex items-center space-x-2 bg-black/60 px-3 py-1.5 border border-[#2b333d] rounded">
+            <span class="jewel-lamp lit-green" id="lamp-transport"></span>
+            <span class="text-[10px] text-stone-400 uppercase">QUORUM:</span>
+            <span class="font-bold text-white text-xs" id="stat-quorum">23 / 23 CHANNELS</span>
+          </div>
+
+          <!-- TNB Electricity Power -->
+          <div class="flex items-center space-x-2 bg-black/60 px-3 py-1.5 border border-[#2b333d] rounded">
+            <span class="text-amber-400 font-bold">⚡</span>
+            <span class="text-[10px] text-stone-400 uppercase">TNB OPEX:</span>
+            <span class="font-bold text-white text-xs">65W <span class="text-stone-400">@ RM 24.10/MO</span></span>
+          </div>
+
+          <!-- Digital SST Exemption -->
+          <div class="hidden sm:flex items-center space-x-2 bg-black/60 px-3 py-1.5 border border-[#2b333d] rounded">
+            <span class="text-[10px] text-stone-400 uppercase">8% DIGITAL SST:</span>
+            <span class="font-bold text-emerald-400 text-xs">0% EXEMPT</span>
+          </div>
+
+          <!-- Sound Synthesizer Master Mute Button -->
+          <button onclick="toggleDeckAudio()" id="btn-deck-audio" class="studio-switch px-3 py-1.5 rounded flex items-center space-x-1.5 text-xs text-stone-200" title="Audio Tone & Tape Whir">
+            <span id="audio-icon">🔊</span>
+            <span id="audio-label">MONITOR: ON</span>
+          </button>
+
+        </div>
+
+      </header>
+
+      <!-- ======================================================================= -->
+      <!-- 2. REEL-TO-REEL TAPE TRANSPORT DECK & DUAL ANALOG NEEDLE VU METERS      -->
+      <!-- ======================================================================= -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+
+        <!-- DUAL MAGNETIC REELS & TAPE PATH (Cols 1-7) -->
+        <div class="lg:col-span-7 bg-[#14171b] border-2 border-[#2b323c] rounded-md p-4 sm:p-6 shadow-inner relative flex flex-col justify-between space-y-4">
+          
+          <div class="flex justify-between items-center text-xs font-mono text-stone-400 border-b border-[#242b33] pb-2">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <span>STUDER 2-INCH MASTER TAPE TRANSPORT</span>
+            </span>
+            <span class="text-white font-bold" id="speed-indicator">TAPE SPEED: 30 IPS [STUDIO MASTER]</span>
+          </div>
+
+          <!-- The Two Reels on Mechanical Deck Plate -->
+          <div class="flex flex-wrap sm:flex-nowrap items-center justify-around py-4 gap-6 relative">
+            
+            <!-- Supply Reel (Left - High Cloud Outflow) -->
+            <div class="flex flex-col items-center space-y-2">
+              <div class="tape-reel w-36 h-36 sm:w-44 sm:h-44 bg-gradient-to-br from-[#404854] via-[#242a32] to-[#14171a] flex items-center justify-center p-3 relative" id="supplyReel">
+                <!-- Outer Aluminum Flange Spokes -->
+                <div class="absolute inset-2 border-2 border-[#5a6575]/40 rounded-full"></div>
+                <!-- 3 Spoke Cutouts -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="w-full h-4 bg-[#14171b] -rotate-45"></div>
+                  <div class="w-full h-4 bg-[#14171b] rotate-45"></div>
+                </div>
+                <!-- Tape Pack (Dark Brown Magnetic Tape) -->
+                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#301b13] border-4 border-[#1c0f0a] shadow-inner flex items-center justify-center z-10">
+                  <!-- Machined Center Hub Lock -->
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#99a6b5] via-[#4f5863] to-[#1e2227] border-2 border-black flex items-center justify-center shadow-lg">
+                    <div class="w-4 h-4 rounded-full bg-black border border-stone-400"></div>
+                  </div>
+                </div>
+              </div>
+              <span class="text-[11px] font-mono font-bold text-stone-300">SUPPLY: RECURRING SAAS SPEND</span>
+            </div>
+
+            <!-- Center Tape Path & Heads Housing -->
+            <div class="hidden sm:flex flex-col items-center justify-center space-y-2 px-2 z-20">
+              <div class="w-16 h-20 bg-gradient-to-b from-[#2e353f] to-[#1a1e23] border border-[#485361] rounded shadow flex flex-col items-center justify-around py-1">
+                <span class="text-[8px] font-mono text-amber-300 uppercase tracking-tighter">REC / PLAY</span>
+                <!-- 3 Heads: Erase, Record, Playback -->
+                <div class="w-8 h-2 bg-stone-300 rounded-sm"></div>
+                <div class="w-8 h-2.5 bg-amber-200 border border-amber-500 rounded-sm"></div>
+                <div class="w-8 h-2 bg-stone-300 rounded-sm"></div>
+                <span class="text-[8px] font-mono text-stone-400">SOVEREIGN</span>
+              </div>
+              <!-- Tension Roller Pins -->
+              <div class="flex space-x-6">
+                <div class="w-3 h-3 rounded-full bg-stone-400 border border-black shadow"></div>
+                <div class="w-3 h-3 rounded-full bg-stone-400 border border-black shadow"></div>
+              </div>
+            </div>
+
+            <!-- Take-Up Reel (Right - Sovereign Capital Inflow) -->
+            <div class="flex flex-col items-center space-y-2">
+              <div class="tape-reel w-36 h-36 sm:w-44 sm:h-44 bg-gradient-to-br from-[#404854] via-[#242a32] to-[#14171a] flex items-center justify-center p-3 relative" id="takeupReel">
+                <!-- Outer Aluminum Flange Spokes -->
+                <div class="absolute inset-2 border-2 border-[#5a6575]/40 rounded-full"></div>
+                <!-- 3 Spoke Cutouts -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="w-full h-4 bg-[#14171b] -rotate-45"></div>
+                  <div class="w-full h-4 bg-[#14171b] rotate-45"></div>
+                </div>
+                <!-- Tape Pack (Large spool accumulated) -->
+                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#301b13] border-4 border-[#1c0f0a] shadow-inner flex items-center justify-center z-10">
+                  <!-- Machined Center Hub Lock -->
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#99a6b5] via-[#4f5863] to-[#1e2227] border-2 border-black flex items-center justify-center shadow-lg">
+                    <div class="w-4 h-4 rounded-full bg-black border border-stone-400"></div>
+                  </div>
+                </div>
+              </div>
+              <span class="text-[11px] font-mono font-bold text-amber-300">TAKE-UP: SOVEREIGN ASSET ACCRUAL</span>
+            </div>
+
+          </div>
+
+          <!-- Physical Tape Transport Solenoid Buttons -->
+          <div class="flex flex-wrap items-center justify-between border-t border-[#242b33] pt-3 gap-2">
+            
+            <div class="flex items-center space-x-1.5 font-mono text-xs">
+              <button onclick="setTapeTransport('play')" id="btn-transport-play" class="studio-switch pressed px-3 py-1.5 rounded font-bold text-white flex items-center space-x-1">
+                <span class="text-emerald-400">▶</span> <span>PLAY (RUN)</span>
+              </button>
+              <button onclick="setTapeTransport('pause')" id="btn-transport-pause" class="studio-switch px-3 py-1.5 rounded font-bold text-stone-300 flex items-center space-x-1">
+                <span>⏸</span> <span>STOP</span>
+              </button>
+              <button onclick="setTapeTransport('ff')" id="btn-transport-ff" class="studio-switch px-3 py-1.5 rounded font-bold text-stone-300 flex items-center space-x-1">
+                <span>⏩</span> <span>30 IPS BOOST</span>
+              </button>
+            </div>
+
+            <div class="text-[11px] font-mono text-stone-400 flex items-center space-x-2">
+              <span>BIAS: CCIR // HIGH-OUTPUT TAPE</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- DUAL ANALOG NEEDLE VU METERS (Cols 8-12) -->
+        <div class="lg:col-span-5 flex flex-col space-y-4">
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- LEFT VU METER: SAAS EXPENDITURE LEVEL (DRAIN) -->
+            <div class="bg-[#14171a] p-3 rounded border-2 border-[#2b333c] flex flex-col items-center">
+              <div class="w-full flex justify-between text-[10px] font-mono font-bold text-stone-300 mb-1">
+                <span>VU-METER 01</span>
+                <span class="text-rose-400">SAAS LEAKAGE</span>
+              </div>
+
+              <!-- Meter Chamber -->
+              <div class="vu-meter-chamber w-full h-28 rounded relative flex flex-col justify-between p-2">
+                <!-- Scale Markings (-20 to +3 dB) -->
+                <div class="flex justify-between text-[9px] font-mono font-black text-black px-1 z-10 select-none">
+                  <span>-20</span>
+                  <span>-10</span>
+                  <span>-7</span>
+                  <span>-3</span>
+                  <span class="text-red-700">0</span>
+                  <span class="text-red-700">+1</span>
+                  <span class="text-red-700 font-extrabold">+3</span>
+                </div>
+
+                <div class="text-center text-[10px] font-serif font-black text-black/70 italic tracking-wider z-10">
+                  RECURRING DRAIN (dB)
+                </div>
+
+                <!-- Needle Indicator -->
+                <div class="vu-needle" id="needleLeft" style="transform: rotate(var(--needle-cloud));"></div>
+              </div>
+
+              <!-- Digital Readout Value -->
+              <div class="w-full mt-2 pt-1 border-t border-[#262c34] flex justify-between text-xs font-mono">
+                <span class="text-stone-400">CLOUD SAAS:</span>
+                <span class="font-bold text-rose-400" id="meter-val-saas">RM 1,196 /mo</span>
+              </div>
+            </div>
+
+            <!-- RIGHT VU METER: CAPITAL RETENTION & BREAKEVEN SPEED -->
+            <div class="bg-[#14171a] p-3 rounded border-2 border-[#2b333c] flex flex-col items-center">
+              <div class="w-full flex justify-between text-[10px] font-mono font-bold text-stone-300 mb-1">
+                <span>VU-METER 02</span>
+                <span class="text-emerald-400">SOVEREIGN EQUITY</span>
+              </div>
+
+              <!-- Meter Chamber -->
+              <div class="vu-meter-chamber w-full h-28 rounded relative flex flex-col justify-between p-2">
+                <!-- Scale Markings (-20 to +3 dB) -->
+                <div class="flex justify-between text-[9px] font-mono font-black text-black px-1 z-10 select-none">
+                  <span>-20</span>
+                  <span>-10</span>
+                  <span>-7</span>
+                  <span>-3</span>
+                  <span class="text-red-700">0</span>
+                  <span class="text-red-700">+1</span>
+                  <span class="text-red-700 font-extrabold">+3</span>
+                </div>
+
+                <div class="text-center text-[10px] font-serif font-black text-black/70 italic tracking-wider z-10">
+                  AMORTIZATION GAIN (dB)
+                </div>
+
+                <!-- Needle Indicator -->
+                <div class="vu-needle" id="needleRight" style="transform: rotate(var(--needle-homelab));"></div>
+              </div>
+
+              <!-- Digital Readout Value -->
+              <div class="w-full mt-2 pt-1 border-t border-[#262c34] flex justify-between text-xs font-mono">
+                <span class="text-stone-400">NET RETAINED:</span>
+                <span class="font-bold text-emerald-400" id="meter-val-net">RM 1,172 /mo</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Breakeven Gold Record Milestone Banner -->
+          <div class="champagne-panel p-3.5 rounded flex items-center justify-between text-xs font-mono">
+            <div>
+              <div class="text-[10px] font-black uppercase tracking-wider text-black/70">
+                MASTER TAPE HARDWARE PAYBACK:
+              </div>
+              <div class="text-lg font-black text-black font-sans mt-0.5" id="val-breakeven-banner">
+                8.5 MONTHS TO ZERO DEBT
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[10px] text-black/70 block">36-MO REVENUE YIELD:</span>
+              <span class="text-sm font-black text-emerald-950 font-mono" id="val-3yr-banner">RM 32,187</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ======================================================================= -->
+      <!-- 3. STUDIO 100mm FADER CONSOLE & ILLUMINATED SAAS CHANNEL STRIPS         -->
+      <!-- ======================================================================= -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#16191d] border-2 border-[#2b333c] p-4 sm:p-6 rounded-md">
+
+        <!-- 100mm CALIBRATED MASTER FADER (Cols 1-4) -->
+        <div class="lg:col-span-4 bg-[#111316] border border-[#23282f] p-4 rounded flex flex-col justify-between">
+          
+          <div>
+            <div class="flex justify-between items-center border-b border-[#23282f] pb-2 mb-3">
+              <span class="text-xs font-bold font-mono uppercase text-white flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                <span>HEADCOUNT POTENTIOMETER</span>
+              </span>
+              <span class="text-[10px] font-mono text-stone-400">100mm THROW</span>
+            </div>
+
+            <p class="text-[11px] font-mono text-stone-400 mb-4 leading-relaxed">
+              Calibrate company user seats. The fader adjusts software bandwidth, license concurrency, and Capex appliance sizing.
+            </p>
+          </div>
+
+          <!-- Vertical Studio Fader Assembly -->
+          <div class="flex items-center justify-center space-x-6 py-2">
+            
+            <!-- dB Scale Markings Left -->
+            <div class="flex flex-col justify-between h-48 text-[10px] font-mono font-bold text-stone-400 select-none py-1">
+              <span>+6 dB</span>
+              <span>+3 dB</span>
+              <span class="text-amber-400">0 dB (REF)</span>
+              <span>-5 dB</span>
+              <span>-10 dB</span>
+              <span>-20 dB</span>
+              <span>-∞ dB</span>
+            </div>
+
+            <!-- Fader Track -->
+            <div class="fader-slot w-10 h-48 rounded relative" id="faderTrack">
+              <!-- Center Guide Slot -->
+              <div class="w-1.5 h-full bg-black mx-auto"></div>
+              
+              <!-- Draggable Fader Knob (Manipulated by JS) -->
+              <div class="fader-cap" id="faderKnob" style="top: 85px;">
+                <div class="fader-cap-indicator"></div>
+              </div>
+            </div>
+
+            <!-- Seat Scale Markings Right -->
+            <div class="flex flex-col justify-between h-48 text-[10px] font-mono font-bold text-stone-400 select-none py-1">
+              <span>100 SEATS</span>
+              <span>50 SEATS</span>
+              <span class="text-amber-400">15 SEATS</span>
+              <span>10 SEATS</span>
+              <span>05 SEATS</span>
+              <span>02 SEATS</span>
+              <span>01 SEAT</span>
+            </div>
+
+          </div>
+
+          <!-- Fader Readout Display -->
+          <div class="mt-4 pt-3 border-t border-[#23282f] flex justify-between items-center font-mono">
+            <span class="text-xs text-stone-400">CONCURRENT SEATS:</span>
+            <span class="px-3 py-1 bg-black border border-amber-600/40 text-amber-300 font-black text-sm rounded" id="fader-seat-readout">
+              15 SEATS
+            </span>
+          </div>
+
+        </div>
+
+        <!-- REPLACED SAAS CONSOLE CHANNELS WITH JEWEL LAMPS (Cols 5-12) -->
+        <div class="lg:col-span-8 flex flex-col justify-between space-y-4">
+          
+          <div>
+            <div class="flex justify-between items-center border-b border-[#23282f] pb-2 mb-3">
+              <span class="text-xs font-bold font-mono uppercase text-white flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>SAAS CHANNEL STRIP ISOLATION (CLICK TO TOGGLE BUS)</span>
+              </span>
+              <span class="text-[10px] font-mono text-emerald-400 font-bold">ALL CHANNELS SOVEREIGN</span>
+            </div>
+
+            <!-- 6 Channel Strips Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs" id="channelStripGrid">
+              <!-- Rendered dynamically via JS -->
+            </div>
+          </div>
+
+          <!-- Ledger Balance Strip -->
+          <div class="bg-black/60 p-3.5 rounded border border-[#2b333c] grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+            <div>
+              <span class="text-[10px] text-stone-400 block">CLOUD BILL (8% SST):</span>
+              <span class="font-bold text-rose-400 text-sm" id="ledger-cloud">RM 1,196.00</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-stone-400 block">TNB ELECTRICITY:</span>
+              <span class="font-bold text-stone-200 text-sm">RM 24.10</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-stone-400 block">NET MONTHLY RECOVERY:</span>
+              <span class="font-bold text-emerald-400 text-sm" id="ledger-net">RM 1,171.90</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-stone-400 block">1X HARDWARE CAPEX:</span>
+              <span class="font-bold text-amber-300 text-sm" id="ledger-capex">RM 10,000.00</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ======================================================================= -->
+      <!-- 4. SOVEREIGN PATCHBAY: 7 WORKHORSE MASTERING NODES                      -->
+      <!-- ======================================================================= -->
+      <section class="bg-[#14171b] border-2 border-[#2b323c] rounded p-4 space-y-3">
+        
+        <div class="flex flex-wrap items-center justify-between border-b border-[#22272e] pb-2 gap-2 text-xs font-mono">
+          <div class="flex items-center space-x-2">
+            <span class="text-amber-400 font-black">●</span>
+            <span class="font-bold text-white uppercase tracking-wider">
+              STUDIO PATCHBAY // SOVEREIGN WORKHORSE APPLICATION STRIPS
+            </span>
+          </div>
+          <span class="text-stone-400 text-[11px]">CLICK JACK TO INSPECT CHANNEL STRIP IMPEDANCE & SPECS</span>
+        </div>
+
+        <!-- 7 Patchbay Jacks -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5" id="patchbayJacks">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- Active Patchbay Channel Inspector -->
+        <div class="bg-[#0e1013] border border-[#232931] p-3 rounded text-xs font-mono space-y-2 mt-2" id="patchbayInspector">
+          <div class="flex justify-between items-center text-amber-300 font-bold border-b border-[#1f242b] pb-1">
+            <span id="inspect-title">CH 01: NEXTCLOUD HUB 30 // MASTER SUITE</span>
+            <span class="text-emerald-400 text-[10px]">STATUS: MASTER SIGNAL LOCKED</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px]">
+            <div>
+              <span class="text-stone-400 block text-[9px]">IMPEDANCE / PORT BINDING:</span>
+              <span class="text-white font-bold" id="inspect-port">PORT: 8443 / TLS 1.3</span>
+            </div>
+            <div>
+              <span class="text-stone-400 block text-[9px]">MEMORY LOAD (ECC RAM):</span>
+              <span class="text-white font-bold" id="inspect-mem">1024 MB DDR5</span>
+            </div>
+            <div>
+              <span class="text-stone-400 block text-[9px]">DISPLACED CLOUD COMPRESSION:</span>
+              <span class="text-rose-400 font-bold" id="inspect-replaces">Microsoft 365 + OneDrive</span>
+            </div>
+          </div>
+
+          <p class="text-stone-300 text-[11px] leading-relaxed pt-1 border-t border-[#1a1f26]" id="inspect-desc">
+            Primary sovereign collaboration layer. Handles encrypted document vaults, synchronized calendar shares, Kanban workflow cards, and peer-to-peer WebRTC video channels without external telemetry exposure.
+          </p>
+
+          <div class="flex justify-between items-center pt-2">
+            <span class="text-[10px] text-stone-500">RESIDENCY: MALAYSIA (PDPA 2010 COMPLIANT)</span>
+            <button onclick="launchAppDirect()" class="studio-switch px-3 py-1 rounded text-white font-bold text-[10px] bg-amber-600/30 border-amber-500/60">
+              ENGAGE MONITOR ➔
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ======================================================================= -->
+      <!-- 5. BOTTOM MASTERING ENGRAVING & SPEC FOOTER                             -->
+      <!-- ======================================================================= -->
+      <footer class="border-t-2 border-[#2b333d] pt-3 flex flex-wrap items-center justify-between text-xs font-mono text-stone-400 gap-3 px-2">
+        <div class="flex items-center space-x-3">
+          <span>MODEL: STUDER-A800-MYS</span>
+          <span>•</span>
+          <span>FREQ RESPONSE: 20Hz - 20,000Hz ±0.5dB</span>
+          <span class="hidden md:inline">•</span>
+          <span class="hidden md:inline">JURISDICTION: KUALA LUMPUR, MALAYSIA</span>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span class="text-white font-bold">100% UNCOMPRESSED SOVEREIGN HARDWARE</span>
+        </div>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: AUDIO SYNTHESIS, VU METER DYNAMICS & INTERACTION              -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. Web Audio API Engine: Tape Whir, Solenoids, and Test Tones
+    // -------------------------------------------------------------------------
+    let deckAudioEnabled = true;
+    let audioCtx = null;
+    let tapeHumOsc = null;
+    let tapeHumGain = null;
+
+    function initDeckAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Background magnetic capstan hum (subtle 50Hz/60Hz tape motor whir)
+        tapeHumOsc = audioCtx.createOscillator();
+        tapeHumGain = audioCtx.createGain();
+        tapeHumOsc.type = 'triangle';
+        tapeHumOsc.frequency.setValueAtTime(55, audioCtx.currentTime);
+        tapeHumGain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+        tapeHumOsc.connect(tapeHumGain);
+        tapeHumGain.connect(audioCtx.destination);
+        tapeHumOsc.start();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSolenoidThud(freq = 120, duration = 0.04) {
+      if (!deckAudioEnabled) return;
+      try {
+        initDeckAudio();
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t);
+        osc.frequency.exponentialRampToValueAtTime(30, t + duration);
+        gain.gain.setValueAtTime(0.2, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + duration);
+      } catch (e) {}
+    }
+
+    function playTestTone(freq = 1000, duration = 0.05) {
+      if (!deckAudioEnabled) return;
+      try {
+        initDeckAudio();
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.05, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + duration);
+      } catch (e) {}
+    }
+
+    function toggleDeckAudio() {
+      deckAudioEnabled = !deckAudioEnabled;
+      const label = document.getElementById('audio-label');
+      const icon = document.getElementById('audio-icon');
+
+      if (deckAudioEnabled) {
+        initDeckAudio();
+        if (tapeHumGain) tapeHumGain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+        label.innerText = 'MONITOR: ON';
+        icon.innerText = '🔊';
+        playSolenoidThud(180, 0.05);
+      } else {
+        if (tapeHumGain && audioCtx) tapeHumGain.gain.setValueAtTime(0, audioCtx.currentTime);
+        label.innerText = 'MONITOR: OFF';
+        icon.innerText = '🔇';
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Sovereign Patchbay Applications Catalog
+    // -------------------------------------------------------------------------
+    const patchbayApps = [
+      {
+        id: 'nextcloud',
+        ch: 'CH 01',
+        name: 'Nextcloud Hub 30',
+        port: '8443 / TLS 1.3',
+        mem: '1024 MB DDR5',
+        replaces: 'Microsoft 365 + OneDrive (RM 32/seat)',
+        desc: 'Primary sovereign collaboration layer. Files, Talk, Deck, and Docs with full on-premise zero-trust encryption without third-party telemetry.'
+      },
+      {
+        id: 'docmost',
+        ch: 'CH 02',
+        name: 'Docmost Wiki Hub',
+        port: '3000 / HTTP',
+        mem: '512 MB DDR5',
+        replaces: 'Notion Team / Confluence (RM 45/seat)',
+        desc: 'Company knowledge base with hierarchical page trees, markdown tables, and live multi-user editing without per-seat cloud bills.'
+      },
+      {
+        id: 'bentopdf',
+        ch: 'CH 03',
+        name: 'BentoPDF Tool Suite',
+        port: '8080 / WASM',
+        mem: '128 MB VRAM',
+        replaces: 'Adobe Acrobat Pro DC (RM 65/seat)',
+        desc: 'Client-side WebAssembly PDF OCR, redaction, signature, and cryptographic merging with zero off-premise transmissions.'
+      },
+      {
+        id: 'invoiceninja',
+        ch: 'CH 04',
+        name: 'Invoice Ninja',
+        port: '8000 / HTTP',
+        mem: '512 MB DDR5',
+        replaces: 'Xero / QuickBooks Online (RM 80/mo)',
+        desc: 'Self-hosted invoicing, billing, expense tracking, and LHDN e-invoice compliance management portal for Malaysian SMEs.'
+      },
+      {
+        id: 'autocount',
+        ch: 'CH 05',
+        name: 'AutoCount Win10 KVM',
+        port: '3389 / RDP',
+        mem: '8192 MB KVM',
+        replaces: 'Azure Virtual Desktop (RM 350/mo)',
+        desc: 'Dedicated Windows 10 virtual machine executing AutoCount Accounting Server and MS SQL Database on bare metal NVMe.'
+      },
+      {
+        id: 'n8n',
+        ch: 'CH 06',
+        name: 'n8n Automation',
+        port: '5678 / WEBHOOK',
+        mem: '512 MB DDR5',
+        replaces: 'Zapier Team ($150/mo)',
+        desc: 'Visual node orchestration graph handling autonomous database migrations, CRM synchronization, and messaging pipelines.'
+      },
+      {
+        id: 'excalidraw',
+        ch: 'CH 07',
+        name: 'Excalidraw Board',
+        port: '5000 / HTTP',
+        mem: '256 MB DDR5',
+        replaces: 'Miro / Mural Enterprise (RM 40/seat)',
+        desc: 'Tactical collaborative canvas for network diagramming, system wireframes, and live architecture planning.'
+      }
+    ];
+
+    let selectedPatchIndex = 0;
+
+    // SaaS Channel Strips Catalog
+    const saasChannels = [
+      { id: 'ch-m365', name: 'Productivity Suite', alt: 'M365 / Google Workspace', cost: 32, type: 'seat', active: true },
+      { id: 'ch-acct', name: 'Accounting & e-Invoicing', alt: 'Xero / QuickBooks Online', cost: 80, type: 'fixed', active: true },
+      { id: 'ch-drive', name: '1TB Cloud Drive', alt: 'SharePoint / Google Drive', cost: 27, type: 'seat', active: true },
+      { id: 'ch-zap', name: 'Workflow Automation', alt: 'Zapier Team Plan', cost: 150, type: 'fixed', active: true },
+      { id: 'ch-wiki', name: 'Team Knowledge Base', alt: 'Notion Team / Confluence', cost: 45, type: 'seat', active: true },
+      { id: 'ch-pdf', name: 'PDF Utilities & Security', alt: 'Adobe Acrobat Pro DC', cost: 65, type: 'seat', active: false }
+    ];
+
+    let currentSeats = 15;
+    let transportState = 'play'; // 'play', 'pause', 'ff'
+
+    // -------------------------------------------------------------------------
+    // 3. Render Channels & Patchbay
+    // -------------------------------------------------------------------------
+    function renderChannelStrips() {
+      const container = document.getElementById('channelStripGrid');
+      container.innerHTML = saasChannels.map((ch, idx) => `
+        <div 
+          onclick="toggleChannel(${idx})"
+          class="studio-switch p-2.5 rounded cursor-pointer transition flex items-center justify-between border ${ch.active ? 'border-amber-600/60 bg-[#1e2329]' : 'border-[#262c33] opacity-60'}"
+        >
+          <div class="flex items-center space-x-2.5">
+            <span class="jewel-lamp ${ch.active ? 'lit-green' : ''}"></span>
+            <div>
+              <div class="font-bold text-white text-xs">${ch.name}</div>
+              <div class="text-[10px] text-stone-400">DISPLACES: ${ch.alt}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-amber-300 font-bold">RM ${ch.cost}</span>
+            <span class="text-[9px] text-stone-400 block">${ch.type === 'seat' ? '/seat' : '/flat'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleChannel(idx) {
+      saasChannels[idx].active = !saasChannels[idx].active;
+      playSolenoidThud(140, 0.03);
+      renderChannelStrips();
+      recalculateConsole();
+    }
+
+    function renderPatchbay() {
+      const container = document.getElementById('patchbayJacks');
+      container.innerHTML = patchbayApps.map((app, idx) => {
+        const isSelected = selectedPatchIndex === idx;
+        return `
+          <div 
+            onclick="selectPatch(${idx})"
+            class="p-2 rounded cursor-pointer text-center border transition flex flex-col items-center justify-between ${
+              isSelected 
+                ? 'bg-amber-950/40 border-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.3)]' 
+                : 'bg-[#111317] border-[#222830] hover:border-stone-500'
+            }"
+          >
+            <!-- 1/4" Headphone/Patch Jack Graphic -->
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-black via-[#373d46] to-[#121417] border-2 border-[#4b5563] flex items-center justify-center shadow-inner mb-1">
+              <div class="w-3.5 h-3.5 rounded-full bg-black border border-stone-500"></div>
+            </div>
+            <span class="text-[9px] font-bold text-amber-300 block">${app.ch}</span>
+            <span class="text-[10px] font-bold text-white truncate w-full">${app.name.split(' ')[0]}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectPatch(idx) {
+      selectedPatchIndex = idx;
+      playTestTone(880 + idx * 80, 0.04);
+      const app = patchbayApps[idx];
+      document.getElementById('inspect-title').innerText = `${app.ch}: ${app.name.toUpperCase()}`;
+      document.getElementById('inspect-port').innerText = app.port;
+      document.getElementById('inspect-mem').innerText = app.mem;
+      document.getElementById('inspect-replaces').innerText = app.replaces;
+      document.getElementById('inspect-desc').innerText = app.desc;
+      renderPatchbay();
+    }
+
+    function launchAppDirect() {
+      const app = patchbayApps[selectedPatchIndex];
+      playSolenoidThud(240, 0.06);
+      alert(`[BROADCAST MASTER] Engaging real-time telemetry feed to ${app.name} on ${app.port}. Master tape signal verified.`);
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Physical Studio 100mm Fader Mechanics
+    // -------------------------------------------------------------------------
+    const faderTrack = document.getElementById('faderTrack');
+    const faderKnob = document.getElementById('faderKnob');
+    let isDraggingFader = false;
+
+    function initFader() {
+      // Mouse & Touch listeners for studio fader
+      const handleMove = (clientY) => {
+        const rect = faderTrack.getBoundingClientRect();
+        let y = clientY - rect.top;
+        y = Math.max(0, Math.min(rect.height, y));
+
+        // Invert y: top = 100 seats, bottom = 1 seat
+        const pct = 1 - (y / rect.height);
+        let seats = Math.round(1 + pct * 99);
+        // Step snap to clean studio increments
+        if (seats > 5) seats = Math.round(seats / 5) * 5;
+        seats = Math.max(1, Math.min(100, seats));
+
+        currentSeats = seats;
+        document.getElementById('fader-seat-readout').innerText = `${seats < 10 ? '0' + seats : seats} SEATS`;
+        
+        // Position knob
+        faderKnob.style.top = `${y - 16}px`;
+
+        playTestTone(300 + seats * 8, 0.015);
+        recalculateConsole();
+      };
+
+      faderKnob.addEventListener('mousedown', (e) => {
+        isDraggingFader = true;
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDraggingFader) return;
+        handleMove(e.clientY);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isDraggingFader) {
+          isDraggingFader = false;
+          playSolenoidThud(100, 0.02);
+        }
+      });
+
+      // Touch for tablets / mobile
+      faderKnob.addEventListener('touchstart', (e) => {
+        isDraggingFader = true;
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDraggingFader) return;
+        handleMove(e.touches[0].clientY);
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        isDraggingFader = false;
+      });
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Tape Transport Speed Controls
+    // -------------------------------------------------------------------------
+    function setTapeTransport(mode) {
+      transportState = mode;
+      playSolenoidThud(mode === 'play' ? 160 : 80, 0.04);
+      
+      const supply = document.getElementById('supplyReel');
+      const takeup = document.getElementById('takeupReel');
+      const spd = document.getElementById('speed-indicator');
+      const lamp = document.getElementById('lamp-transport');
+
+      const btnPlay = document.getElementById('btn-transport-play');
+      const btnPause = document.getElementById('btn-transport-pause');
+      const btnFF = document.getElementById('btn-transport-ff');
+
+      [btnPlay, btnPause, btnFF].forEach(b => b.classList.remove('pressed'));
+
+      supply.className = 'tape-reel w-36 h-36 sm:w-44 sm:h-44 bg-gradient-to-br from-[#404854] via-[#242a32] to-[#14171a] flex items-center justify-center p-3 relative';
+      takeup.className = 'tape-reel w-36 h-36 sm:w-44 sm:h-44 bg-gradient-to-br from-[#404854] via-[#242a32] to-[#14171a] flex items-center justify-center p-3 relative';
+
+      if (mode === 'play') {
+        btnPlay.classList.add('pressed');
+        supply.classList.add('spinning-15ips');
+        takeup.classList.add('spinning-15ips');
+        spd.innerText = 'TAPE SPEED: 15 IPS [BROADCAST RUN]';
+        lamp.className = 'jewel-lamp lit-green';
+        if (tapeHumGain && audioCtx) tapeHumGain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+      } else if (mode === 'pause') {
+        btnPause.classList.add('pressed');
+        supply.classList.add('spinning-paused');
+        takeup.classList.add('spinning-paused');
+        spd.innerText = 'TAPE TRANSPORT: STOPPED';
+        lamp.className = 'jewel-lamp lit-amber';
+        if (tapeHumGain && audioCtx) tapeHumGain.gain.setValueAtTime(0, audioCtx.currentTime);
+      } else if (mode === 'ff') {
+        btnFF.classList.add('pressed');
+        supply.classList.add('spinning-30ips');
+        takeup.classList.add('spinning-30ips');
+        spd.innerText = 'TAPE SPEED: 30 IPS [MASTERING TURBO]';
+        lamp.className = 'jewel-lamp lit-red';
+        if (tapeHumGain && audioCtx) tapeHumGain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. Financial Calculation & Analog Needle Inertia
+    // -------------------------------------------------------------------------
+    function recalculateConsole() {
+      const seats = currentSeats;
+      let rawMonthly = 0;
+
+      saasChannels.forEach(ch => {
+        if (ch.active) {
+          if (ch.type === 'seat') rawMonthly += (ch.cost * seats);
+          else rawMonthly += ch.cost;
+        }
+      });
+
+      const sst = rawMonthly * 0.08;
+      const grossCloud = Math.round(rawMonthly + sst);
+      const homelabOpex = 24.10; // TNB 65W
+      const netMonthly = Math.max(0, grossCloud - homelabOpex);
+
+      let capex = 10000;
+      if (seats <= 5) capex = 6500;
+      else if (seats > 30) capex = 18000;
+
+      const breakeven = netMonthly > 0 ? (capex / netMonthly).toFixed(1) : '∞';
+      const threeYrNet = (netMonthly * 36) - capex;
+
+      // Update Digital Readouts
+      document.getElementById('meter-val-saas').innerText = `RM ${grossCloud.toLocaleString()} /mo`;
+      document.getElementById('meter-val-net').innerText = `RM ${Math.round(netMonthly).toLocaleString()} /mo`;
+      document.getElementById('val-breakeven-banner').innerText = `${breakeven} MONTHS TO ZERO DEBT`;
+      document.getElementById('val-3yr-banner').innerText = `RM ${Math.max(0, Math.round(threeYrNet)).toLocaleString()}`;
+
+      document.getElementById('ledger-cloud').innerText = `RM ${grossCloud.toFixed(2)}`;
+      document.getElementById('ledger-net').innerText = `RM ${netMonthly.toFixed(2)}`;
+      document.getElementById('ledger-capex').innerText = `RM ${capex.toFixed(2)}`;
+
+      // Update Needle Angles (-32deg to +32deg throw)
+      // Left needle responds to cloud spend (higher spend = more needle defection into red)
+      const cloudNorm = Math.min(1, grossCloud / 4500);
+      const needleLeftAngle = -32 + (cloudNorm * 64);
+      document.getElementById('needleLeft').style.transform = `rotate(${needleLeftAngle.toFixed(1)}deg)`;
+
+      // Right needle responds to net monthly savings & breakeven velocity
+      const netNorm = Math.min(1, netMonthly / 4000);
+      const needleRightAngle = -28 + (netNorm * 58);
+      document.getElementById('needleRight').style.transform = `rotate(${needleRightAngle.toFixed(1)}deg)`;
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. Initialization
+    // -------------------------------------------------------------------------
+    window.onload = function() {
+      renderChannelStrips();
+      renderPatchbay();
+      selectPatch(0);
+      initFader();
+      setTapeTransport('play');
+      recalculateConsole();
+    };
+  </script>
+</body>
+</html>

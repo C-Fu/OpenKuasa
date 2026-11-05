@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMRON Sysmac NJ501-MY // HomeLAB.my Factory HMI Controller</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Share Tech Mono, Teko, Noto Sans JP -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Share+Tech+Mono&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['"Share Tech Mono"', 'monospace'],
+            industrial: ['"Teko"', 'sans-serif'],
+            jp: ['"Noto Sans JP"', 'sans-serif']
+          },
+          colors: {
+            hmi: {
+              cabinet: '#181b1e',
+              chassis: '#22272c',
+              bezel: '#2c333a',
+              bezelHighlight: '#404953',
+              bezelShadow: '#101316',
+              screen: '#0d1115',
+              grid: '#1a222a',
+              orange: '#f58220',
+              yellow: '#ffcc00',
+              green: '#00e676',
+              greenDim: '#004724',
+              red: '#ff1744',
+              redDim: '#4a0812',
+              cyan: '#00e5ff',
+              text: '#e6ebf0',
+              muted: '#7a889b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ======================================================================= */
+    /* INDUSTRIAL HMI TACTILE DESIGN SYSTEM                                   */
+    /* ======================================================================= */
+    :root {
+      --led-glow-green: 0 0 10px rgba(0, 230, 118, 0.7);
+      --led-glow-yellow: 0 0 10px rgba(255, 204, 0, 0.7);
+      --led-glow-red: 0 0 12px rgba(255, 23, 68, 0.85);
+      --led-glow-orange: 0 0 10px rgba(245, 130, 32, 0.7);
+    }
+
+    body {
+      background-color: #121417;
+      color: #e6ebf0;
+      font-family: 'Noto Sans JP', 'Share Tech Mono', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(35, 42, 50, 0.4) 0%, rgba(10, 12, 14, 0.95) 100%),
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.3) 10px, rgba(0, 0, 0, 0.3) 20px);
+    }
+
+    .industrial-font {
+      font-family: 'Teko', sans-serif;
+      letter-spacing: 0.05em;
+    }
+    .mono-font {
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* Tactile Factory Membrane Pushbutton */
+    .membrane-btn {
+      background: linear-gradient(180deg, #373f47 0%, #252b31 100%);
+      border: 2px solid #4a545e;
+      border-top-color: #63717e;
+      border-bottom-color: #16191c;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+      transition: all 0.08s ease;
+      cursor: pointer;
+    }
+    .membrane-btn:hover {
+      background: linear-gradient(180deg, #404952 0%, #2b3239 100%);
+      border-color: #ffcc00;
+    }
+    .membrane-btn:active, .membrane-btn.active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.8), inset 0 2px 4px rgba(0,0,0,0.8);
+      background: linear-gradient(180deg, #1b2024 0%, #2b333a 100%);
+      border-color: #f58220;
+    }
+
+    /* Recessed HMI Sunken Screen Panel */
+    .hmi-sunken {
+      background-color: #0b0f13;
+      border: 2px solid #14181c;
+      border-top-color: #080a0d;
+      border-bottom-color: #3e4751;
+      border-right-color: #3e4751;
+      box-shadow: inset 0 3px 10px rgba(0,0,0,0.9);
+    }
+
+    /* Raised Industrial Bevel Framing */
+    .hmi-chassis-bezel {
+      background: linear-gradient(180deg, #2e353c 0%, #20252a 100%);
+      border: 3px solid #3c454f;
+      border-top-color: #556270;
+      border-left-color: #556270;
+      border-bottom-color: #121517;
+      border-right-color: #121517;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    /* Industrial Emergency Stop (E-STOP) Button */
+    .estop-collar {
+      background: radial-gradient(circle, #ffe600 0%, #c49b00 100%);
+      border: 3px solid #7a6100;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    }
+    .estop-head {
+      background: radial-gradient(circle at 35% 35%, #ff4b60 0%, #b3001e 75%, #59000f 100%);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.8), inset 0 2px 3px rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: transform 0.15s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+    .estop-head:active, .estop-head.engaged {
+      transform: scale(0.90) translateY(4px);
+      background: radial-gradient(circle at 45% 45%, #940018 0%, #47000c 80%);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.9), inset 0 3px 6px rgba(0,0,0,0.8);
+    }
+
+    /* Industrial LED Status Dots */
+    .plc-led {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid #111;
+      display: inline-block;
+      background-color: #1f272e;
+    }
+    .plc-led.green {
+      background-color: #00e676;
+      box-shadow: var(--led-glow-green);
+    }
+    .plc-led.green-blink {
+      animation: plcBlink 0.8s infinite;
+    }
+    @keyframes plcBlink {
+      0%, 100% { background-color: #00e676; box-shadow: var(--led-glow-green); }
+      50% { background-color: #004724; box-shadow: none; }
+    }
+    .plc-led.orange {
+      background-color: #f58220;
+      box-shadow: var(--led-glow-orange);
+    }
+    .plc-led.red {
+      background-color: #ff1744;
+      box-shadow: var(--led-glow-red);
+    }
+    .plc-led.yellow {
+      background-color: #ffcc00;
+      box-shadow: var(--led-glow-yellow);
+    }
+
+    /* Industrial Seven Segment Display Simulation */
+    .digital-meter {
+      background-color: #05080a;
+      border: 2px solid #1a2228;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.95);
+    }
+
+    /* Custom Factory Range Slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      width: 100%;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 10px;
+      background: #090d10;
+      border: 2px solid #3c454f;
+      border-radius: 2px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.9);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 26px;
+      width: 16px;
+      background: linear-gradient(180deg, #ffcc00 0%, #d49b00 100%);
+      border: 2px solid #111;
+      border-radius: 2px;
+      cursor: pointer;
+      margin-top: -9px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.7);
+    }
+
+    /* Ladder Logic Contact Symbols */
+    .ladder-rail {
+      width: 4px;
+      background-color: #00e5ff;
+      box-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
+    }
+    .ladder-wire {
+      height: 3px;
+      background-color: #00e5ff;
+    }
+    .ladder-wire.energized {
+      background-color: #00e676;
+      box-shadow: 0 0 8px #00e676;
+    }
+    .ladder-wire.dead {
+      background-color: #3a4754;
+      box-shadow: none;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen p-2 sm:p-4 md:p-6 flex flex-col justify-between items-center text-slate-100">
+
+  <!-- ========================================================================= -->
+  <!-- INDUSTRIAL HMI CONSOLE CABINET (4-SIDED METAL HOUSING)                    -->
+  <!-- ========================================================================= -->
+  <div class="w-full max-w-7xl hmi-chassis-bezel rounded-md p-3 sm:p-5 relative shadow-2xl flex flex-col space-y-4">
+
+    <!-- CABINET MOUNTING SCREWS -->
+    <div class="absolute top-2 left-2 w-3 h-3 rounded-full bg-slate-700 border border-slate-900 shadow-inner"></div>
+    <div class="absolute top-2 right-2 w-3 h-3 rounded-full bg-slate-700 border border-slate-900 shadow-inner"></div>
+    <div class="absolute bottom-2 left-2 w-3 h-3 rounded-full bg-slate-700 border border-slate-900 shadow-inner"></div>
+    <div class="absolute bottom-2 right-2 w-3 h-3 rounded-full bg-slate-700 border border-slate-900 shadow-inner"></div>
+
+    <!-- ======================================================================= -->
+    <!-- 1. TOP PLC CONTROLLER STATUS HEADER & EMERGENCY STOP MECHANISM          -->
+    <!-- ======================================================================= -->
+    <header class="bg-[#181c20] border-2 border-[#373f47] p-2.5 sm:p-3.5 rounded flex flex-wrap items-center justify-between gap-3 shadow-md">
+      
+      <!-- PLC Brand & Machine Tag -->
+      <div class="flex items-center space-x-3">
+        <!-- OMRON Style Red/White Emblem -->
+        <div class="px-2 py-1 bg-[#d32f2f] border border-white text-white font-black text-sm tracking-tighter mono-font shadow">
+          OMRON
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-base sm:text-lg font-bold tracking-wider text-white mono-font">
+              Sysmac NJ501-MY // SOVEREIGN CLUSTER CONTROLLER
+            </h1>
+            <span class="bg-[#242b32] border border-[#ffcc00] text-[#ffcc00] text-[10px] px-1.5 py-0.2 font-bold mono-font">
+              HMI VER 8.2
+            </span>
+          </div>
+          <p class="text-[10px] text-slate-400 mono-font">
+            産業用自動化コントローラ // HIGH-DENSITY SOVEREIGN DATA RESIDENCY ENGINE
+          </p>
+        </div>
+      </div>
+
+      <!-- Live Bus Telemetry & PLC Pilot LEDs -->
+      <div class="flex flex-wrap items-center gap-3 text-xs mono-font">
+        
+        <!-- Hardware Pilot Indicator Cluster -->
+        <div class="flex items-center space-x-3 bg-black/60 px-3 py-1.5 border border-[#303840] rounded">
+          <div class="flex items-center space-x-1">
+            <span class="plc-led green" id="led-pwr"></span>
+            <span class="text-[10px] text-slate-300 font-bold">PWR</span>
+          </div>
+          <div class="flex items-center space-x-1">
+            <span class="plc-led green green-blink" id="led-run"></span>
+            <span class="text-[10px] text-slate-300 font-bold">RUN</span>
+          </div>
+          <div class="flex items-center space-x-1">
+            <span class="plc-led" id="led-err"></span>
+            <span class="text-[10px] text-slate-300 font-bold">ERR/ALM</span>
+          </div>
+          <div class="flex items-center space-x-1">
+            <span class="plc-led orange" id="led-link"></span>
+            <span class="text-[10px] text-slate-300 font-bold">NVMe/ZFS</span>
+          </div>
+        </div>
+
+        <!-- Scan Cycle Time -->
+        <div class="bg-black/60 px-2.5 py-1.5 border border-[#303840] rounded text-[11px] text-slate-300">
+          SCAN: <span class="text-[#00e676] font-bold" id="plc-scan-time">0.82ms</span>
+        </div>
+
+        <!-- Quorum Node Count -->
+        <div class="bg-black/60 px-2.5 py-1.5 border border-[#303840] rounded text-[11px] text-slate-300">
+          NODES: <span class="text-[#ffcc00] font-bold" id="plc-node-count">23/23 LATCHED</span>
+        </div>
+
+        <!-- Audio Relay Feedback Button -->
+        <button 
+          onclick="toggleHmiAudio()" 
+          id="btn-hmi-audio"
+          class="membrane-btn px-2.5 py-1 text-[11px] text-slate-300 flex items-center space-x-1 rounded"
+          title="Toggle Industrial Relay Clicks"
+        >
+          <span id="audio-icon">🔊</span>
+          <span id="audio-label">RELAY: ON</span>
+        </button>
+
+      </div>
+
+      <!-- EMERGENCY STOP (E-STOP) PUSHBUTTON WITH SAFETY FLANGE -->
+      <div class="flex items-center space-x-3 pl-2 border-l-2 border-[#373f47]">
+        <div class="text-right hidden sm:block">
+          <div class="text-[11px] font-black text-[#ff1744] industrial-font text-base tracking-wider leading-none">非常停止</div>
+          <div class="text-[9px] text-slate-400 mono-font">E-STOP SYSTEM</div>
+        </div>
+
+        <!-- Heavy Duty Mushroom Button -->
+        <div class="estop-collar w-12 h-12 rounded-full flex items-center justify-center p-1 cursor-pointer" onclick="toggleEStop()">
+          <div id="estop-button" class="estop-head w-10 h-10 rounded-full flex items-center justify-center text-white text-[10px] font-black tracking-tighter">
+            STOP
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- ALARM BANNER (ACTIVE WHEN E-STOP OR ERROR TRIPPED) -->
+    <div id="alarm-banner" class="hidden bg-[#ff1744] text-black px-4 py-1.5 rounded flex items-center justify-between font-bold mono-font text-xs animate-pulse">
+      <div class="flex items-center space-x-2">
+        <span class="text-sm">⚠️</span>
+        <span>【重大警報】 EMERGENCY STOP TRIPPED // PLC SCAN IN SAFE INTERLOCK STATE // SAAS DRAIN FROZEN</span>
+      </div>
+      <button onclick="toggleEStop()" class="px-2 py-0.5 bg-black text-white hover:bg-white hover:text-black transition text-[10px]">
+        RESET INTERLOCK [復旧]
+      </button>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 2. MAIN INDUSTRIAL HMI MULTI-PANEL VIEWPORT                             -->
+    <!-- ======================================================================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- PANEL A: PROCESS LINE CAROUSEL / SERVICE STATIONS (4 COLS)          -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="lg:col-span-4 hmi-sunken p-3 rounded flex flex-col justify-between space-y-3">
+        
+        <div>
+          <!-- Panel Header -->
+          <div class="flex items-center justify-between border-b border-[#222a31] pb-2 mb-2">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 bg-[#f58220] inline-block shadow-[0_0_6px_#f58220]"></span>
+              <h2 class="text-xs font-black tracking-wider text-white mono-font uppercase">
+                LINE 01: SOVEREIGN APPLIANCE STATIONS
+              </h2>
+            </div>
+            <span class="text-[10px] text-slate-400 mono-font">稼働ステーション</span>
+          </div>
+
+          <!-- Stations List -->
+          <div class="space-y-1.5 overflow-y-auto max-h-[380px] pr-1" id="station-list">
+            <!-- Rendered by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Station Runbook Inspector Sub-Panel -->
+        <div class="bg-[#12161b] border border-[#26303a] p-2.5 rounded text-xs mono-font space-y-2">
+          <div class="flex items-center justify-between border-b border-[#202932] pb-1 text-[#00e5ff]">
+            <span class="font-bold flex items-center gap-1">
+              <span class="text-xs">▶</span> <span id="inspect-station-name">STATION 01: NEXTCLOUD HUB</span>
+            </span>
+            <span class="text-[10px] text-[#00e676]">運転中 [RUNNING]</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <div>
+              <span class="text-slate-400 block text-[9px]">CYCLE PORT / 周期:</span>
+              <span class="text-white font-bold" id="inspect-port">PORT: 8443 / TLS</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px]">MEMORY RSS / 占有:</span>
+              <span class="text-white font-bold" id="inspect-mem">1024 MB ECC DDR5</span>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-slate-400 block text-[9px]">DISPLACED SAAS / 置換クラウド:</span>
+            <span class="text-[#ff5252] font-bold text-xs" id="inspect-replaces">Microsoft 365 / Google Workspace</span>
+          </div>
+
+          <p class="text-[10px] text-slate-300 leading-relaxed border-t border-[#202932] pt-1" id="inspect-desc">
+            Primary sovereign collaboration layer. Files, Talk, Deck, and Docs with full on-premise zero-trust encryption.
+          </p>
+        </div>
+
+      </section>
+
+      <!-- ------------------------------------------------------------------- -->
+      <!-- PANEL B & C: PARAMETER SETUP & AMORTIZATION GAUGES (8 COLS)         -->
+      <!-- ------------------------------------------------------------------- -->
+      <section class="lg:col-span-8 flex flex-col space-y-4">
+
+        <!-- TOP: AMORTIZATION GAUGES & HIGH-CONTRAST DIGITAL READOUTS -->
+        <div class="hmi-sunken p-4 rounded space-y-3">
+          
+          <div class="flex items-center justify-between border-b border-[#222a31] pb-2">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 bg-[#00e676] inline-block shadow-[0_0_6px_#00e676]"></span>
+              <h2 class="text-xs font-black tracking-wider text-white mono-font uppercase">
+                AMORTIZATION LEDGER & CAPITAL GAUGES // 投資対効果
+              </h2>
+            </div>
+            <span class="text-[10px] text-[#ffcc00] mono-font font-bold">
+              MALAYSIA PDPA-2010 // LHDN E-INVOICE VALIDATED
+            </span>
+          </div>
+
+          <!-- Digital LED Readout Blocks -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+            
+            <!-- Metric 1: Monthly Cloud Drain -->
+            <div class="digital-meter p-2.5 rounded border border-[#2b3540] flex flex-col justify-between">
+              <div class="flex justify-between items-center text-[10px] text-slate-400 mono-font">
+                <span>CLOUD BILL / クラウド費用</span>
+                <span class="text-[#ff1744] font-bold">8% SST</span>
+              </div>
+              <div class="text-2xl font-black text-[#ff5252] industrial-font tracking-wider mt-1" id="readout-cloud">
+                RM 1,196
+              </div>
+              <div class="text-[9px] text-slate-400 mono-font" id="readout-cloud-sub">
+                Includes RM 89 SST
+              </div>
+            </div>
+
+            <!-- Metric 2: Local Hardware Power OpEx -->
+            <div class="digital-meter p-2.5 rounded border border-[#2b3540] flex flex-col justify-between">
+              <div class="flex justify-between items-center text-[10px] text-slate-400 mono-font">
+                <span>APPLIANCE OPEX / 電気代</span>
+                <span class="text-[#00e676] font-bold">TNB-B</span>
+              </div>
+              <div class="text-2xl font-black text-[#00e676] industrial-font tracking-wider mt-1">
+                RM 24.00
+              </div>
+              <div class="text-[9px] text-slate-400 mono-font">
+                65W Continuous @ TNB Tariff
+              </div>
+            </div>
+
+            <!-- Metric 3: Net Monthly Retained -->
+            <div class="digital-meter p-2.5 rounded border border-[#2b3540] flex flex-col justify-between">
+              <div class="flex justify-between items-center text-[10px] text-slate-400 mono-font">
+                <span>NET MONTHLY SAVINGS / 削減</span>
+                <span class="text-[#00e5ff] font-bold">RETAINED</span>
+              </div>
+              <div class="text-2xl font-black text-[#00e5ff] industrial-font tracking-wider mt-1" id="readout-net">
+                RM 1,172
+              </div>
+              <div class="text-[9px] text-slate-400 mono-font">
+                Added directly to treasury
+              </div>
+            </div>
+
+            <!-- Metric 4: Breakeven Horizon -->
+            <div class="digital-meter p-2.5 rounded border border-[#2b3540] flex flex-col justify-between">
+              <div class="flex justify-between items-center text-[10px] text-slate-400 mono-font">
+                <span>BREAKEVEN / 投資回収</span>
+                <span class="text-[#ffcc00] font-bold">TARGET</span>
+              </div>
+              <div class="text-2xl font-black text-[#ffcc00] industrial-font tracking-wider mt-1" id="readout-breakeven">
+                8.5 MONTHS
+              </div>
+              <div class="text-[9px] text-slate-400 mono-font" id="readout-capex-tier">
+                On RM 10,000 Capex
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Analog Segmented LED Bar-Graph (Payback Progress) -->
+          <div class="bg-[#080b0e] p-3 rounded border border-[#1e262e] space-y-2">
+            <div class="flex justify-between items-center text-xs mono-font">
+              <span class="text-slate-300 font-bold flex items-center gap-1.5">
+                <span>LEVEL METER:</span> <span class="text-[#ffcc00]">CAPEX AMORTIZATION VELOCITY / 償却スピード</span>
+              </span>
+              <span class="text-[#00e676] font-bold" id="bargraph-pct">82% FAST PAYBACK</span>
+            </div>
+
+            <!-- 28-Segment Bar -->
+            <div class="flex gap-1 h-4 bg-black p-1 border border-[#26313b] rounded" id="led-bargraph">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <div class="flex justify-between text-[10px] text-slate-500 mono-font">
+              <span>0M (IMMEDIATE)</span>
+              <span>6M</span>
+              <span>12M (1 YEAR CAP)</span>
+              <span>24M (MAX HORIZON)</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- PARAMETER SETUP: SEAT CALIBRATION & SAAS CHIPS -->
+        <div class="hmi-sunken p-4 rounded space-y-4">
+          
+          <div class="flex items-center justify-between border-b border-[#222a31] pb-2">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 bg-[#ffcc00] inline-block shadow-[0_0_6px_#ffcc00]"></span>
+              <h2 class="text-xs font-black tracking-wider text-white mono-font uppercase">
+                PARAMETER SETUP // 稼働パラメータ & SAAS除外設定
+              </h2>
+            </div>
+            <span class="text-[10px] text-slate-400 mono-font">SET VALUES</span>
+          </div>
+
+          <!-- Seat Step Buttons & Calibrator Slider -->
+          <div class="bg-[#12161b] p-3 rounded border border-[#222a32] space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs mono-font font-bold text-white">
+                TENANT WORKFORCE CAPACITY [座席数]:
+              </span>
+              <span class="text-sm font-black mono-font text-[#ffcc00] bg-black px-2.5 py-0.5 border border-[#37424d] rounded" id="display-seats">
+                15 SEATS / 座席
+              </span>
+            </div>
+
+            <!-- Membrane Preset Buttons -->
+            <div class="grid grid-cols-5 gap-2 text-xs mono-font">
+              <button onclick="setHmiSeats(5)" id="btn-seat-5" class="membrane-btn py-1.5 rounded text-center">
+                5 SEATS
+              </button>
+              <button onclick="setHmiSeats(15)" id="btn-seat-15" class="membrane-btn active py-1.5 rounded text-center font-bold text-[#ffcc00]">
+                15 SEATS
+              </button>
+              <button onclick="setHmiSeats(25)" id="btn-seat-25" class="membrane-btn py-1.5 rounded text-center">
+                25 SEATS
+              </button>
+              <button onclick="setHmiSeats(50)" id="btn-seat-50" class="membrane-btn py-1.5 rounded text-center">
+                50 SEATS
+              </button>
+              <button onclick="setHmiSeats(100)" id="btn-seat-100" class="membrane-btn py-1.5 rounded text-center">
+                100 SEATS
+              </button>
+            </div>
+
+            <!-- Slider -->
+            <input type="range" id="seatSlider" min="5" max="100" value="15" step="5" oninput="onHmiSlider(this.value)">
+          </div>
+
+          <!-- Displaced SaaS Matrix Toggles -->
+          <div class="space-y-1.5">
+            <span class="text-[11px] mono-font text-slate-400 uppercase font-bold block">
+              DISPLACED CLOUD SUITES // クラウド解約対象リスト:
+            </span>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mono-font" id="saas-toggle-grid">
+              <!-- Checkboxes dynamically rendered -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 3. LIVE PLC LADDER LOGIC RUNG / 制御シーケンス & BUS DISPATCH           -->
+    <!-- ======================================================================= -->
+    <section class="hmi-sunken p-3.5 rounded space-y-2">
+      
+      <div class="flex items-center justify-between border-b border-[#222a31] pb-1.5">
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 bg-[#00e5ff] inline-block shadow-[0_0_6px_#00e5ff]"></span>
+          <h3 class="text-xs font-black tracking-wider text-white mono-font uppercase">
+            LIVE PLC LADDER LOGIC RUNG 0001 // 制御シーケンス
+          </h3>
+        </div>
+        <div class="text-[10px] mono-font text-slate-400">
+          LOGIC: [LOCAL_PWR] ∧ [PDPA_ISOLATE] ∧ ¬[CLOUD_LEAK] ➔ (SOVEREIGN_STORAGE)
+        </div>
+      </div>
+
+      <!-- Animated Graphic Ladder Rung -->
+      <div class="bg-black p-3 rounded border border-[#202932] overflow-x-auto flex items-center justify-between min-w-[700px] mono-font text-xs">
+        
+        <!-- Left Power Rail -->
+        <div class="ladder-rail h-16 rounded"></div>
+
+        <!-- Contact 1: Local Power -->
+        <div class="flex items-center flex-1">
+          <div class="ladder-wire energized flex-1"></div>
+          <div class="px-2 py-1 bg-[#12181e] border-2 border-[#00e676] rounded text-center shadow-[0_0_8px_rgba(0,230,118,0.3)]">
+            <div class="text-[9px] text-[#00e676] font-bold">X001: LOCAL_PWR</div>
+            <div class="text-xs font-bold text-white">[ 65W TNB ]</div>
+          </div>
+          <div class="ladder-wire energized flex-1"></div>
+        </div>
+
+        <!-- Contact 2: PDPA Compliance -->
+        <div class="flex items-center flex-1">
+          <div class="px-2 py-1 bg-[#12181e] border-2 border-[#00e676] rounded text-center shadow-[0_0_8px_rgba(0,230,118,0.3)]">
+            <div class="text-[9px] text-[#00e676] font-bold">X002: PDPA_2010</div>
+            <div class="text-xs font-bold text-white">[-|  |-] PASS</div>
+          </div>
+          <div class="ladder-wire energized flex-1"></div>
+        </div>
+
+        <!-- Contact 3: Inverted Cloud Act Leak (Normally Closed) -->
+        <div class="flex items-center flex-1">
+          <div class="px-2 py-1 bg-[#12181e] border-2 border-[#00e676] rounded text-center shadow-[0_0_8px_rgba(0,230,118,0.3)]" id="rung-cloud-contact">
+            <div class="text-[9px] text-[#00e676] font-bold">X003: US_CLOUD_LEAK</div>
+            <div class="text-xs font-bold text-white">[-| / |-] BLOCKED</div>
+          </div>
+          <div class="ladder-wire energized flex-1" id="rung-output-wire"></div>
+        </div>
+
+        <!-- Output Coil: Sovereign Data Storage -->
+        <div class="flex items-center">
+          <div class="px-3 py-1.5 bg-[#00e676]/20 border-2 border-[#00e676] rounded text-center shadow-[0_0_12px_rgba(0,230,118,0.5)]" id="rung-coil">
+            <div class="text-[9px] text-[#00e676] font-black uppercase">Y001: SOVEREIGN_LATCH</div>
+            <div class="text-sm font-black text-white industrial-font tracking-wider">-( ENGAGED )-</div>
+          </div>
+          <div class="ladder-wire energized w-4"></div>
+        </div>
+
+        <!-- Right Neutral Rail -->
+        <div class="ladder-rail h-16 rounded"></div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 4. BOTTOM OPERATOR MEMBRANE DECK & CYCLE EXECUTION                      -->
+    <!-- ======================================================================= -->
+    <footer class="bg-[#181c20] border-2 border-[#373f47] p-2.5 rounded flex flex-wrap items-center justify-between gap-3 text-xs mono-font">
+      
+      <div class="flex items-center space-x-3 text-slate-400">
+        <span class="text-white font-bold">PLC STATUS:</span>
+        <span class="text-[#00e676] font-bold" id="plc-status-text">NORMAL CONTINUOUS SCAN [通常運転]</span>
+        <span>|</span>
+        <span class="hidden sm:inline">SERIAL: 2026-MYS-NJ501</span>
+      </div>
+
+      <!-- Action Push-Buttons -->
+      <div class="flex items-center space-x-2">
+        <button onclick="cycleAudit()" class="membrane-btn px-3 py-1.5 text-white font-bold rounded flex items-center space-x-1">
+          <span>🔄</span>
+          <span>RE-SCAN AUDIT [再計算]</span>
+        </button>
+        <button onclick="commissionHardware()" class="membrane-btn px-4 py-1.5 bg-[#ffcc00] text-[#ffcc00] border-[#ffcc00] font-black rounded tracking-wider shadow">
+          COMMISSION APPLIANCE [設備導入]
+        </button>
+      </div>
+
+    </footer>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: INDUSTRIAL AUDIO ENGINE, PLC LOGIC & HMI EVENT HANDLING       -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. Web Audio API Synthesis: Industrial Relays, Beeps, & Alarm Buzzer
+    // -------------------------------------------------------------------------
+    let hmiAudioEnabled = true;
+    let hmiAudioCtx = null;
+
+    function initHmiAudio() {
+      if (!hmiAudioCtx) {
+        hmiAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playRelayClick(freq = 1200, duration = 0.02, type = 'square') {
+      if (!hmiAudioEnabled) return;
+      try {
+        initHmiAudio();
+        const osc = hmiAudioCtx.createOscillator();
+        const gain = hmiAudioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, hmiAudioCtx.currentTime);
+        gain.gain.setValueAtTime(0.09, hmiAudioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, hmiAudioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(hmiAudioCtx.destination);
+        osc.start();
+        osc.stop(hmiAudioCtx.currentTime + duration);
+      } catch (e) {
+        // Fallback
+      }
+    }
+
+    function playAlarmBuzzer() {
+      if (!hmiAudioEnabled) return;
+      try {
+        initHmiAudio();
+        const osc = hmiAudioCtx.createOscillator();
+        const gain = hmiAudioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, hmiAudioCtx.currentTime);
+        osc.frequency.setValueAtTime(440, hmiAudioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.18, hmiAudioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, hmiAudioCtx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(hmiAudioCtx.destination);
+        osc.start();
+        osc.stop(hmiAudioCtx.currentTime + 0.3);
+      } catch (e) {}
+    }
+
+    function toggleHmiAudio() {
+      hmiAudioEnabled = !hmiAudioEnabled;
+      const btn = document.getElementById('btn-hmi-audio');
+      const label = document.getElementById('audio-label');
+      const icon = document.getElementById('audio-icon');
+
+      if (hmiAudioEnabled) {
+        initHmiAudio();
+        label.innerText = 'RELAY: ON';
+        icon.innerText = '🔊';
+        btn.classList.add('text-[#ffcc00]');
+        playRelayClick(1500, 0.03);
+      } else {
+        label.innerText = 'RELAY: OFF';
+        icon.innerText = '🔇';
+        btn.classList.remove('text-[#ffcc00]');
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Sovereign Appliance Carousel Stations Data
+    // -------------------------------------------------------------------------
+    const applianceStations = [
+      {
+        id: 'st-01',
+        code: 'STN-01',
+        name: 'Nextcloud Hub 30',
+        port: '8443 / TLS 1.3',
+        mem: '1024 MB ECC DDR5',
+        replaces: 'Microsoft 365 / Google Workspace (RM 32 / seat)',
+        desc: 'Sovereign productivity suite replacing Google Workspace & M365. Native Files, Talk, Deck, and Docs with full data isolation.',
+        status: 'RUNNING'
+      },
+      {
+        id: 'st-02',
+        code: 'STN-02',
+        name: 'Docmost Wiki Hub',
+        port: '3000 / HTTP',
+        mem: '512 MB ECC DDR5',
+        replaces: 'Notion Team / Atlassian Confluence (RM 45 / seat)',
+        desc: 'Company knowledge base with hierarchical spaces, markdown tables, and live multi-user editing on local PostgreSQL.',
+        status: 'RUNNING'
+      },
+      {
+        id: 'st-03',
+        code: 'STN-03',
+        name: 'BentoPDF Tool Suite',
+        port: '8080 / WASM',
+        mem: '128 MB VRAM',
+        replaces: 'Adobe Acrobat Pro DC Cloud (RM 65 / seat)',
+        desc: 'Client-side PDF manipulation suite offering merging, splitting, OCR, watermarking, and format conversion without cloud exposure.',
+        status: 'RUNNING'
+      },
+      {
+        id: 'st-04',
+        code: 'STN-04',
+        name: 'Invoice Ninja Enterprise',
+        port: '8000 / HTTP',
+        mem: '512 MB ECC DDR5',
+        replaces: 'Xero / QuickBooks Online (RM 80 / mo)',
+        desc: 'Self-hosted invoicing, billing, expense tracking, and LHDN e-invoice compliance management portal for SMEs.',
+        status: 'RUNNING'
+      },
+      {
+        id: 'st-05',
+        code: 'STN-05',
+        name: 'AutoCount Win10 KVM',
+        port: '3389 / RDP',
+        mem: '8192 MB ECC REG',
+        replaces: 'Azure Virtual Desktop (RM 350 / mo)',
+        desc: 'Dedicated Windows 10 virtual machine running AutoCount Accounting Server, SQL database, and multi-user SME financial system.',
+        status: 'RUNNING'
+      },
+      {
+        id: 'st-06',
+        code: 'STN-06',
+        name: 'n8n Automation Engine',
+        port: '5678 / WEBHOOK',
+        mem: '512 MB ECC DDR5',
+        replaces: 'Zapier Team / Make.com (RM 150 / mo)',
+        desc: 'Extendable workflow automation engine with node-based execution graphs and webhook triggers without per-task charges.',
+        status: 'RUNNING'
+      },
+      {
+        id: 'st-07',
+        code: 'STN-07',
+        name: 'Excalidraw Whiteboard',
+        port: '5000 / HTTP',
+        mem: '256 MB ECC DDR5',
+        replaces: 'Miro / Mural Enterprise (RM 40 / seat)',
+        desc: 'Collaborative virtual whiteboard for system architecture diagramming, hand-drawn wireframes, and live team brainstorming sessions.',
+        status: 'RUNNING'
+      }
+    ];
+
+    let selectedStationIndex = 0;
+    let currentSeats = 15;
+    let isEStopTripped = false;
+
+    // SaaS Bypassed Products Catalog
+    const saasItems = [
+      { id: 'saas-m365', name: 'Office 365 / Google Suite', price: 32, type: 'seat', checked: true, alt: 'RM 32 / seat' },
+      { id: 'saas-acct', name: 'Accounting & e-Invoicing (Xero)', price: 80, type: 'fixed', checked: true, alt: 'RM 80 flat' },
+      { id: 'saas-drive', name: 'Cloud Drive (1TB OneDrive/Drive)', price: 27, type: 'seat', checked: true, alt: 'RM 27 / seat' },
+      { id: 'saas-zap', name: 'Dev Automation (Zapier Team)', price: 150, type: 'fixed', checked: true, alt: 'RM 150 flat' },
+      { id: 'saas-wiki', name: 'Team Wiki (Notion Team)', price: 45, type: 'seat', checked: true, alt: 'RM 45 / seat' },
+      { id: 'saas-pdf', name: 'PDF Pro (Adobe Acrobat DC)', price: 65, type: 'seat', checked: false, alt: 'RM 65 / seat' }
+    ];
+
+    // -------------------------------------------------------------------------
+    // 3. Render Stations Carousel
+    // -------------------------------------------------------------------------
+    function renderStations() {
+      const container = document.getElementById('station-list');
+      container.innerHTML = applianceStations.map((stn, idx) => {
+        const isSelected = selectedStationIndex === idx;
+        return `
+          <div 
+            onclick="selectStation(${idx})"
+            class="p-2.5 rounded cursor-pointer transition flex items-center justify-between border ${
+              isSelected 
+                ? 'bg-[#1e252d] border-[#f58220] shadow-[inset_0_0_8px_rgba(245,130,32,0.3)]' 
+                : 'bg-[#12161b] border-[#222b34] hover:border-[#ffcc00]'
+            }"
+          >
+            <div class="flex items-center space-x-2.5">
+              <span class="plc-led ${isEStopTripped ? 'red' : 'green'}"></span>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-[9px] px-1 bg-black text-[#ffcc00] border border-[#37424d] font-bold">${stn.code}</span>
+                  <span class="font-bold text-xs text-white">${stn.name}</span>
+                </div>
+                <div class="text-[10px] text-slate-400 truncate max-w-[220px]">REPLACES: ${stn.replaces.split('(')[0]}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-[9px] bg-black text-[#00e5ff] px-1.5 py-0.5 rounded border border-[#232c35]">${stn.port.split(' ')[0]}</span>
+              <span class="block text-[8px] text-[#00e676] font-bold mt-0.5">${isEStopTripped ? 'INTERLOCKED' : 'ONLINE'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectStation(idx) {
+      selectedStationIndex = idx;
+      playRelayClick(1000 + idx * 80, 0.025);
+      const stn = applianceStations[idx];
+      document.getElementById('inspect-station-name').innerText = `${stn.code}: ${stn.name.toUpperCase()}`;
+      document.getElementById('inspect-port').innerText = stn.port;
+      document.getElementById('inspect-mem').innerText = stn.mem;
+      document.getElementById('inspect-replaces').innerText = stn.replaces;
+      document.getElementById('inspect-desc').innerText = stn.desc;
+      renderStations();
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Financial Reconciliation Engine & Analog LED Bar-Graph
+    // -------------------------------------------------------------------------
+    function renderSaaSToggles() {
+      const container = document.getElementById('saas-toggle-grid');
+      container.innerHTML = saasItems.map((item, idx) => `
+        <label class="flex items-center space-x-2 p-2 bg-[#12161b] border border-[#222a32] rounded cursor-pointer hover:border-[#ffcc00] transition">
+          <input 
+            type="checkbox" 
+            class="accent-[#ffcc00] w-4 h-4 cursor-pointer" 
+            ${item.checked ? 'checked' : ''} 
+            onchange="toggleSaasItem(${idx})"
+          >
+          <div class="flex-1">
+            <div class="flex justify-between items-center text-white">
+              <span class="font-bold truncate text-[11px]">${item.name}</span>
+              <span class="text-[#ffcc00] text-[10px]">${item.alt}</span>
+            </div>
+          </div>
+        </label>
+      `).join('');
+    }
+
+    function toggleSaasItem(idx) {
+      saasItems[idx].checked = !saasItems[idx].checked;
+      playRelayClick(800, 0.02);
+      calculateFinancials();
+    }
+
+    function onHmiSlider(val) {
+      currentSeats = parseInt(val);
+      document.getElementById('display-seats').innerText = `${currentSeats} SEATS / 座席`;
+      updateSeatPresetsUI();
+      playRelayClick(600 + currentSeats * 8, 0.015);
+      calculateFinancials();
+    }
+
+    function setHmiSeats(n) {
+      currentSeats = n;
+      document.getElementById('seatSlider').value = n;
+      document.getElementById('display-seats').innerText = `${currentSeats} SEATS / 座席`;
+      updateSeatPresetsUI();
+      playRelayClick(1100, 0.03);
+      calculateFinancials();
+    }
+
+    function updateSeatPresetsUI() {
+      [5, 15, 25, 50, 100].forEach(p => {
+        const btn = document.getElementById(`btn-seat-${p}`);
+        if (p === currentSeats) {
+          btn.className = "membrane-btn active py-1.5 rounded text-center font-bold text-[#ffcc00]";
+        } else {
+          btn.className = "membrane-btn py-1.5 rounded text-center text-slate-300";
+        }
+      });
+    }
+
+    function calculateFinancials() {
+      if (isEStopTripped) return;
+
+      const seats = currentSeats;
+      let rawMonthly = 0;
+
+      saasItems.forEach(item => {
+        if (item.checked) {
+          if (item.type === 'seat') rawMonthly += (item.price * seats);
+          else rawMonthly += item.price;
+        }
+      });
+
+      const sst = rawMonthly * 0.08;
+      const grossCloud = Math.round(rawMonthly + sst);
+      const homelabOpex = 24.00; // TNB 65W
+      const netMonthly = Math.max(0, grossCloud - homelabOpex);
+
+      let capex = 10000;
+      let capexTier = 'On RM 10,000 Capex (15-Seat)';
+      if (seats <= 5) {
+        capex = 6500;
+        capexTier = 'On RM 6,500 Capex (Micro 5-Seat)';
+      } else if (seats > 30) {
+        capex = 18000;
+        capexTier = 'On RM 18,000 Capex (High-Avail 50+)';
+      }
+
+      const breakeven = netMonthly > 0 ? (capex / netMonthly).toFixed(1) : '∞';
+
+      // Update Digital Readouts
+      document.getElementById('readout-cloud').innerText = `RM ${grossCloud.toLocaleString()}`;
+      document.getElementById('readout-cloud-sub').innerText = `Includes RM ${Math.round(sst).toLocaleString()} SST (8%)`;
+      document.getElementById('readout-net').innerText = `RM ${Math.round(netMonthly).toLocaleString()}`;
+      document.getElementById('readout-breakeven').innerText = `${breakeven} MONTHS`;
+      document.getElementById('readout-capex-tier').innerText = capexTier;
+
+      renderAnalogBargraph(parseFloat(breakeven) || 12);
+    }
+
+    function renderAnalogBargraph(months) {
+      const bar = document.getElementById('led-bargraph');
+      const segments = 28;
+      // Faster payback = higher level meter
+      const activeCount = Math.max(1, Math.min(segments, Math.round((1 - (months / 24)) * segments)));
+      const pct = Math.round((activeCount / segments) * 100);
+
+      document.getElementById('bargraph-pct').innerText = `${pct}% FAST AMORTIZATION`;
+
+      let html = '';
+      for (let i = 0; i < segments; i++) {
+        let color = 'bg-[#182026]';
+        if (i < activeCount) {
+          if (i < 18) color = 'bg-[#00e676] shadow-[0_0_4px_#00e676]';
+          else if (i < 24) color = 'bg-[#ffcc00] shadow-[0_0_4px_#ffcc00]';
+          else color = 'bg-[#ff1744] shadow-[0_0_4px_#ff1744]';
+        }
+        html += `<span class="flex-1 ${color} inline-block rounded-xs"></span>`;
+      }
+      bar.innerHTML = html;
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. EMERGENCY STOP (E-STOP) LOGIC & SAFETY LATCH
+    // -------------------------------------------------------------------------
+    function toggleEStop() {
+      isEStopTripped = !isEStopTripped;
+      const estopBtn = document.getElementById('estop-button');
+      const banner = document.getElementById('alarm-banner');
+      const errLed = document.getElementById('led-err');
+      const runLed = document.getElementById('led-run');
+      const statusText = document.getElementById('plc-status-text');
+      const rungCoil = document.getElementById('rung-coil');
+
+      if (isEStopTripped) {
+        playAlarmBuzzer();
+        estopBtn.classList.add('engaged');
+        banner.classList.remove('hidden');
+        errLed.className = 'plc-led red';
+        runLed.className = 'plc-led';
+        statusText.innerHTML = '<span class="text-[#ff1744] font-bold">EMERGENCY STOP INTERLOCK [非常停止中]</span>';
+        rungCoil.className = "px-3 py-1.5 bg-[#ff1744]/20 border-2 border-[#ff1744] rounded text-center shadow-[0_0_12px_rgba(255,23,68,0.5)]";
+        rungCoil.innerHTML = '<div class="text-[9px] text-[#ff1744] font-black uppercase">Y001: SAFETY_TRIP</div><div class="text-sm font-black text-white industrial-font tracking-wider">-( DE-ENERGIZED )-</div>';
+      } else {
+        playRelayClick(1600, 0.05);
+        estopBtn.classList.remove('engaged');
+        banner.classList.add('hidden');
+        errLed.className = 'plc-led';
+        runLed.className = 'plc-led green green-blink';
+        statusText.innerHTML = 'NORMAL CONTINUOUS SCAN [通常運転]';
+        rungCoil.className = "px-3 py-1.5 bg-[#00e676]/20 border-2 border-[#00e676] rounded text-center shadow-[0_0_12px_rgba(0,230,118,0.5)]";
+        rungCoil.innerHTML = '<div class="text-[9px] text-[#00e676] font-black uppercase">Y001: SOVEREIGN_LATCH</div><div class="text-sm font-black text-white industrial-font tracking-wider">-( ENGAGED )-</div>';
+        calculateFinancials();
+      }
+      renderStations();
+    }
+
+    function cycleAudit() {
+      playRelayClick(1400, 0.04);
+      const scan = document.getElementById('plc-scan-time');
+      scan.innerText = '0.45ms';
+      setTimeout(() => { scan.innerText = '0.82ms'; }, 600);
+      calculateFinancials();
+    }
+
+    function commissionHardware() {
+      playRelayClick(1800, 0.06);
+      alert('【設備発注】 OMRON Sysmac Sovereign Appliance commissioned. Local hardware manifest queued for deployment.');
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. Init
+    // -------------------------------------------------------------------------
+    window.onload = function() {
+      renderStations();
+      selectStation(0);
+      renderSaaSToggles();
+      calculateFinancials();
+    };
+  </script>
+</body>
+</html>

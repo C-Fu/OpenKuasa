@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Briefing // Sovereign SME Infrastructure Audit (Report No. 2026-B8)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Editorial Google Fonts: Newsreader (Editorial Serif) & Plus Jakarta Sans / JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'Courier New', 'monospace']
+          },
+          colors: {
+            paper: {
+              pitch: '#090d0f',
+              base: '#0d1317',
+              panel: '#12191f',
+              elevated: '#172027',
+              border: '#222d36',
+              borderLight: '#313e4a',
+              cream: '#f5f2eb',
+              bone: '#ded7c8',
+              muted: '#8e968f',
+              brass: '#c29b38',
+              copper: '#d97736',
+              forest: '#2d7a5b',
+              emerald: '#45b18a',
+              crimson: '#bf4343'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Editorial Layout & Print Mechanics */
+    body {
+      background-color: #090d0f;
+      color: #f5f2eb;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-serif-italic {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+    }
+
+    /* Editorial Hairlines */
+    .rule-hairline {
+      border-color: #222d36;
+    }
+
+    .hairline-b {
+      border-bottom: 1px solid #222d36;
+    }
+
+    .hairline-r {
+      border-right: 1px solid #222d36;
+    }
+
+    /* Custom Range Slider with Brass Track & Copper Knob */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      width: 100%;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 3px;
+      background: #25333e;
+      border-radius: 0px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #d97736;
+      border: 2px solid #f5f2eb;
+      cursor: pointer;
+      margin-top: -6.5px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      transition: transform 0.1s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #d97736;
+      border: 2px solid #f5f2eb;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+
+    /* Checkbox Styling */
+    .editorial-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      border: 1px solid #4a5a67;
+      background-color: #0d1317;
+      display: inline-grid;
+      place-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .editorial-checkbox:checked {
+      background-color: #d97736;
+      border-color: #d97736;
+    }
+    .editorial-checkbox:checked::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background-color: #090d0f;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    }
+
+    /* Print Briefing Formatting */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #1a1a1a !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-invert {
+        background: #ffffff !important;
+        color: #111111 !important;
+        border-color: #cccccc !important;
+      }
+      .editorial-card {
+        border-color: #dddddd !important;
+        background: #fdfdfd !important;
+        color: #111111 !important;
+      }
+      .text-paper-cream, .text-paper-bone {
+        color: #111111 !important;
+      }
+      .text-paper-copper {
+        color: #a3480e !important;
+      }
+      .text-paper-brass {
+        color: #7d5e12 !important;
+      }
+      .text-paper-emerald {
+        color: #155e42 !important;
+      }
+      .text-paper-muted {
+        color: #555555 !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-paper-pitch selection:bg-paper-copper selection:text-paper-cream">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP MASTHEAD & EXECUTIVE METRIC BAR                                    -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-paper-border bg-paper-base sticky top-0 z-40">
+    
+    <!-- Top Micro Folio -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 border-b border-paper-border/60 flex flex-wrap items-center justify-between text-[11px] font-mono text-paper-muted gap-2">
+      <div class="flex items-center space-x-4">
+        <span class="tracking-widest uppercase text-paper-bone font-medium">EXECUTIVE BRIEFING // REPORT NO. 2026-B8</span>
+        <span class="hidden md:inline">|</span>
+        <span class="hidden md:inline">CIRCULATION: CONFIDENTIAL (C-SUITE & MANAGING DIRECTORS)</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="text-paper-brass">BENCHMARK: TNB TARIFF B // COMM. FIBRE</span>
+        <span>|</span>
+        <span class="text-paper-emerald flex items-center space-x-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-paper-emerald inline-block"></span>
+          <span>PDPA-2010 VERIFIED</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Main Editorial Navigation Bar -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Logo & Publication Identity -->
+      <div>
+        <div class="flex items-center space-x-2">
+          <span class="font-serif text-2xl font-bold tracking-tight text-paper-cream">HomeLAB<span class="text-paper-copper font-serif-italic">.my</span></span>
+          <span class="text-[10px] font-mono px-2 py-0.5 border border-paper-border text-paper-bone uppercase tracking-wider">
+            ADVISORY MEMORANDUM
+          </span>
+        </div>
+        <p class="text-xs text-paper-muted mt-0.5">
+          Sovereign Hardware Infrastructure & Malaysian Enterprise SaaS Capital Retention
+        </p>
+      </div>
+
+      <!-- Masthead Action Controls -->
+      <div class="flex items-center space-x-3 no-print">
+        
+        <!-- Currency Toggle Switch -->
+        <div class="bg-paper-panel border border-paper-border p-0.5 flex text-xs font-mono">
+          <button id="btn-currency-myr" onclick="setCurrency('MYR')" class="px-2.5 py-1 bg-paper-copper text-paper-cream font-bold">
+            MYR (RM)
+          </button>
+          <button id="btn-currency-usd" onclick="setCurrency('USD')" class="px-2.5 py-1 text-paper-muted hover:text-paper-cream transition">
+            USD ($)
+          </button>
+        </div>
+
+        <!-- Print Executive Memo -->
+        <button 
+          onclick="window.print()" 
+          class="px-3 py-1.5 border border-paper-border hover:border-paper-bone text-paper-bone hover:text-paper-cream text-xs font-mono uppercase tracking-wider flex items-center space-x-1.5 transition"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+          </svg>
+          <span>EXPORT MEMORANDUM</span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. EXECUTIVE BRIEFING DOSSIER CONTENT                                     -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- SECTION A: INVESTMENT DISPATCH & STRATEGIC PULL-QUOTE                  -->
+    <!-- --------------------------------------------------------------------- -->
+    <section class="border-b border-paper-border pb-10">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Editorial Dispatch (Cols 1-8) -->
+        <div class="lg:col-span-8 space-y-5">
+          <div class="flex items-center space-x-2 text-xs font-mono text-paper-copper uppercase tracking-wider">
+            <span>DISPATCH 01</span>
+            <span>//</span>
+            <span>CAPITAL EFFICIENCY STRATEGY</span>
+          </div>
+
+          <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-paper-cream leading-[1.15]">
+            The Case for Asset Sovereignty: <br>
+            <span class="font-serif-italic text-paper-bone">Replacing Recurring Cloud Tenancy with Owned Physical Infrastructure.</span>
+          </h1>
+
+          <p class="text-sm sm:text-base text-paper-bone/90 leading-relaxed font-normal max-w-2xl">
+            Over the past decade, enterprise IT transitioned from capital equipment (CAPEX) to endless subscription fees (OPEX). While cloud suites eased early deployment, Malaysian mid-market firms now face an insidious operational burden: recurring dollar-denominated license escalations, mandatory 8% Digital SST, and external exposure under foreign cloud jurisdiction.
+          </p>
+
+          <!-- Editorial Pull-Quote -->
+          <div class="pl-4 sm:pl-6 border-l-2 border-paper-copper py-1">
+            <blockquote class="font-serif font-normal italic text-lg sm:text-xl text-paper-cream leading-snug">
+              “Why pay ongoing software tenancy for tools your enterprise relies upon daily, when modern high-throughput local hardware amortizes to zero cost in under nine months?”
+            </blockquote>
+            <cite class="text-xs font-mono text-paper-muted uppercase tracking-wider block mt-2">
+              — Strategic IT Portfolio Review, HomeLAB.my Advisory
+            </cite>
+          </div>
+        </div>
+
+        <!-- Right Balance-Sheet Key Metric Column (Cols 9-12) -->
+        <div class="lg:col-span-4 bg-paper-panel border border-paper-border p-6 space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-paper-border text-xs font-mono text-paper-muted">
+            <span>PORTFOLIO AGGREGATE</span>
+            <span>Q4 2026 AUDIT</span>
+          </div>
+
+          <!-- Metric 1 -->
+          <div>
+            <div class="text-[11px] font-mono uppercase text-paper-muted tracking-wider">Retained Capital (20+ Malaysian Firms)</div>
+            <div class="font-serif text-3xl font-semibold text-paper-emerald mt-1 tracking-tight" id="kpi-retained-capital">
+              RM 2,000,034
+            </div>
+            <p class="text-xs text-paper-bone/80 mt-1">
+              Direct cash flow diverted from Silicon Valley subscription models into local operating reserves.
+            </p>
+          </div>
+
+          <!-- Metric 2 -->
+          <div class="pt-4 border-t border-paper-border">
+            <div class="text-[11px] font-mono uppercase text-paper-muted tracking-wider">Median Payback Milestone</div>
+            <div class="font-serif text-3xl font-semibold text-paper-copper mt-1 tracking-tight" id="kpi-payback-months">
+              8.5 Months
+            </div>
+            <p class="text-xs text-paper-bone/80 mt-1">
+              Full recovery of enterprise appliance hardware Capex based on a 15-seat deployment.
+            </p>
+          </div>
+
+          <!-- Metric 3 -->
+          <div class="pt-4 border-t border-paper-border">
+            <div class="text-[11px] font-mono uppercase text-paper-muted tracking-wider">Jurisdictional Exposure</div>
+            <div class="font-serif text-3xl font-semibold text-paper-cream mt-1 tracking-tight">
+              0.00%
+            </div>
+            <p class="text-xs text-paper-bone/80 mt-1">
+              100% on-premises data residency complying strictly with the Malaysian PDPA 2010 framework.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- SECTION B: INTERACTIVE FINANCIAL AMORTIZATION MATRIX & LEDGER          -->
+    <!-- --------------------------------------------------------------------- -->
+    <section class="space-y-6">
+      
+      <!-- Section Title Masthead -->
+      <div class="flex flex-wrap items-baseline justify-between pb-3 border-b border-paper-border gap-2">
+        <div>
+          <span class="text-xs font-mono text-paper-copper uppercase tracking-wider block">LEDGER SECTION 02</span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-medium text-paper-cream mt-0.5">
+            SaaS Cost Savings & Hardware Amortization Matrix
+          </h2>
+        </div>
+        <div class="text-xs font-mono text-paper-muted">
+          FORMULA: <span class="text-paper-bone">NET = GROSS_CLOUD (INCL. 8% SST) - TNB_COMMERCIAL_OPEX</span>
+        </div>
+      </div>
+
+      <!-- Main Ledger Workspace Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Variable Parameters & SaaS Replacement Selection (Cols 1-7) -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Variable 1: Team Size & Presets -->
+          <div class="bg-paper-panel border border-paper-border p-5 space-y-4">
+            
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <div>
+                <label class="text-xs font-mono uppercase tracking-wider text-paper-bone font-semibold">
+                  1. Corporate Headcount (Licensed Seats)
+                </label>
+                <p class="text-xs text-paper-muted mt-0.5">Adjust workforce scale to measure variable seat licensing exposure.</p>
+              </div>
+              <div class="text-right">
+                <span class="font-mono text-xl font-bold text-paper-copper tracking-tight" id="val-seat-counter">15 Seats</span>
+              </div>
+            </div>
+
+            <!-- Seat Slider -->
+            <div class="pt-1">
+              <input 
+                type="range" 
+                id="seat-slider" 
+                min="5" 
+                max="100" 
+                value="15" 
+                step="1"
+                oninput="handleSeatSlider(this.value)"
+              >
+              <div class="flex justify-between text-[11px] font-mono text-paper-muted mt-2">
+                <span>5 Seats (Micro)</span>
+                <span>25 Seats</span>
+                <span>50 Seats (Mid-Market)</span>
+                <span>100 Seats</span>
+              </div>
+            </div>
+
+            <!-- Quick Enterprise Presets -->
+            <div class="grid grid-cols-3 gap-2.5 pt-1 text-xs font-mono">
+              <button 
+                onclick="applySeatPreset(5)" 
+                id="preset-5" 
+                class="py-2 px-3 border border-paper-border text-paper-bone hover:border-paper-copper text-center transition"
+              >
+                Micro SME [5]
+              </button>
+              <button 
+                onclick="applySeatPreset(15)" 
+                id="preset-15" 
+                class="py-2 px-3 border border-paper-copper bg-paper-copper/10 text-paper-copper font-bold text-center transition"
+              >
+                Growing Ent. [15]
+              </button>
+              <button 
+                onclick="applySeatPreset(50)" 
+                id="preset-50" 
+                class="py-2 px-3 border border-paper-border text-paper-bone hover:border-paper-copper text-center transition"
+              >
+                Mid-Market [50]
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Variable 2: Replaceable Enterprise Software Categories -->
+          <div class="bg-paper-panel border border-paper-border p-5 space-y-4">
+            <div class="flex items-baseline justify-between border-b border-paper-border pb-3">
+              <div>
+                <span class="text-xs font-mono uppercase tracking-wider text-paper-bone font-semibold">
+                  2. Replaceable Cloud Subscriptions
+                </span>
+                <p class="text-xs text-paper-muted mt-0.5">Toggle active commercial licenses to audit immediate recovery potential.</p>
+              </div>
+              <button onclick="toggleAllSaaS(true)" class="text-[11px] font-mono text-paper-copper hover:underline uppercase">
+                Select All
+              </button>
+            </div>
+
+            <!-- Checklist Matrix -->
+            <div class="space-y-2.5 pt-1" id="saas-catalog-container">
+              <!-- Dynamically rendered via JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: The C-Suite Financial Ledger Breakdown & Projections (Cols 8-12) -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- The Certified Balance Sheet Card -->
+          <div class="bg-paper-panel border border-paper-border p-6 space-y-5">
+            
+            <div class="border-b border-paper-border pb-3 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-paper-muted block">FINANCIAL RECOVERY STATEMENT</span>
+                <h3 class="font-serif text-lg font-medium text-paper-cream mt-0.5">CFO Operating Ledger</h3>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 border border-paper-emerald text-paper-emerald bg-paper-emerald/10">
+                AUDITED
+              </span>
+            </div>
+
+            <!-- Line Items -->
+            <div class="space-y-3 font-mono text-xs">
+              
+              <!-- Gross Cloud Spend -->
+              <div class="flex justify-between items-baseline">
+                <div>
+                  <span class="text-paper-bone block font-sans">Monthly Cloud SaaS Bill</span>
+                  <span class="text-[10px] text-paper-muted block">Direct software invoice drain</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-sm font-semibold text-paper-crimson" id="ledger-cloud-gross">RM 1,514</span>
+                  <span class="text-[10px] text-paper-muted block" id="ledger-cloud-sst">Incl. 8% SST (RM 112)</span>
+                </div>
+              </div>
+
+              <!-- Local OpEx -->
+              <div class="flex justify-between items-baseline pt-2 border-t border-paper-border/60">
+                <div>
+                  <span class="text-paper-bone block font-sans">Homelab Appliance OpEx</span>
+                  <span class="text-[10px] text-paper-muted block">65W continuous @ TNB Tariff B</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-sm font-semibold text-paper-bone" id="ledger-homelab-opex">RM 24.30</span>
+                  <span class="text-[10px] text-paper-emerald block">Local utility only</span>
+                </div>
+              </div>
+
+              <!-- Net Free Cash Flow -->
+              <div class="flex justify-between items-baseline pt-3 border-t border-paper-border bg-paper-elevated p-3 -mx-2">
+                <div>
+                  <span class="text-paper-cream font-medium block font-sans">Net Monthly Free Cash Flow</span>
+                  <span class="text-[10px] text-paper-muted block">Operating cash retained monthly</span>
+                </div>
+                <div class="text-right">
+                  <span class="font-serif text-xl font-bold text-paper-emerald" id="ledger-net-monthly">RM 1,489.70</span>
+                  <span class="text-[10px] text-paper-emerald block font-mono">100% Retained</span>
+                </div>
+              </div>
+
+              <!-- Hardware CapEx Investment -->
+              <div class="flex justify-between items-baseline pt-2 border-t border-paper-border/60">
+                <div>
+                  <span class="text-paper-bone block font-sans">One-Time Hardware Investment</span>
+                  <span class="text-[10px] text-paper-muted block" id="ledger-appliance-model">Enterprise 15-Seat Appliance</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-sm font-semibold text-paper-brass" id="ledger-hardware-capex">RM 10,000</span>
+                  <span class="text-[10px] text-paper-muted block">Depreciable Fixed Asset</span>
+                </div>
+              </div>
+
+              <!-- Capital Payback Milestone -->
+              <div class="flex justify-between items-baseline pt-2 border-t border-paper-border/60">
+                <div>
+                  <span class="text-paper-copper font-medium block font-sans">Capital Breakeven Milestone</span>
+                  <span class="text-[10px] text-paper-muted block">Full hardware amortization</span>
+                </div>
+                <div class="text-right">
+                  <span class="font-serif text-lg font-bold text-paper-copper" id="ledger-breakeven-months">6.7 Months</span>
+                  <span class="text-[10px] text-paper-muted block">Zero cost thereafter</span>
+                </div>
+              </div>
+
+              <!-- 36-Month Cumulative ROI -->
+              <div class="flex justify-between items-baseline pt-2 border-t border-paper-border/60">
+                <div>
+                  <span class="text-paper-bone block font-sans">3-Year Net Cumulative Return</span>
+                  <span class="text-[10px] text-paper-muted block">36-mo Cloud vs (CapEx + 36-mo OpEx)</span>
+                </div>
+                <div class="text-right">
+                  <span class="text-sm font-bold text-paper-emerald" id="ledger-3yr-savings">RM 43,629</span>
+                  <span class="text-[10px] text-paper-emerald block" id="ledger-3yr-roi">392% Net ROI</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Visual Amortization Trajectory Chart -->
+            <div class="pt-4 border-t border-paper-border">
+              <div class="flex justify-between items-center text-[11px] font-mono text-paper-muted mb-2">
+                <span>36-MONTH COST TRAJECTORY (AMORTIZATION)</span>
+                <span class="text-paper-emerald" id="chart-crossover-text">Breakeven: Month 7</span>
+              </div>
+              
+              <!-- SVG Visual Chart Container -->
+              <div class="bg-paper-pitch border border-paper-border p-3">
+                <svg id="amortization-chart" viewBox="0 0 340 120" class="w-full h-24 overflow-visible">
+                  <!-- Rendered dynamically via JS -->
+                </svg>
+                <div class="flex justify-between text-[10px] font-mono text-paper-muted mt-1 border-t border-paper-border/50 pt-1">
+                  <div class="flex items-center space-x-1.5">
+                    <span class="w-2.5 h-0.5 bg-paper-crimson inline-block"></span>
+                    <span>Cumulative SaaS Spend</span>
+                  </div>
+                  <div class="flex items-center space-x-1.5">
+                    <span class="w-2.5 h-0.5 bg-paper-emerald inline-block"></span>
+                    <span>Sovereign Hardware (CapEx+OpEx)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Call to Action Button -->
+            <button 
+              onclick="scrollToDossier()" 
+              class="w-full py-3 bg-paper-copper text-paper-cream hover:bg-[#b85e26] font-mono text-xs uppercase font-semibold tracking-wider transition active:translate-y-0.5"
+            >
+              Examine Sovereign Technical Architecture &rarr;
+            </button>
+
+          </div>
+
+          <!-- Editorial Advisory Note -->
+          <div class="border border-paper-border bg-paper-panel/60 p-4 text-xs text-paper-muted font-sans leading-relaxed">
+            <span class="font-mono text-[10px] text-paper-bone uppercase block mb-1">Advisory Benchmark Note:</span>
+            Electricity expenditure is calculated using continuous 65W thermal design load on commercial Tenaga Nasional Berhad (TNB) Low Voltage Industrial / Commercial Tariff B (RM 0.509/kWh). Calculations assume zero local IT staff expansion due to containerized maintenance templates.
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- SECTION C: SOVEREIGN REPLACEMENT DOSSIER (EXECUTIVE PORTFOLIO)        -->
+    <!-- --------------------------------------------------------------------- -->
+    <section class="space-y-6 pt-6 border-t border-paper-border" id="section-dossier">
+      
+      <div class="flex flex-wrap items-baseline justify-between pb-3 border-b border-paper-border gap-2">
+        <div>
+          <span class="text-xs font-mono text-paper-copper uppercase tracking-wider block">PORTFOLIO DOSSIER 03</span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-medium text-paper-cream mt-0.5">
+            Sovereign Infrastructure Catalog
+          </h2>
+        </div>
+        <div class="text-xs font-mono text-paper-muted">
+          23/23 CLUSTER NODES ACTIVE // SELECT TO INSPECT FEASIBILITY
+        </div>
+      </div>
+
+      <!-- Dossier Grid Categorized by Business Domain -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="dossier-grid">
+        <!-- Generated dynamically via JS -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 4. MODAL / SLIDE-OVER: EXECUTIVE FEASIBILITY BRIEFING                     -->
+  <!-- ========================================================================= -->
+  <div id="modal-dossier" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-paper-panel border border-paper-borderLight max-w-2xl w-full p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between border-b border-paper-border pb-4">
+        <div>
+          <span class="text-[10px] font-mono text-paper-copper uppercase tracking-widest block" id="modal-category">
+            CATEGORY // DOMAIN
+          </span>
+          <h3 class="font-serif text-2xl font-normal text-paper-cream mt-1" id="modal-title">
+            Service Title
+          </h3>
+        </div>
+        <button onclick="closeModal()" class="text-paper-muted hover:text-paper-cream font-mono text-xs p-1 border border-paper-border">
+          [ESC / CLOSE]
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="space-y-5 text-sm">
+        
+        <!-- Executive Summary -->
+        <div>
+          <h4 class="text-xs font-mono uppercase text-paper-bone tracking-wider">Executive Overview</h4>
+          <p class="text-paper-bone/90 font-sans mt-1 leading-relaxed" id="modal-summary">
+            Summary statement text goes here.
+          </p>
+        </div>
+
+        <!-- SaaS Comparison & Financial Impact -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-paper-base border border-paper-border font-mono text-xs">
+          <div>
+            <span class="text-paper-muted text-[10px] block uppercase">Displaced Cloud SaaS</span>
+            <span class="text-paper-crimson font-medium text-sm block mt-0.5" id="modal-replaces">Microsoft 365</span>
+            <span class="text-paper-muted text-[10px] mt-1 block" id="modal-saas-cost">RM 32 / seat / month</span>
+          </div>
+          <div>
+            <span class="text-paper-muted text-[10px] block uppercase">Sovereign On-Premise Stack</span>
+            <span class="text-paper-emerald font-medium text-sm block mt-0.5" id="modal-stack">Nextcloud Hub 29 (ZFS)</span>
+            <span class="text-paper-muted text-[10px] mt-1 block">Zero Incremental License Cost</span>
+          </div>
+        </div>
+
+        <!-- Risk Mitigation & Compliance -->
+        <div>
+          <h4 class="text-xs font-mono uppercase text-paper-bone tracking-wider">Data Sovereignty & Risk Mitigation</h4>
+          <p class="text-paper-bone/80 text-xs font-sans mt-1 leading-relaxed" id="modal-risk">
+            Data resides in encrypted NVMe ZFS local storage pools. Immune to third-party terms of service changes, foreign cross-border data audits, and currency fluctuation.
+          </p>
+        </div>
+
+        <!-- Technical Feasibility Runbook -->
+        <div class="p-3 bg-paper-pitch border border-paper-border font-mono text-xs space-y-1">
+          <div class="text-paper-muted text-[10px] uppercase">DEPLOYMENT RUNBOOK TELEMETRY:</div>
+          <div class="text-paper-bone flex justify-between">
+            <span>Container Image:</span>
+            <span class="text-paper-copper" id="modal-docker">image:latest</span>
+          </div>
+          <div class="text-paper-bone flex justify-between">
+            <span>Memory Footprint:</span>
+            <span class="text-paper-bone" id="modal-mem">512 MB</span>
+          </div>
+          <div class="text-paper-bone flex justify-between">
+            <span>Local Network Port:</span>
+            <span class="text-paper-bone" id="modal-port">443 / HTTPS</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-4 border-t border-paper-border flex justify-between items-center text-xs font-mono">
+        <span class="text-paper-emerald">● ARCHITECTURE CERTIFIED</span>
+        <button onclick="closeModal()" class="px-4 py-2 bg-paper-base border border-paper-border hover:border-paper-bone text-paper-cream transition">
+          Dismiss Briefing
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. EDITORIAL COLOPHON / FOOTER                                            -->
+  <!-- ========================================================================= -->
+  <footer class="border-t border-paper-border bg-paper-base mt-12 py-8 text-xs font-mono text-paper-muted">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-4">
+      <div>
+        <span class="text-paper-bone font-medium">HOMELAB.MY ADVISORY GROUP</span>
+        <span class="mx-2">|</span>
+        <span>MALAYSIAN SOVEREIGN IT FEASIBILITY AUDIT</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span>KUALA LUMPUR &bull; PENANG &bull; JOHOR BAHRU</span>
+        <span>|</span>
+        <span class="text-paper-bone">STRICTLY FOR EXECUTIVE EVALUATION</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- DATA MODEL & INTERACTIVE LOGIC                                            -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. Currency Configuration (MYR vs USD)
+    // -------------------------------------------------------------------------
+    let currentCurrency = 'MYR';
+    const FX_RATE_USD = 0.225; // 1 MYR = ~0.225 USD
+
+    function formatMoney(amountMYR) {
+      if (currentCurrency === 'USD') {
+        const usd = amountMYR * FX_RATE_USD;
+        return '$ ' + Math.round(usd).toLocaleString();
+      }
+      return 'RM ' + Math.round(amountMYR).toLocaleString();
+    }
+
+    function formatMoneyExact(amountMYR) {
+      if (currentCurrency === 'USD') {
+        const usd = amountMYR * FX_RATE_USD;
+        return '$ ' + usd.toFixed(2);
+      }
+      return 'RM ' + amountMYR.toFixed(2);
+    }
+
+    function setCurrency(curr) {
+      currentCurrency = curr;
+      const btnMYR = document.getElementById('btn-currency-myr');
+      const btnUSD = document.getElementById('btn-currency-usd');
+
+      if (curr === 'MYR') {
+        btnMYR.className = "px-2.5 py-1 bg-paper-copper text-paper-cream font-bold";
+        btnUSD.className = "px-2.5 py-1 text-paper-muted hover:text-paper-cream transition";
+      } else {
+        btnUSD.className = "px-2.5 py-1 bg-paper-copper text-paper-cream font-bold";
+        btnMYR.className = "px-2.5 py-1 text-paper-muted hover:text-paper-cream transition";
+      }
+
+      calculateLedger();
+      renderDossierGrid();
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. SaaS Catalog & Replacement Matrix Data
+    // -------------------------------------------------------------------------
+    const saasCatalog = [
+      {
+        id: 'office',
+        name: 'Office & Team Collaboration',
+        alt: 'Microsoft 365 / Google Workspace',
+        sovereign: 'Nextcloud Hub (Files, Deck, Talk)',
+        priceMYR: 32,
+        type: 'seat',
+        checked: true,
+        tag: 'Productivity'
+      },
+      {
+        id: 'accounting',
+        name: 'Accounting, Invoicing & e-Invoicing',
+        alt: 'AutoCount Cloud / Xero / QuickBooks',
+        sovereign: 'Invoice Ninja + AutoCount Server VM',
+        priceMYR: 80,
+        type: 'company',
+        checked: true,
+        tag: 'Finance'
+      },
+      {
+        id: 'storage',
+        name: 'Dedicated File Vault & Cloud Storage',
+        alt: 'SharePoint / 1TB Google Drive / Box',
+        sovereign: 'TrueNAS SCALE / Synology Hot Storage',
+        priceMYR: 27,
+        type: 'seat',
+        checked: true,
+        tag: 'Storage'
+      },
+      {
+        id: 'automation',
+        name: 'Workflow & Integration Automation',
+        alt: 'Zapier Team / Make.com',
+        sovereign: 'n8n Workflow Engine (Node-Based)',
+        priceMYR: 150,
+        type: 'company',
+        checked: true,
+        tag: 'DevOps'
+      },
+      {
+        id: 'wiki',
+        name: 'Team Knowledge Base & SOPs',
+        alt: 'Notion Team / Atlassian Confluence',
+        sovereign: 'Docmost Team Wiki (Hierarchical)',
+        priceMYR: 45,
+        type: 'seat',
+        checked: true,
+        tag: 'Knowledge'
+      },
+      {
+        id: 'publishing',
+        name: 'Digital Editorial & Member Feeds',
+        alt: 'Substack Pro / Mailchimp Standard',
+        sovereign: 'Ghost Engine (Cathedra Journal)',
+        priceMYR: 180,
+        type: 'company',
+        checked: false,
+        tag: 'Media'
+      },
+      {
+        id: 'ecommerce',
+        name: 'E-Commerce Storefront Engine',
+        alt: 'Shopify Basic + 2% Gateway Penalties',
+        sovereign: 'WooCommerce (itik Tudung Stack)',
+        priceMYR: 220,
+        type: 'company',
+        checked: false,
+        tag: 'Commerce'
+      },
+      {
+        id: 'pdf',
+        name: 'Client-Side Document Security & PDF',
+        alt: 'Adobe Acrobat Pro DC Cloud',
+        sovereign: 'BentoPDF Tool Suite (Client-Side WASM)',
+        priceMYR: 75,
+        type: 'seat',
+        checked: true,
+        tag: 'Legal'
+      }
+    ];
+
+    // -------------------------------------------------------------------------
+    // 3. Sovereign Infrastructure Portfolio Directory (Executive Dossier)
+    // -------------------------------------------------------------------------
+    const sovereignDossier = [
+      {
+        id: 'nextcloud',
+        category: 'OFFICE & COLLABORATION',
+        title: 'Nextcloud Hub Enterprise',
+        hook: 'Sovereign replacement for Google Workspace and Microsoft 365.',
+        replaces: 'Microsoft 365 / Google Workspace',
+        saasCost: 'RM 32 / seat / month',
+        stack: 'Nextcloud 29 / PHP 8.3 / MariaDB / Redis',
+        docker: 'nextcloud:fpm-alpine',
+        mem: '1024 MB',
+        port: '443 / HTTPS',
+        risk: 'Zero cross-border cloud telemetry. Files, real-time documents, and team chats are bound exclusively to encrypted local ZFS pools.',
+        summary: 'Provides enterprise-wide document editing, calendar synchronization, Kanban project boards (Deck), and WebRTC videoconferencing with absolute sovereignty over corporate intellectual property.'
+      },
+      {
+        id: 'docmost',
+        category: 'KNOWLEDGE BASE & SOPS',
+        title: 'Docmost Team Wiki',
+        hook: 'Centralized company wiki eliminating fragmented operational silos.',
+        replaces: 'Notion Team / Atlassian Confluence',
+        saasCost: 'RM 45 / seat / month',
+        stack: 'Docmost Core / Node.js / PostgreSQL',
+        docker: 'docmost/docmost:latest',
+        mem: '512 MB',
+        port: '3000 / HTTP',
+        risk: 'Maintains company SOPs and engineering runbooks on local NVMe arrays, immune to foreign platform service terms changes.',
+        summary: 'A clean, high-density knowledge base offering hierarchical page trees, real-time collaborative Markdown editing, and multi-department space management.'
+      },
+      {
+        id: 'invoiceninja',
+        category: 'FINANCE & COMPLIANCE',
+        title: 'Invoice Ninja & e-Invoicing',
+        hook: 'Self-hosted invoicing engine with Malaysian LHDN e-invoice compliance.',
+        replaces: 'Xero / QuickBooks Online',
+        saasCost: 'RM 80 / company / month',
+        stack: 'Laravel 11 / Flutter UI / MariaDB',
+        docker: 'invoiceninja/invoiceninja:latest',
+        mem: '512 MB',
+        port: '8000 / HTTP',
+        risk: 'Financial records, client contracts, and payment history remain on-premise without exposing gross profit margins to cloud providers.',
+        summary: 'Streamlines customer billing, expense auditing, and automated payment gateways (FPX/DuitNow) without per-transaction SaaS commissions.'
+      },
+      {
+        id: 'autocount',
+        category: 'FINANCE & COMPLIANCE',
+        title: 'AutoCount Win10 Accounting',
+        hook: 'Dedicated Windows 10 VM hosting AutoCount Desktop Server.',
+        replaces: 'Azure Virtual Desktop / AWS EC2 Windows',
+        saasCost: 'RM 350 / month cloud compute',
+        stack: 'KVM Hypervisor / QEMU / Windows 10 Pro',
+        docker: 'qemu-system-x86_64:win10-autocount',
+        mem: '8192 MB',
+        port: '3389 / RDP LAN',
+        risk: 'Runs critical legacy accounting software locally on bare metal, eliminating internet outage disruptions to accounts receivable operations.',
+        summary: 'Delivers multi-user financial accounting, stock inventory control, and SQL database management inside a fast LAN environment.'
+      },
+      {
+        id: 'n8n',
+        category: 'OPERATIONS & AUTOMATION',
+        title: 'n8n Workflow Automation',
+        hook: 'Visual node-based orchestration connecting disparate enterprise systems.',
+        replaces: 'Zapier Team / Make.com',
+        saasCost: 'RM 150 / company / month',
+        stack: 'n8n Enterprise / Node.js / SQLite',
+        docker: 'n8nio/n8n:latest',
+        mem: '512 MB',
+        port: '5678 / WEBHOOK',
+        risk: 'Executes sensitive customer data transfers between CRM and billing entirely in-memory behind internal firewall rules.',
+        summary: 'Connects internal webhooks, ERP databases, WhatsApp business channels, and email systems into automated, zero-licensing business processes.'
+      },
+      {
+        id: 'cathedra',
+        category: 'MEDIA & EDITORIAL',
+        title: 'Cathedra Journal (Ghost)',
+        hook: 'Independent publishing engine for high-end corporate newsletters.',
+        replaces: 'Substack Pro / Medium Cloud',
+        saasCost: 'RM 180 / company / month',
+        stack: 'Ghost 5.x / Node.js / MySQL',
+        docker: 'ghost:5-alpine',
+        mem: '384 MB',
+        port: '2368 / HTTP',
+        risk: 'Eliminates platform take-rates on reader subscriptions and ensures client subscriber emails are never mined by third parties.',
+        summary: 'A fast, publication-grade CMS designed for client advisories, annual stakeholder reports, and direct-to-inbox member briefings.'
+      },
+      {
+        id: 'bentopdf',
+        category: 'LEGAL & DOCUMENT TOOLS',
+        title: 'BentoPDF Tool Suite',
+        hook: 'Client-side PDF manipulation preventing confidential document leaks.',
+        replaces: 'Adobe Acrobat Pro DC Cloud',
+        saasCost: 'RM 75 / seat / month',
+        stack: 'WebAssembly (WASM) / Rust Core',
+        docker: 'bentopdf/standalone:v2',
+        mem: '128 MB',
+        port: '8080 / WASM',
+        risk: 'All document manipulation (OCR, splitting, merging, redacting) runs inside the local browser sandbox—zero bytes uploaded off-premise.',
+        summary: 'Guarantees bank-grade confidentiality for merger agreements, employee contracts, and proprietary engineering drawings.'
+      },
+      {
+        id: 'opencode',
+        category: 'SOVEREIGN AI & COMPUTE',
+        title: 'Opencode AI Assistant',
+        hook: 'Private code generation and AI analysis on local silicon.',
+        replaces: 'GitHub Copilot Enterprise',
+        saasCost: 'RM 85 / seat / month',
+        stack: 'Ollama / vLLM / Local Quantized Weights',
+        docker: 'ollama/ollama:rocm-vLLM',
+        mem: '4096 MB',
+        port: '11434 / REST',
+        risk: 'Ensures proprietary codebase syntax and internal financial algorithms never train commercial third-party LLMs.',
+        summary: 'Hosts browser-based syntax debugging and code completion directly on internal hardware accelerators with low latency.'
+      },
+      {
+        id: 'truenas',
+        category: 'DATA VAULT & STORAGE',
+        title: 'TrueNAS SCALE Enterprise ZFS',
+        hook: 'Resilient multi-terabyte storage array with real-time bitrot self-healing.',
+        replaces: 'AWS S3 Enterprise / Azure Files',
+        saasCost: 'RM 450 / month cloud storage',
+        stack: 'OpenZFS 2.2 / Linux Debian Core',
+        docker: 'truenas/scale:zfs-core',
+        mem: '4096 MB',
+        port: '443 / HTTPS',
+        risk: 'RAID-Z redundancy guarantees complete protection against disk failure while preserving 10GbE transfer speeds over internal fiber.',
+        summary: 'Provides unified SMB/NFS file shares, automated immutable snapshots against ransomware, and offsite point-to-point replication.'
+      }
+    ];
+
+    let currentSeats = 15;
+
+    // -------------------------------------------------------------------------
+    // 4. Ledger Financial Calculation Engine
+    // -------------------------------------------------------------------------
+    function handleSeatSlider(val) {
+      currentSeats = parseInt(val);
+      document.getElementById('val-seat-counter').innerText = `${currentSeats} Seats`;
+      updatePresetButtons();
+      calculateLedger();
+    }
+
+    function applySeatPreset(seats) {
+      currentSeats = seats;
+      document.getElementById('seat-slider').value = seats;
+      document.getElementById('val-seat-counter').innerText = `${currentSeats} Seats`;
+      updatePresetButtons();
+      calculateLedger();
+    }
+
+    function updatePresetButtons() {
+      [5, 15, 50].forEach(p => {
+        const btn = document.getElementById(`preset-5`);
+        const el = document.getElementById(`preset-${p}`);
+        if (!el) return;
+        if (p === currentSeats) {
+          el.className = "py-2 px-3 border border-paper-copper bg-paper-copper/10 text-paper-copper font-bold text-center transition";
+        } else {
+          el.className = "py-2 px-3 border border-paper-border text-paper-bone hover:border-paper-copper text-center transition";
+        }
+      });
+    }
+
+    function toggleSaaS(idx) {
+      saasCatalog[idx].checked = !saasCatalog[idx].checked;
+      calculateLedger();
+    }
+
+    function toggleAllSaaS(state) {
+      saasCatalog.forEach(c => c.checked = state);
+      renderSaaSCatalog();
+      calculateLedger();
+    }
+
+    function renderSaaSCatalog() {
+      const container = document.getElementById('saas-catalog-container');
+      container.innerHTML = saasCatalog.map((item, idx) => {
+        const costStr = item.type === 'seat' 
+          ? `${formatMoney(item.priceMYR)} / seat / mo`
+          : `${formatMoney(item.priceMYR)} / company / mo`;
+
+        return `
+          <div class="p-3 bg-paper-base border border-paper-border hover:border-paper-borderLight transition flex items-start space-x-3">
+            <input 
+              type="checkbox" 
+              class="editorial-checkbox mt-0.5" 
+              id="chk-${item.id}"
+              ${item.checked ? 'checked' : ''}
+              onchange="toggleSaaS(${idx})"
+            >
+            <div class="flex-1 cursor-pointer" onclick="toggleSaaS(${idx})">
+              <div class="flex flex-wrap justify-between items-baseline gap-1">
+                <span class="text-xs font-semibold text-paper-cream font-sans">${item.name}</span>
+                <span class="text-xs font-mono font-medium text-paper-copper">${costStr}</span>
+              </div>
+              <div class="flex flex-wrap justify-between items-baseline text-[11px] text-paper-muted mt-0.5">
+                <span>Displaces: <span class="text-paper-bone">${item.alt}</span></span>
+                <span class="text-paper-emerald">Sovereign: ${item.sovereign.split('(')[0]}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function calculateLedger() {
+      const seats = currentSeats;
+
+      // 1. Calculate Gross Cloud SaaS Drain
+      let cloudBase = 0;
+      saasCatalog.forEach(item => {
+        if (item.checked) {
+          if (item.type === 'seat') {
+            cloudBase += (item.priceMYR * seats);
+          } else {
+            cloudBase += item.priceMYR;
+          }
+        }
+      });
+
+      // 8% Malaysian Digital SST
+      const sst = cloudBase * 0.08;
+      const cloudGross = cloudBase + sst;
+
+      // 2. Homelab Appliance OpEx (65W Continuous @ TNB Tariff B: 0.065 kW * 730h * RM 0.509/kWh ≈ RM 24.30)
+      const homelabOpExMYR = 24.30;
+      const netMonthlyFreeCashMYR = Math.max(0, cloudGross - homelabOpExMYR);
+
+      // 3. Hardware CapEx Tiering
+      let hardwareCapexMYR = 10000;
+      let modelLabel = 'Enterprise 15-Seat Appliance';
+      if (seats <= 5) {
+        hardwareCapexMYR = 6000;
+        modelLabel = 'Micro SME Appliance (5-Seat Spec)';
+      } else if (seats > 30) {
+        hardwareCapexMYR = 22000;
+        modelLabel = 'Campus Cluster Appliance (50+ Spec)';
+      }
+
+      // 4. Breakeven Horizon in Months
+      const breakevenMonths = netMonthlyFreeCashMYR > 0 ? (hardwareCapexMYR / netMonthlyFreeCashMYR) : 999;
+      const breakevenFormatted = breakevenMonths <= 60 ? breakevenMonths.toFixed(1) + ' Months' : 'N/A';
+
+      // 5. 36-Month Projections
+      const cloud36mo = cloudGross * 36;
+      const homelab36mo = hardwareCapexMYR + (homelabOpExMYR * 36);
+      const savings36mo = Math.max(0, cloud36mo - homelab36mo);
+      const roiPercent = hardwareCapexMYR > 0 ? Math.round((savings36mo / hardwareCapexMYR) * 100) : 0;
+
+      // Update DOM
+      document.getElementById('ledger-cloud-gross').innerText = formatMoney(cloudGross);
+      document.getElementById('ledger-cloud-sst').innerText = `Incl. 8% SST (${formatMoney(sst)})`;
+      document.getElementById('ledger-homelab-opex').innerText = formatMoneyExact(homelabOpExMYR);
+      document.getElementById('ledger-net-monthly').innerText = formatMoneyExact(netMonthlyFreeCashMYR);
+      document.getElementById('ledger-hardware-capex').innerText = formatMoney(hardwareCapexMYR);
+      document.getElementById('ledger-appliance-model').innerText = modelLabel;
+      document.getElementById('ledger-breakeven-months').innerText = breakevenFormatted;
+      document.getElementById('ledger-3yr-savings').innerText = formatMoney(savings36mo);
+      document.getElementById('ledger-3yr-roi').innerText = `${roiPercent}% Net ROI`;
+
+      // Update Top KPIs
+      document.getElementById('kpi-payback-months').innerText = breakevenFormatted;
+
+      // Render Visual Amortization Trajectory Chart
+      renderChart(cloudGross, hardwareCapexMYR, homelabOpExMYR, breakevenMonths);
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Visual Amortization Trajectory Chart (SVG)
+    // -------------------------------------------------------------------------
+    function renderChart(monthlyCloud, capex, monthlyOpex, breakevenMonths) {
+      const svg = document.getElementById('amortization-chart');
+      const width = 340;
+      const height = 110;
+      const padding = 20;
+
+      // Generate 36-month coordinates
+      const maxVal = Math.max(monthlyCloud * 36, capex + (monthlyOpex * 36), 10000);
+      
+      const getX = (m) => padding + (m / 36) * (width - padding * 2);
+      const getY = (val) => height - padding - (val / maxVal) * (height - padding * 2);
+
+      // Cloud Line (Starts at 0, slopes upward steeply)
+      const cloudP1 = `${getX(0)},${getY(0)}`;
+      const cloudP2 = `${getX(36)},${getY(monthlyCloud * 36)}`;
+
+      // Homelab Line (Starts at Capex, slopes gently with OpEx)
+      const homeP1 = `${getX(0)},${getY(capex)}`;
+      const homeP2 = `${getX(36)},${getY(capex + (monthlyOpex * 36))}`;
+
+      // Calculate intersection point
+      const be = Math.min(36, Math.max(0, breakevenMonths));
+      const crossX = getX(be);
+      const crossY = getY(monthlyCloud * be);
+
+      document.getElementById('chart-crossover-text').innerText = 
+        be < 36 ? `Breakeven Milestone: Month ${be.toFixed(1)}` : 'Adjust Parameters for Payback';
+
+      svg.innerHTML = `
+        <!-- Chart Grid Lines -->
+        <line x1="${padding}" y1="${getY(0)}" x2="${width - padding}" y2="${getY(0)}" stroke="#222d36" stroke-width="1" />
+        <line x1="${padding}" y1="${getY(maxVal/2)}" x2="${width - padding}" y2="${getY(maxVal/2)}" stroke="#222d36" stroke-width="1" stroke-dasharray="2,2" />
+        <line x1="${padding}" y1="${getY(maxVal)}" x2="${width - padding}" y2="${getY(maxVal)}" stroke="#222d36" stroke-width="1" stroke-dasharray="2,2" />
+        
+        <!-- SaaS Cumulative Spend (Crimson) -->
+        <line x1="${getX(0)}" y1="${getY(0)}" x2="${getX(36)}" y2="${getY(monthlyCloud * 36)}" stroke="#bf4343" stroke-width="2" />
+        
+        <!-- Sovereign Hardware Amortization (Emerald) -->
+        <line x1="${getX(0)}" y1="${getY(capex)}" x2="${getX(36)}" y2="${getY(capex + (monthlyOpex * 36))}" stroke="#45b18a" stroke-width="2" />
+
+        <!-- Crossover Breakeven Indicator -->
+        ${be < 36 ? `
+          <line x1="${crossX}" y1="${height - padding}" x2="${crossX}" y2="${crossY}" stroke="#d97736" stroke-dasharray="3,3" stroke-width="1" />
+          <circle cx="${crossX}" cy="${crossY}" r="4" fill="#d97736" stroke="#f5f2eb" stroke-width="1.5" />
+          <text x="${Math.min(width - 70, crossX + 6)}" y="${crossY - 6}" fill="#d97736" font-size="9" font-family="'JetBrains Mono', monospace">Month ${be.toFixed(1)}</text>
+        ` : ''}
+
+        <!-- Month Markers -->
+        <text x="${getX(0)}" y="${height - 6}" fill="#8e968f" font-size="8" font-family="'JetBrains Mono', monospace">M0</text>
+        <text x="${getX(12)}" y="${height - 6}" fill="#8e968f" font-size="8" font-family="'JetBrains Mono', monospace">M12</text>
+        <text x="${getX(24)}" y="${height - 6}" fill="#8e968f" font-size="8" font-family="'JetBrains Mono', monospace">M24</text>
+        <text x="${getX(36) - 14}" y="${height - 6}" fill="#8e968f" font-size="8" font-family="'JetBrains Mono', monospace">M36</text>
+      `;
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. Sovereign Dossier Directory Rendering & Inspection Modal
+    // -------------------------------------------------------------------------
+    function renderDossierGrid() {
+      const container = document.getElementById('dossier-grid');
+      container.innerHTML = sovereignDossier.map(item => `
+        <div class="bg-paper-panel border border-paper-border hover:border-paper-borderLight transition p-5 flex flex-col justify-between space-y-4 editorial-card">
+          <div class="space-y-2">
+            <div class="flex justify-between items-baseline">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-paper-muted">${item.category}</span>
+              <span class="text-[10px] font-mono text-paper-emerald">● ACTIVE</span>
+            </div>
+            <h3 class="font-serif text-xl font-normal text-paper-cream">${item.title}</h3>
+            <p class="text-xs text-paper-bone/80 font-sans leading-relaxed">${item.hook}</p>
+          </div>
+
+          <div class="pt-3 border-t border-paper-border/70 space-y-2 font-mono text-[11px]">
+            <div class="flex justify-between text-paper-muted">
+              <span>Displaces:</span>
+              <span class="text-paper-crimson font-sans">${item.replaces.split('/')[0]}</span>
+            </div>
+            <div class="flex justify-between text-paper-muted">
+              <span>On-Premise:</span>
+              <span class="text-paper-brass font-sans">${item.port}</span>
+            </div>
+            <button 
+              onclick="openModal('${item.id}')" 
+              class="w-full mt-2 py-1.5 border border-paper-border hover:border-paper-bone text-paper-bone hover:text-paper-cream text-[11px] font-mono uppercase tracking-wider transition"
+            >
+              Examine Feasibility Memo &rarr;
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openModal(id) {
+      const item = sovereignDossier.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById('modal-category').innerText = item.category;
+      document.getElementById('modal-title').innerText = item.title;
+      document.getElementById('modal-summary').innerText = item.summary;
+      document.getElementById('modal-replaces').innerText = item.replaces;
+      document.getElementById('modal-saas-cost').innerText = item.saasCost;
+      document.getElementById('modal-stack').innerText = item.stack;
+      document.getElementById('modal-risk').innerText = item.risk;
+      document.getElementById('modal-docker').innerText = item.docker;
+      document.getElementById('modal-mem').innerText = item.mem;
+      document.getElementById('modal-port').innerText = item.port;
+
+      const modal = document.getElementById('modal-dossier');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal-dossier');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Close modal on ESC key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    function scrollToDossier() {
+      const el = document.getElementById('section-dossier');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. Initialize Application
+    // -------------------------------------------------------------------------
+    window.onload = function() {
+      renderSaaSCatalog();
+      calculateLedger();
+      renderDossierGrid();
+
+      // Subtle dynamic ticker for the retained capital indicator
+      let retainedMYR = 2000034;
+      setInterval(() => {
+        retainedMYR += Math.floor(Math.random() * 5) + 1;
+        document.getElementById('kpi-retained-capital').innerText = formatMoney(retainedMYR);
+      }, 4000);
+    };
+  </script>
+</body>
+</html>

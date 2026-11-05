@@ -1,0 +1,8 @@
+{
+  "project_name": "OpenKuasa Multi-Theme Engine & Curated Design Systems",
+  "workflow": {
+    "commit_docs": true,
+    "compact_content": false,
+    "research_before_questions": false
+  }
+}

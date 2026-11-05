@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HomeLAB.my // APPLIANCE-RACK-4U</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Share+Tech+Mono&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --rack-panel: #14171a;
+      --rack-metal: #1f2429;
+      --rack-border: #2d333b;
+      --led-green: #00ff66;
+      --led-amber: #ffaa00;
+      --led-red: #ff3344;
+      --silk-screen: #8b949e;
+    }
+    body {
+      background-color: #08090a;
+      font-family: 'Chakra Petch', sans-serif;
+      color: #c9d1d9;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(20, 24, 30, 0.8) 0%, rgba(5, 6, 7, 1) 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.4) 2px, rgba(0, 0, 0, 0.4) 4px);
+    }
+    .mono { font-family: 'Share Tech Mono', monospace; }
+    
+    /* Machined screw head */
+    .hex-screw {
+      width: 18px;
+      height: 18px;
+      background: radial-gradient(circle, #3a3f47 0%, #1a1c20 80%);
+      border: 1px solid #484f58;
+      border-radius: 50%;
+      position: relative;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.8);
+    }
+    .hex-screw::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      background: #0d0e11;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      transform: translate(-50%, -50%);
+    }
+
+    /* Recessed industrial chassis panel */
+    .chassis-bevel {
+      background: linear-gradient(180deg, #181b1f 0%, #111316 100%);
+      box-shadow: 
+        inset 0 1px 0 rgba(255,255,255,0.1),
+        inset 0 0 15px rgba(0,0,0,0.8),
+        0 8px 30px rgba(0,0,0,0.9),
+        0 0 0 1px #22272e;
+    }
+    
+    .bay-inset {
+      background: #0c0e11;
+      border: 1px solid #21262d;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    /* Rocker Switch */
+    .rocker {
+      width: 44px;
+      height: 72px;
+      background: #090b0d;
+      border: 2px solid #30363d;
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    }
+    .rocker-paddle {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      right: 4px;
+      height: 30px;
+      background: linear-gradient(180deg, #ff5722 0%, #d84315 100%);
+      border-radius: 2px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      transition: all 0.15s ease;
+    }
+    .rocker.off .rocker-paddle {
+      top: 34px;
+      background: linear-gradient(180deg, #2d333b 0%, #1c2128 100%);
+    }
+
+    /* Seven Segment LED font / LCD display */
+    .vfd-display {
+      background: #061009;
+      border: 2px solid #162a1d;
+      color: #00ff66;
+      text-shadow: 0 0 8px rgba(0,255,102,0.6);
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.9);
+    }
+
+    /* Mechanical link LED */
+    .status-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ff66;
+      box-shadow: 0 0 8px #00ff66, inset 0 1px 1px #fff;
+    }
+    .status-led.blink {
+      animation: ledPulse 1.2s infinite ease-in-out;
+    }
+    @keyframes ledPulse {
+      0%, 100% { opacity: 1; filter: brightness(1.2); }
+      50% { opacity: 0.3; filter: brightness(0.6); }
+    }
+    .status-led.amber {
+      background: #ffaa00;
+      box-shadow: 0 0 8px #ffaa00, inset 0 1px 1px #fff;
+    }
+    .status-led.off {
+      background: #21262d;
+      box-shadow: none;
+    }
+
+    /* Rotary Dial Visual */
+    .rotary-knob {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, #1c2128, #30363d, #1c2128, #30363d, #1c2128);
+      border: 3px solid #484f58;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.8), inset 0 0 8px rgba(0,0,0,0.9);
+      position: relative;
+    }
+    .rotary-indicator {
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 18px;
+      background: #ff5722;
+      border-radius: 2px;
+      box-shadow: 0 0 6px #ff5722;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center">
+
+  <!-- 19-INCH SERVER RACK OUTER CABINET FRAME -->
+  <div class="w-full max-w-7xl bg-[#0d0f12] p-2 md:p-4 rounded-lg border-2 border-[#30363d] shadow-[0_20px_60px_rgba(0,0,0,0.95)] relative">
+    
+    <!-- Rack Ear Left -->
+    <div class="absolute -left-3 md:-left-5 top-0 bottom-0 w-4 md:w-6 bg-[#161b22] border-y-2 border-l-2 border-[#30363d] rounded-l flex flex-col justify-between py-6 items-center">
+      <div class="hex-screw"></div>
+      <div class="hex-screw"></div>
+      <div class="hex-screw"></div>
+      <div class="hex-screw"></div>
+    </div>
+
+    <!-- Rack Ear Right -->
+    <div class="absolute -right-3 md:-right-5 top-0 bottom-0 w-4 md:w-6 bg-[#161b22] border-y-2 border-r-2 border-[#30363d] rounded-r flex flex-col justify-between py-6 items-center">
+      <div class="hex-screw"></div>
+      <div class="hex-screw"></div>
+      <div class="hex-screw"></div>
+      <div class="hex-screw"></div>
+    </div>
+
+    <!-- 4U CHASSIS FACEPLATE -->
+    <div class="chassis-bevel rounded p-4 md:p-6 text-slate-300">
+      
+      <!-- TOP SILKSCREEN HEADER & HARDWARE STATUS STRIP -->
+      <div class="flex flex-wrap items-center justify-between border-b-2 border-[#21262d] pb-4 mb-6 gap-4">
+        <div class="flex items-center gap-4">
+          <div class="px-2 py-1 bg-black border border-[#30363d] text-amber-500 mono font-bold text-xs tracking-widest">
+            MODEL: HL-4U-MYS
+          </div>
+          <div>
+            <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <span>HOMELAB.MY</span>
+              <span class="text-xs px-2 py-0.5 bg-orange-950/60 border border-orange-500/50 text-orange-400 font-mono">SERIES 1.5</span>
+            </h1>
+            <p class="text-[11px] mono text-slate-400 uppercase tracking-widest">Sovereign On-Premise Enterprise Infrastructure Appliance</p>
+          </div>
+        </div>
+
+        <!-- Telemetry Bus Indicators -->
+        <div class="flex items-center gap-6 bg-black/60 px-4 py-2 border border-[#21262d] rounded">
+          <div class="flex items-center gap-2">
+            <span class="status-led blink"></span>
+            <span class="text-xs mono text-slate-300">QUORUM: 23/23 OK</span>
+          </div>
+          <div class="h-4 w-px bg-slate-700"></div>
+          <div class="flex items-center gap-2">
+            <span class="status-led amber"></span>
+            <span class="text-xs mono text-slate-300">TNB TARIFF B: 65W</span>
+          </div>
+          <div class="h-4 w-px bg-slate-700"></div>
+          <div class="flex items-center gap-2">
+            <span class="status-led"></span>
+            <span class="text-xs mono text-slate-300">PDPA: 100% LOCAL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CHASSIS BAY: 3 COLUMNS -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- COLUMN 1: PHYSICAL DRIVE / SERVICE RUNNERS (5 COLS) -->
+        <div class="lg:col-span-5 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+              <span class="inline-block w-2 h-2 bg-orange-500"></span> ACTIVE RUNTIME APPLIANCES (HOT-SWAP)
+            </span>
+            <span class="mono text-[10px] text-slate-500">BUS: 10Gbps SFP+</span>
+          </div>
+
+          <!-- Service Drive Bays -->
+          <div class="space-y-2 overflow-y-auto max-h-[580px] pr-1" id="serviceList">
+            <!-- Items injected by script -->
+          </div>
+        </div>
+
+        <!-- COLUMN 2: HARDWARE CONTROLS & SEAT POTENTIOMETER (3 COLS) -->
+        <div class="lg:col-span-3 flex flex-col justify-between bay-inset p-4 rounded">
+          <div>
+            <div class="border-b border-[#21262d] pb-2 mb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-300">ANALOG OPEX CONTROLS</span>
+              <p class="text-[10px] mono text-slate-500">Seat capacity & power bus</p>
+            </div>
+
+            <!-- Seat Dial Simulation -->
+            <div class="flex flex-col items-center justify-center my-4 p-4 bg-black/40 border border-[#21262d] rounded">
+              <span class="text-[11px] mono text-slate-400 uppercase mb-2">TENANT CAPACITY CALIBRATOR</span>
+              
+              <div class="relative my-2">
+                <div class="rotary-knob" id="knobGraphic" style="transform: rotate(45deg);">
+                  <div class="rotary-indicator"></div>
+                </div>
+              </div>
+
+              <!-- Digital Readout for Seats -->
+              <div class="vfd-display mono text-2xl font-bold px-4 py-1 rounded my-3">
+                <span id="seatCountDisplay">15</span> <span class="text-xs text-emerald-600">SEATS</span>
+              </div>
+
+              <input type="range" id="seatSlider" min="5" max="100" value="15" step="5" class="w-full accent-orange-500 cursor-pointer">
+              <div class="flex justify-between w-full text-[10px] mono text-slate-500 mt-1">
+                <span>5 (Micro)</span>
+                <span>50 (SME)</span>
+                <span>100 (Corp)</span>
+              </div>
+            </div>
+
+            <!-- Replaceable Service Switches -->
+            <div class="mt-4">
+              <span class="text-[11px] mono text-slate-400 uppercase tracking-wider block mb-2">BUS ROUTING TOGGLES</span>
+              <div class="space-y-2 text-xs">
+                <label class="flex items-center justify-between p-2 bg-black/30 border border-[#21262d] rounded cursor-pointer hover:border-slate-600">
+                  <span class="mono">M365 / Workspace Suite</span>
+                  <input type="checkbox" checked data-cost="32" class="category-toggle accent-orange-500">
+                </label>
+                <label class="flex items-center justify-between p-2 bg-black/30 border border-[#21262d] rounded cursor-pointer hover:border-slate-600">
+                  <span class="mono">Xero / QuickBooks Engine</span>
+                  <input type="checkbox" checked data-cost="80" data-fixed="true" class="category-toggle accent-orange-500">
+                </label>
+                <label class="flex items-center justify-between p-2 bg-black/30 border border-[#21262d] rounded cursor-pointer hover:border-slate-600">
+                  <span class="mono">OneDrive / SharePoint (1TB)</span>
+                  <input type="checkbox" checked data-cost="27" class="category-toggle accent-orange-500">
+                </label>
+                <label class="flex items-center justify-between p-2 bg-black/30 border border-[#21262d] rounded cursor-pointer hover:border-slate-600">
+                  <span class="mono">Zapier / Make Automation</span>
+                  <input type="checkbox" checked data-cost="150" data-fixed="true" class="category-toggle accent-orange-500">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Master Power Rocker -->
+          <div class="mt-4 pt-4 border-t border-[#21262d] flex items-center justify-between">
+            <div>
+              <div class="text-xs font-bold text-white">MAINS POWER</div>
+              <div class="text-[10px] mono text-slate-500">ISOLATION RELAY</div>
+            </div>
+            <div class="rocker" id="masterPower">
+              <div class="rocker-paddle"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMN 3: VFD METER & BREAKEVEN DISPATCH (4 COLS) -->
+        <div class="lg:col-span-4 flex flex-col gap-4">
+          <!-- VFD Financial Panel -->
+          <div class="vfd-display p-4 rounded border-2 border-emerald-950 flex flex-col justify-between">
+            <div class="flex justify-between items-center border-b border-emerald-900/60 pb-2 mb-3">
+              <span class="text-xs uppercase tracking-widest text-emerald-400">AMORTIZATION MONITOR</span>
+              <span class="text-[10px] px-1.5 py-0.5 bg-emerald-950 text-emerald-300 rounded">LIVE FEED</span>
+            </div>
+
+            <!-- Big Stat: Breakeven -->
+            <div class="mb-4">
+              <div class="text-[11px] uppercase tracking-wider text-emerald-400/80">CAPEX BREAKEVEN HORIZON</div>
+              <div class="text-3xl md:text-4xl font-bold tracking-tight text-emerald-300 mono" id="breakevenMonths">
+                8.5 MONTHS
+              </div>
+              <div class="text-xs text-emerald-500/80 mt-1">
+                Pays for RM 10,000 appliance in full. Zero recurring SaaS tax.
+              </div>
+            </div>
+
+            <div class="space-y-2 border-t border-emerald-900/60 pt-3 text-xs mono">
+              <div class="flex justify-between">
+                <span class="text-emerald-500">CLOUD SAAS BILL (INC 8% SST):</span>
+                <span class="font-bold text-emerald-300" id="saasMonthly">RM 1,196 /mo</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-emerald-500">HARDWARE OPEX (TNB 65W):</span>
+                <span class="font-bold text-emerald-300">RM 24 /mo</span>
+              </div>
+              <div class="flex justify-between text-emerald-200 border-t border-emerald-900/40 pt-1">
+                <span>NET MONTHLY SAVINGS:</span>
+                <span class="font-bold text-emerald-100" id="netSavings">RM 1,172 /mo</span>
+              </div>
+              <div class="flex justify-between text-amber-300 border-t border-emerald-900/40 pt-1">
+                <span>3-YEAR CUMULATIVE RETURN:</span>
+                <span class="font-bold text-amber-200" id="cumulativeSavings">RM 32,187</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Service Inspector / Punch Card -->
+          <div class="bay-inset p-4 rounded flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-orange-400 uppercase tracking-wider">HARDWARE SPEC INSPECTOR</span>
+                <span class="mono text-[10px] text-slate-500" id="inspectedPort">PORT: 8080</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-1" id="inspectedName">Nextcloud Hub 30</h3>
+              <p class="text-xs text-slate-400 mb-3" id="inspectedDesc">
+                Self-hosted productivity suite replacing Google Workspace & M365. Native Files, Talk, Deck, and Docs with full data isolation.
+              </p>
+              
+              <div class="grid grid-cols-2 gap-2 text-[11px] mono bg-black/40 p-2.5 rounded border border-[#21262d]">
+                <div>
+                  <span class="text-slate-500 block">REPLACES:</span>
+                  <span class="text-slate-200 font-semibold" id="inspectedReplaces">MS 365 + Drive</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 block">SOVEREIGNTY:</span>
+                  <span class="text-emerald-400 font-semibold">100% On-Premise</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-[#21262d] flex items-center justify-between">
+              <span class="text-[10px] mono text-slate-500">RUNTIME: DOCKER CONTAINER</span>
+              <button class="px-3 py-1.5 bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs rounded mono tracking-wider transition-colors shadow">
+                TEST TELEMETRY ➔
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- BOTTOM RACK VENT & SPEC FOOTER -->
+      <div class="mt-6 pt-4 border-t border-[#21262d] flex flex-wrap justify-between items-center text-[10px] mono text-slate-500 gap-4">
+        <div class="flex items-center gap-3">
+          <span>VENTILATION: 2x 120mm BALL-BEARING FANS (AUTO)</span>
+          <span>•</span>
+          <span>CHASSIS: 1.2mm SECC STEEL</span>
+          <span>•</span>
+          <span>JURISDICTION: MALAYSIA (PDPA COMPLIANT)</span>
+        </div>
+        <div class="flex gap-1">
+          <div class="w-1.5 h-3 bg-[#21262d]"></div>
+          <div class="w-1.5 h-3 bg-[#21262d]"></div>
+          <div class="w-1.5 h-3 bg-[#21262d]"></div>
+          <div class="w-1.5 h-3 bg-[#21262d]"></div>
+          <div class="w-1.5 h-3 bg-[#21262d]"></div>
+          <div class="w-1.5 h-3 bg-orange-500"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const services = [
+      { id: 1, name: "Nextcloud Hub", replaces: "Google Workspace / M365", port: "443/HTTPS", desc: "Files, Docs, Team Deck, and encrypted voice/video chat under sovereign encryption.", active: true },
+      { id: 2, name: "Docmost Wiki", replaces: "Notion / Confluence", port: "3000/TCP", desc: "Company knowledge base with hierarchical spaces, markdown tables, and live multi-user editing.", active: true },
+      { id: 3, name: "BentoPDF Suite", replaces: "Adobe Acrobat Pro", port: "8080/TCP", desc: "Local client-side PDF OCR, splitting, and watermarking with zero file uploads to foreign clouds.", active: true },
+      { id: 4, name: "Invoice Ninja", replaces: "Xero / QuickBooks Online", port: "8000/TCP", desc: "Self-hosted invoicing, recurring billing, expense ledger, and LHDN e-invoicing compliance.", active: true },
+      { id: 5, name: "AutoCount Win10", replaces: "Dedicated Accounting VM", port: "3389/RDP", desc: "Full Windows virtual machine running AutoCount desktop and Microsoft SQL database on local NVMe.", active: true },
+      { id: 6, name: "n8n Automation", replaces: "Zapier / Make ($150/mo)", port: "5678/TCP", desc: "Visual webhook triggers and execution graphs handling automated cross-app pipelines.", active: true },
+      { id: 7, name: "Excalidraw Board", replaces: "Miro / Lucidchart", port: "5000/TCP", desc: "Infinite hand-drawn collaborative whiteboard for system flows, wireframes, and architecture.", active: true }
+    ];
+
+    let currentSelected = 0;
+
+    // Render Service Drive Bays
+    const listContainer = document.getElementById("serviceList");
+    function renderServices() {
+      listContainer.innerHTML = services.map((s, idx) => `
+        <div onclick="selectService(${idx})" class="p-3 bay-inset rounded cursor-pointer transition-all border ${currentSelected === idx ? 'border-orange-500 bg-orange-950/20' : 'border-[#21262d] hover:border-slate-500'}">
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-2">
+              <span class="status-led ${s.active ? '' : 'off'}"></span>
+              <span class="font-bold text-sm text-white">${s.name}</span>
+            </div>
+            <span class="mono text-[10px] text-slate-400 bg-black/60 px-1.5 py-0.5 rounded border border-[#21262d]">${s.port}</span>
+          </div>
+          <div class="flex justify-between items-center text-[11px] mono text-slate-400">
+            <span>REPLACES: <span class="text-orange-300">${s.replaces}</span></span>
+            <span class="text-[10px] text-emerald-400 font-bold">READY</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectService(idx) {
+      currentSelected = idx;
+      const s = services[idx];
+      document.getElementById("inspectedName").textContent = s.name;
+      document.getElementById("inspectedDesc").textContent = s.desc;
+      document.getElementById("inspectedReplaces").textContent = s.replaces;
+      document.getElementById("inspectedPort").textContent = "PORT: " + s.port;
+      renderServices();
+    }
+
+    // Interactive Financial Calculation
+    const seatSlider = document.getElementById("seatSlider");
+    const seatDisplay = document.getElementById("seatCountDisplay");
+    const knobGraphic = document.getElementById("knobGraphic");
+    const toggles = document.querySelectorAll(".category-toggle");
+
+    function calculateFinancials() {
+      const seats = parseInt(seatSlider.value);
+      seatDisplay.textContent = seats;
+      
+      // Rotate dial UI based on seats
+      const rot = 20 + (seats / 100) * 240;
+      knobGraphic.style.transform = `rotate(${rot}deg)`;
+
+      let monthlyCloud = 0;
+      toggles.forEach(t => {
+        if (t.checked) {
+          const cost = parseFloat(t.dataset.cost);
+          if (t.dataset.fixed === "true") {
+            monthlyCloud += cost;
+          } else {
+            monthlyCloud += cost * seats;
+          }
+        }
+      });
+
+      const sst = monthlyCloud * 0.08;
+      const totalSaaS = Math.round(monthlyCloud + sst);
+      const opex = 24; // TNB 65W
+      const netSave = Math.max(0, totalSaaS - opex);
+      const capex = 10000;
+      const breakeven = netSave > 0 ? (capex / netSave).toFixed(1) : "∞";
+      const cumulative3Yr = (netSave * 36) - capex;
+
+      document.getElementById("saasMonthly").textContent = `RM ${totalSaaS.toLocaleString()} /mo`;
+      document.getElementById("netSavings").textContent = `RM ${netSave.toLocaleString()} /mo`;
+      document.getElementById("breakevenMonths").textContent = `${breakeven} MONTHS`;
+      document.getElementById("cumulativeSavings").textContent = `RM ${cumulative3Yr > 0 ? cumulative3Yr.toLocaleString() : 0}`;
+    }
+
+    seatSlider.addEventListener("input", calculateFinancials);
+    toggles.forEach(t => t.addEventListener("change", calculateFinancials));
+
+    // Master Rocker Switch Toggle
+    const masterPower = document.getElementById("masterPower");
+    let powerState = true;
+    masterPower.addEventListener("click", () => {
+      powerState = !powerState;
+      masterPower.classList.toggle("off", !powerState);
+      document.querySelectorAll(".status-led").forEach(led => {
+        if (!powerState) {
+          led.classList.add("off");
+          led.classList.remove("blink");
+        } else {
+          led.classList.remove("off");
+        }
+      });
+    });
+
+    // Init
+    renderServices();
+    selectService(0);
+    calculateFinancials();
+  </script>
+</body>
+</html>

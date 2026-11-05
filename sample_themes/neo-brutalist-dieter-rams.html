@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HomeLAB.my | Industrial Appliance V8.2</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono for Dieter Rams / Braun DIN typographic feel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Helvetica Neue', 'Arial', 'sans-serif'],
+            mono: ['"Chivo Mono"', 'JetBrains Mono', 'Consolas', 'monospace'],
+          },
+          colors: {
+            braun: {
+              charcoal: '#121315',
+              chassis: '#18191C',
+              chassisSub: '#1E2024',
+              surface: '#24272D',
+              border: '#333740',
+              borderLight: '#444955',
+              orange: '#FF5400',       /* Iconic Braun Signal Orange */
+              orangeHover: '#E04A00',
+              orangeMuted: '#FF54001A',
+              yellow: '#F4B400',       /* Dieter Rams ET66 Calculator Yellow */
+              green: '#10B981',        /* Indicator LED Green */
+              metal: '#8E94A0',
+              bone: '#F4F3EF',
+              cream: '#ECE9E2',
+            }
+          },
+          boxShadow: {
+            'braun-btn': 'inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 0 #0D0E10',
+            'braun-pressed': 'inset 0 2px 4px rgba(0,0,0,0.6)',
+            'braun-raised': '0 1px 0 rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.1)',
+            'switch-thumb': '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Mechanical Texture & Precision Alignment */
+    body {
+      background-color: #121315;
+      color: #ECE9E2;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle industrial matte micro-grid */
+    .industrial-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    }
+
+    /* Braun Mechanical Slotted Speaker/Vent Grille */
+    .speaker-grille {
+      background-image: radial-gradient(circle, #2d313a 1.2px, transparent 1.2px);
+      background-size: 6px 6px;
+    }
+
+    /* Hardware toggle switch */
+    .rocker-switch input:checked + .rocker-track {
+      background-color: #FF5400;
+    }
+    .rocker-switch input:checked + .rocker-track .rocker-thumb {
+      transform: translateX(18px);
+      background-color: #ECE9E2;
+    }
+
+    /* Custom industrial range slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 6px;
+      background: #24272D;
+      border: 1px solid #333740;
+      border-radius: 2px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 14px;
+      background: #ECE9E2;
+      border: 1px solid #121315;
+      border-radius: 1px;
+      cursor: pointer;
+      margin-top: -8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 20px;
+      width: 14px;
+      background: #ECE9E2;
+      border: 1px solid #121315;
+      border-radius: 1px;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+
+    /* Custom scrollbar for high-density engineering list */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #18191C;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #333740;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #444955;
+    }
+
+    /* Mechanical indicator pulse */
+    @keyframes led-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+    .animate-led {
+      animation: led-blink 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col industrial-grid selection:bg-braun-orange selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP HARDWARE TELEMETRY & SPEC BAR (Dieter Rams Precision Header)      -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-braun-border bg-braun-chassis sticky top-0 z-50">
+    <div class="w-full px-4 lg:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Machine Chassis Code -->
+      <div class="flex items-center space-x-3.5">
+        <div class="flex items-center justify-center w-7 h-7 bg-braun-surface border border-braun-border rounded-sm">
+          <div class="w-3 h-3 bg-braun-orange rounded-none"></div>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-bold tracking-tight text-braun-bone text-sm">HOMELAB.MY</span>
+            <span class="text-[10px] font-mono text-braun-metal bg-braun-surface px-1.5 py-0.5 border border-braun-border rounded-sm">APPLIANCE V8.2</span>
+          </div>
+          <p class="text-[9px] font-mono text-braun-metal tracking-wider uppercase">BRAUN INDUSTRIAL SPEC // 1U MULTI-TENANT NODE</p>
+        </div>
+      </div>
+
+      <!-- Telemetry Hardware Gauges -->
+      <div class="flex flex-wrap items-center gap-3 lg:gap-6 text-xs font-mono">
+        
+        <!-- Hardware Quorum Indicator -->
+        <div class="flex items-center space-x-2 bg-braun-surface px-2.5 py-1.5 border border-braun-border rounded-sm">
+          <span class="w-2 h-2 rounded-full bg-braun-green animate-led inline-block shadow-[0_0_8px_#10B981]"></span>
+          <span class="text-braun-metal uppercase text-[10px] tracking-wide">QUORUM:</span>
+          <span class="font-semibold text-braun-bone text-[11px]" id="quorum-stat">23 / 23 OK</span>
+        </div>
+
+        <!-- TNB Electric Power Consumption -->
+        <div class="flex items-center space-x-2 bg-braun-surface px-2.5 py-1.5 border border-braun-border rounded-sm">
+          <span class="text-braun-yellow text-[11px] font-bold">⚡</span>
+          <span class="text-braun-metal uppercase text-[10px] tracking-wide">TNB DRAW:</span>
+          <span class="text-braun-bone text-[11px]">65W <span class="text-braun-metal">@ RM 24.10/MO</span></span>
+        </div>
+
+        <!-- Tax Savings Flag -->
+        <div class="hidden sm:flex items-center space-x-2 bg-braun-surface px-2.5 py-1.5 border border-braun-border rounded-sm">
+          <span class="text-braun-metal uppercase text-[10px] tracking-wide">DIGITAL SST:</span>
+          <span class="text-braun-orange font-bold text-[11px]">0% EXEMPT</span>
+        </div>
+
+        <!-- View Mode Rocker Toggle -->
+        <div class="flex items-center space-x-2 border-l border-braun-border pl-3">
+          <span class="text-[10px] text-braun-metal uppercase tracking-wider hidden md:inline">MODE:</span>
+          <div class="inline-flex rounded-sm p-0.5 bg-braun-surface border border-braun-border text-[11px]">
+            <button id="view-exec-btn" onclick="setViewMode('exec')" class="px-2.5 py-1 rounded-sm font-semibold transition-all bg-braun-cream text-braun-charcoal">EXECUTIVE</button>
+            <button id="view-sys-btn" onclick="setViewMode('sys')" class="px-2.5 py-1 rounded-sm font-semibold transition-all text-braun-metal hover:text-braun-bone">SYSADMIN</button>
+          </div>
+        </div>
+
+        <!-- Status Light Horn -->
+        <button onclick="rebootSimulation()" class="bg-braun-surface hover:bg-braun-border text-braun-bone border border-braun-border active:translate-y-0.5 px-2.5 py-1.5 text-[11px] font-mono tracking-tight flex items-center space-x-1.5 rounded-sm transition">
+          <span class="text-braun-orange">⟳</span>
+          <span>POWER CYCLE</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN SPLIT INTERACTION SURFACE (1px Hairline Grid Infrastructure)      -->
+  <!-- ========================================================================= -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-0 border-b border-braun-border">
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- LEFT RAIL: SOVEREIGN GUEST SERVICE RACK (Cols 1-4)                    -->
+    <!-- --------------------------------------------------------------------- -->
+    <aside class="lg:col-span-4 bg-braun-chassis border-b lg:border-b-0 lg:border-r border-braun-border flex flex-col overflow-hidden">
+      
+      <!-- Panel Header & Filter -->
+      <div class="p-3.5 border-b border-braun-border bg-braun-chassisSub flex items-center justify-between">
+        <div>
+          <h2 class="text-xs font-mono font-bold tracking-wider uppercase text-braun-bone flex items-center gap-2">
+            <span class="w-2 h-2 bg-braun-metal rounded-none"></span>
+            GUEST SERVICES RACK (12 MOUNTED)
+          </h2>
+          <p class="text-[10px] font-mono text-braun-metal">PHYSICAL ISOLATION // ZERO US CLOUD LEAK</p>
+        </div>
+        <div class="w-12 h-4 speaker-grille opacity-40"></div>
+      </div>
+
+      <!-- Search / Filter Input -->
+      <div class="p-2.5 border-b border-braun-border bg-braun-chassis">
+        <div class="relative">
+          <input 
+            type="text" 
+            id="service-search" 
+            placeholder="FILTER INSTALLED NODES..." 
+            oninput="filterServices(this.value)"
+            class="w-full bg-braun-surface border border-braun-border rounded-sm py-1.5 pl-7 pr-3 text-xs font-mono text-braun-bone placeholder-braun-metal focus:outline-none focus:border-braun-orange"
+          >
+          <span class="absolute left-2.5 top-2 text-[10px] font-mono text-braun-metal">/</span>
+        </div>
+      </div>
+
+      <!-- Services Scroll Container -->
+      <div class="flex-1 overflow-y-auto divide-y divide-braun-border" id="service-list-container">
+        <!-- Rendered via JavaScript for crisp reactive updates -->
+      </div>
+
+      <!-- Bottom Hardware Vent Footprint -->
+      <div class="p-3 border-t border-braun-border bg-braun-chassisSub flex items-center justify-between text-[10px] font-mono text-braun-metal">
+        <span>MEM TOTAL: 32,768 MB</span>
+        <span class="text-braun-green">● ALL HYPERVISOR VMS NOMINAL</span>
+      </div>
+    </aside>
+
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- CENTER STAGE: FINANCIAL AMORTIZATION MATRIX & INSPECTOR (Cols 5-12)  -->
+    <!-- --------------------------------------------------------------------- -->
+    <main class="lg:col-span-8 bg-braun-charcoal flex flex-col overflow-y-auto">
+
+      <!-- HERO STATEMENT (Neo-Brutalist Typographic Precision) -->
+      <section class="p-6 lg:p-8 border-b border-braun-border bg-braun-chassis">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[10px] font-mono tracking-widest text-braun-orange font-bold uppercase bg-braun-orangeMuted border border-braun-orange/30 px-2 py-0.5 rounded-none">
+            ARCHITECTURAL FORMULATION 01 // SOVEREIGN CLOUD EXIT
+          </span>
+          <span class="text-xs font-mono text-braun-metal">SME DEPLOYMENT SPEC</span>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-braun-bone leading-tight">
+          THE POWER OF A DATACENTER.<br>
+          <span class="text-braun-metal">ON YOUR PREMISES. ZERO CLOUD RENT.</span>
+        </h1>
+
+        <p class="mt-3 text-xs sm:text-sm text-braun-bone/80 font-normal max-w-2xl leading-relaxed">
+          Why pay recurring monthly subscription rent to foreign big tech when you own your office and fibre optic connection? Run enterprise-grade collaboration, accounting, and AI locally from a one-time amortizable hardware investment.
+        </p>
+
+        <!-- Dieter Rams Style Physical Push Buttons -->
+        <div class="mt-6 flex flex-wrap gap-3">
+          <button onclick="triggerAction('tour')" class="bg-braun-orange hover:bg-braun-orangeHover text-white text-xs font-mono font-bold tracking-wider px-4 py-2.5 rounded-none shadow-braun-btn active:translate-y-0.5 transition flex items-center gap-2">
+            <span>▶</span>
+            <span>2-MIN EXECUTIVE BRIEFING</span>
+          </button>
+          
+          <button onclick="triggerAction('launch')" class="bg-braun-surface hover:bg-braun-border text-braun-bone border border-braun-border text-xs font-mono font-semibold tracking-wider px-4 py-2.5 rounded-none active:translate-y-0.5 transition flex items-center gap-2">
+            <span>⚙</span>
+            <span>LAUNCH NEXTCLOUD CLUSTER</span>
+          </button>
+
+          <button onclick="triggerAction('audit')" class="bg-braun-chassisSub hover:bg-braun-border text-braun-metal hover:text-braun-bone border border-braun-border text-xs font-mono font-medium tracking-wider px-4 py-2.5 rounded-none transition">
+            DOWNLOAD AUDIT PDF (PDPA-2010)
+          </button>
+        </div>
+      </section>
+
+      <!-- THREE HIGH-CONTRAST STAT PILLARS (No gradient slop) -->
+      <section class="grid grid-cols-1 sm:grid-cols-3 border-b border-braun-border">
+        
+        <div class="p-5 border-b sm:border-b-0 sm:border-r border-braun-border bg-braun-chassis/60">
+          <div class="text-[10px] font-mono text-braun-metal uppercase tracking-wider">CUMULATIVE SME TAX SAVED</div>
+          <div class="mt-1 text-2xl font-mono font-bold text-braun-bone tracking-tight" id="live-tax-saved">RM 2,000,034</div>
+          <div class="mt-1 text-[10px] font-mono text-braun-green flex items-center gap-1">
+            <span>▲</span> Live ticking across 20+ clients
+          </div>
+        </div>
+
+        <div class="p-5 border-b sm:border-b-0 sm:border-r border-braun-border bg-braun-chassis/60">
+          <div class="text-[10px] font-mono text-braun-metal uppercase tracking-wider">SOVEREIGN ISOLATION</div>
+          <div class="mt-1 text-2xl font-mono font-bold text-braun-orange tracking-tight">100.0%</div>
+          <div class="mt-1 text-[10px] font-mono text-braun-metal">
+            Zero foreign subpoenas / PDPA 2010
+          </div>
+        </div>
+
+        <div class="p-5 bg-braun-chassis/60">
+          <div class="text-[10px] font-mono text-braun-metal uppercase tracking-wider">EST. HARDWARE BREAKEVEN</div>
+          <div class="mt-1 text-2xl font-mono font-bold text-braun-yellow tracking-tight" id="matrix-breakeven-banner">8.5 MONTHS</div>
+          <div class="mt-1 text-[10px] font-mono text-braun-metal" id="matrix-net-banner">
+            Then RM 1,172/mo retained
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- INTERACTIVE FINANCIAL AUDIT & REPLACEMENT CALCULATOR -->
+      <section class="p-6 lg:p-8 border-b border-braun-border bg-braun-charcoal flex-1">
+        
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 bg-braun-yellow rounded-none inline-block"></span>
+              <h3 class="text-sm font-mono font-bold uppercase tracking-wider text-braun-bone">
+                INTERACTIVE HARDWARE AMORTIZATION CALCULATOR
+              </h3>
+            </div>
+            <p class="text-xs text-braun-metal mt-0.5">Calculate your company's recurring cloud subscription drain vs sovereign homelab hardware</p>
+          </div>
+          <span class="text-[10px] font-mono text-braun-metal bg-braun-chassis border border-braun-border px-2 py-1">
+            CURRENCY: MYR (RM) // 8% SST INCL.
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+
+          <!-- Left Interactive Controls (Cols 1-7) -->
+          <div class="xl:col-span-7 space-y-6">
+            
+            <!-- Seat Selector Module -->
+            <div class="p-4 bg-braun-chassis border border-braun-border rounded-none">
+              <div class="flex items-center justify-between mb-3">
+                <label class="text-xs font-mono font-semibold text-braun-bone uppercase tracking-wider">
+                  TEAM SEATS (HEADCOUNT):
+                </label>
+                <span class="text-sm font-mono font-bold text-braun-orange bg-braun-orangeMuted border border-braun-orange/30 px-2 py-0.5" id="seat-display">
+                  15 SEATS
+                </span>
+              </div>
+
+              <!-- Preset Step Buttons -->
+              <div class="grid grid-cols-3 gap-2 mb-4">
+                <button onclick="setSeats(5)" id="preset-5" class="py-1.5 px-2 text-xs font-mono border border-braun-border bg-braun-surface hover:bg-braun-border text-braun-metal transition">
+                  MICRO (5 SEATS)
+                </button>
+                <button onclick="setSeats(15)" id="preset-15" class="py-1.5 px-2 text-xs font-mono border border-braun-orange bg-braun-orange/10 font-bold text-braun-bone transition">
+                  GROWING (15 SEATS)
+                </button>
+                <button onclick="setSeats(50)" id="preset-50" class="py-1.5 px-2 text-xs font-mono border border-braun-border bg-braun-surface hover:bg-braun-border text-braun-metal transition">
+                  MID-MARKET (50)
+                </button>
+              </div>
+
+              <!-- Precision Linear Slider -->
+              <div class="space-y-1">
+                <input 
+                  type="range" 
+                  id="seat-slider" 
+                  min="1" 
+                  max="100" 
+                  value="15" 
+                  oninput="onSeatSlider(this.value)"
+                  class="w-full"
+                >
+                <div class="flex justify-between text-[10px] font-mono text-braun-metal">
+                  <span>1 SEAT</span>
+                  <span>50 SEATS</span>
+                  <span>100 SEATS</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Replaceable SaaS Matrix Checkboxes -->
+            <div class="p-4 bg-braun-chassis border border-braun-border rounded-none">
+              <div class="text-xs font-mono font-semibold text-braun-bone uppercase tracking-wider mb-3">
+                SELECTABLE CLOUD REPLACEMENTS:
+              </div>
+
+              <div class="space-y-2.5 text-xs font-mono">
+                
+                <!-- Office Suite -->
+                <label class="flex items-start justify-between p-2.5 bg-braun-surface border border-braun-border cursor-pointer hover:border-braun-borderLight transition">
+                  <div class="flex items-start space-x-2.5">
+                    <input type="checkbox" id="check-office" checked onchange="calculateFinancials()" class="mt-0.5 accent-braun-orange">
+                    <div>
+                      <div class="font-bold text-braun-bone">Office & Productivity Suite</div>
+                      <div class="text-[10px] text-braun-metal">Replaces: Microsoft 365 / Google Workspace</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-braun-bone font-mono">RM 32</span>
+                    <span class="text-[9px] text-braun-metal block">/ seat / mo</span>
+                  </div>
+                </label>
+
+                <!-- Accounting & Invoicing -->
+                <label class="flex items-start justify-between p-2.5 bg-braun-surface border border-braun-border cursor-pointer hover:border-braun-borderLight transition">
+                  <div class="flex items-start space-x-2.5">
+                    <input type="checkbox" id="check-accounting" checked onchange="calculateFinancials()" class="mt-0.5 accent-braun-orange">
+                    <div>
+                      <div class="font-bold text-braun-bone">Accounting & LHDN e-Invoicing</div>
+                      <div class="text-[10px] text-braun-metal">Replaces: Xero / QuickBooks / AutoCount Cloud</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-braun-bone font-mono">RM 80</span>
+                    <span class="text-[9px] text-braun-metal block">/ company / mo</span>
+                  </div>
+                </label>
+
+                <!-- Storage & Backup -->
+                <label class="flex items-start justify-between p-2.5 bg-braun-surface border border-braun-border cursor-pointer hover:border-braun-borderLight transition">
+                  <div class="flex items-start space-x-2.5">
+                    <input type="checkbox" id="check-storage" checked onchange="calculateFinancials()" class="mt-0.5 accent-braun-orange">
+                    <div>
+                      <div class="font-bold text-braun-bone">Cloud Storage & File Sharing (1TB/user)</div>
+                      <div class="text-[10px] text-braun-metal">Replaces: Dropbox Business / OneDrive Cloud</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-braun-bone font-mono">RM 27</span>
+                    <span class="text-[9px] text-braun-metal block">/ seat / mo</span>
+                  </div>
+                </label>
+
+                <!-- Automation / Dev -->
+                <label class="flex items-start justify-between p-2.5 bg-braun-surface border border-braun-border cursor-pointer hover:border-braun-borderLight transition">
+                  <div class="flex items-start space-x-2.5">
+                    <input type="checkbox" id="check-auto" checked onchange="calculateFinancials()" class="mt-0.5 accent-braun-orange">
+                    <div>
+                      <div class="font-bold text-braun-bone">Workflow Automation Engine</div>
+                      <div class="text-[10px] text-braun-metal">Replaces: Zapier Team / Make.com Cloud</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-braun-bone font-mono">RM 150</span>
+                    <span class="text-[9px] text-braun-metal block">/ company / mo</span>
+                  </div>
+                </label>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Financial Amortization Ledger (Cols 8-12) -->
+          <div class="xl:col-span-5 bg-braun-chassis border border-braun-border p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-3 border-b border-braun-border">
+                <span class="text-xs font-mono font-bold text-braun-bone uppercase">FINANCIAL AMORTIZATION AUDIT</span>
+                <span class="text-[10px] font-mono text-braun-green">● AUDIT READY</span>
+              </div>
+
+              <!-- Comparison Line Items -->
+              <div class="py-4 space-y-3 font-mono text-xs">
+                
+                <div class="flex justify-between items-baseline">
+                  <span class="text-braun-metal">MONTHLY CLOUD SAAS BILL:</span>
+                  <div class="text-right">
+                    <span class="text-base font-bold text-braun-orange" id="calc-saas-total">RM 1,196</span>
+                    <span class="text-[9px] text-braun-metal block" id="calc-sst-note">Incl. 8% Digital SST (RM 89)</span>
+                  </div>
+                </div>
+
+                <div class="flex justify-between items-baseline pt-2 border-t border-braun-border/60">
+                  <span class="text-braun-metal">HOMELAB LOCAL OPEX:</span>
+                  <div class="text-right">
+                    <span class="text-base font-bold text-braun-bone">RM 24</span>
+                    <span class="text-[9px] text-braun-metal block">65W continuous TNB Tariff B</span>
+                  </div>
+                </div>
+
+                <div class="flex justify-between items-baseline pt-2 border-t border-braun-border/60">
+                  <span class="text-braun-bone font-bold">NET MONTHLY RECOVERY:</span>
+                  <div class="text-right">
+                    <span class="text-lg font-bold text-braun-green" id="calc-net-monthly">RM 1,172</span>
+                    <span class="text-[9px] text-braun-metal block">Retained in operating capital</span>
+                  </div>
+                </div>
+
+                <div class="flex justify-between items-baseline pt-2 border-t border-braun-border/60">
+                  <span class="text-braun-metal">ONE-TIME HARDWARE CAPEX:</span>
+                  <div class="text-right">
+                    <span class="text-base font-bold text-braun-bone" id="calc-capex">RM 10,000</span>
+                    <span class="text-[9px] text-braun-metal block" id="calc-capex-tier">Tiered 15-Seat Appliance</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- High-Contrast Breakeven Callout Card -->
+              <div class="mt-2 p-3 bg-braun-surface border-l-4 border-braun-yellow border-t border-r border-b border-braun-border">
+                <div class="text-[10px] font-mono text-braun-yellow font-bold uppercase tracking-wide">
+                  BREAKEVEN HORIZON
+                </div>
+                <div class="text-sm font-bold text-braun-bone mt-0.5" id="calc-breakeven-text">
+                  Payback achieved in 8.5 Months
+                </div>
+                <p class="text-[10px] font-mono text-braun-metal mt-1">
+                  After month 9, your company operates completely free of recurring cloud fees for the next 5-7 years of appliance hardware lifecycle.
+                </p>
+              </div>
+            </div>
+
+            <!-- 3-Year Projection Bar -->
+            <div class="mt-6 pt-3 border-t border-braun-border">
+              <div class="flex justify-between text-xs font-mono mb-1.5">
+                <span class="text-braun-metal">3-YEAR NET CUMULATIVE SAVINGS:</span>
+                <span class="text-braun-green font-bold" id="calc-3yr-savings">RM 32,187</span>
+              </div>
+              <div class="w-full bg-braun-surface h-2 border border-braun-border">
+                <div class="bg-braun-green h-full" style="width: 78%;"></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ACTIVE SERVICE INSPECTOR (When clicking services from the left rack) -->
+      <section class="p-6 lg:p-8 bg-braun-chassis" id="service-inspector-section">
+        <div class="flex items-center justify-between pb-3 border-b border-braun-border mb-4">
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-mono font-bold text-braun-orange">◆</span>
+            <span class="text-xs font-mono font-bold uppercase tracking-wider text-braun-bone">HARDWARE RUNBOOK INSPECTOR</span>
+          </div>
+          <span class="text-[10px] font-mono text-braun-metal uppercase" id="inspector-port">PORT: 8080 // HTTP DOCKER SOCK</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="inspector-content">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. FOOTER TELEMETRY / STATUS TICKER                                       -->
+  <!-- ========================================================================= -->
+  <footer class="bg-braun-chassisSub border-t border-braun-border py-2 px-4 text-xs font-mono text-braun-metal flex flex-wrap items-center justify-between gap-2">
+    <div class="flex items-center space-x-4">
+      <span class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-braun-green"></span>
+        <span>DAEMON: RUNNING</span>
+      </span>
+      <span class="hidden sm:inline">|</span>
+      <span class="hidden sm:inline">RAM: 14.2 / 32 GB (44%)</span>
+      <span class="hidden md:inline">|</span>
+      <span class="hidden md:inline">STORAGE: 4.8 TB ZFS RAID-Z1</span>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <span class="text-braun-bone">MALAYSIA SOVEREIGN LABS</span>
+      <span class="text-braun-metal">DESIGN SPEC: DIETER RAMS 1968 / BRAUN ET66</span>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: INTERACTIVITY, AMORTIZATION ENGINE & INSPECTION LOGIC          -->
+  <!-- ========================================================================= -->
+  <script>
+    // Guest Service Fleet Registry
+    const services = [
+      {
+        id: 'nextcloud',
+        name: 'Nextcloud Hub',
+        category: 'Office & Core',
+        hook: 'Your private Google Workspace—without big tech snooping.',
+        mem: '1024 MB',
+        port: '8443 / TLS',
+        docker: 'nextcloud:29-fpm-alpine',
+        replaces: 'Google Workspace / M365 (RM 32/seat)',
+        status: 'online',
+        uptime: '99.98%'
+      },
+      {
+        id: 'docmost',
+        name: 'Docmost Team Wiki',
+        category: 'Office & Core',
+        hook: 'Stop answering "Where is that file again?" all day.',
+        mem: '512 MB',
+        port: '3000 / HTTP',
+        docker: 'docmost/docmost:latest',
+        replaces: 'Notion Team / Confluence (RM 45/seat)',
+        status: 'online',
+        uptime: '99.99%'
+      },
+      {
+        id: 'ghost',
+        name: 'Ghost Publishing Journal',
+        category: 'Office & Core',
+        hook: 'Editorial publishing like a high-end magazine.',
+        mem: '384 MB',
+        port: '2368 / HTTP',
+        docker: 'ghost:5-alpine',
+        replaces: 'Substack Pro / Medium Cloud (RM 180/mo)',
+        status: 'online',
+        uptime: '100%'
+      },
+      {
+        id: 'bentopdf',
+        name: 'BentoPDF Tool Suite',
+        category: 'Office & Core',
+        hook: 'The Swiss Army knife for PDFs—zero file uploads.',
+        mem: '128 MB',
+        port: '8080 / WASM',
+        docker: 'bentopdf/standalone:v2',
+        replaces: 'Adobe Acrobat Pro (RM 85/seat)',
+        status: 'online',
+        uptime: '100%'
+      },
+      {
+        id: 'invoiceninja',
+        name: 'Invoice Ninja',
+        category: 'SME Finance & Invoicing',
+        hook: 'Get paid faster without paying a subscription cut.',
+        mem: '512 MB',
+        port: '8000 / HTTP',
+        docker: 'invoiceninja/invoiceninja:latest',
+        replaces: 'QuickBooks Online / Xero (RM 80/mo)',
+        status: 'online',
+        uptime: '99.95%'
+      },
+      {
+        id: 'autocount',
+        name: 'AutoCount Win10 VM',
+        category: 'SME Finance & Invoicing',
+        hook: 'Your full AutoCount desktop software, accessible securely anywhere.',
+        mem: '8192 MB',
+        port: '3389 / RDP',
+        docker: 'qemu/kvm:win10-autocount-server',
+        replaces: 'Azure Virtual Desktop (RM 350/mo)',
+        status: 'online',
+        uptime: '99.91%'
+      },
+      {
+        id: 'itiktudung',
+        name: 'itik Tudung Boutique',
+        category: 'SME Finance & Invoicing',
+        hook: 'Ready for payday traffic spikes without Shopify fees.',
+        mem: '768 MB',
+        port: '443 / NGINX',
+        docker: 'wordpress:php8.2-fpm-woo',
+        replaces: 'Shopify Advanced + 2% Cut (RM 450/mo)',
+        status: 'online',
+        uptime: '99.99%'
+      },
+      {
+        id: 'n8n',
+        name: 'n8n Workflow Automation',
+        category: 'Sovereign Automation',
+        hook: 'Connect your business apps and let them do the busywork.',
+        mem: '512 MB',
+        port: '5678 / WEBHOOK',
+        docker: 'n8nio/n8n:latest',
+        replaces: 'Zapier Team (RM 150/mo)',
+        status: 'online',
+        uptime: '100%'
+      },
+      {
+        id: 'netronome',
+        name: 'Netronome Speedtest',
+        category: 'Sovereign Automation',
+        hook: 'Stop guessing why the office internet feels slow.',
+        mem: '128 MB',
+        port: '8081 / HTTP',
+        docker: 'librespeed/speedtest:latest',
+        replaces: 'Datadog Synthetics (RM 120/mo)',
+        status: 'online',
+        uptime: '100%'
+      },
+      {
+        id: 'opencode',
+        name: 'Opencode AI Studio',
+        category: 'Sovereign Automation',
+        hook: 'Private code assistance directly on local silicon.',
+        mem: '4096 MB',
+        port: '11434 / LLAMA3',
+        docker: 'ollama/ollama:rocm-vLLM',
+        replaces: 'GitHub Copilot Enterprise (RM 85/seat)',
+        status: 'online',
+        uptime: '99.85%'
+      },
+      {
+        id: 'excalidraw',
+        name: 'Excalidraw Whiteboard',
+        category: 'Sovereign Automation',
+        hook: 'Sketch complex ideas fast enough for everyone to get it.',
+        mem: '128 MB',
+        port: '80 / HTTP',
+        docker: 'excalidraw/excalidraw:latest',
+        replaces: 'Miro Team (RM 45/seat)',
+        status: 'online',
+        uptime: '100%'
+      },
+      {
+        id: 'links',
+        name: 'Aishah Razali Links',
+        category: 'Sovereign Automation',
+        hook: 'One sovereign link to rule your entire personal brand.',
+        mem: '64 MB',
+        port: '8008 / HTTP',
+        docker: 'linkstack/linkstack:latest',
+        replaces: 'Linktree Pro (RM 35/mo)',
+        status: 'online',
+        uptime: '100%'
+      }
+    ];
+
+    let currentSelectedId = 'nextcloud';
+    let currentSeats = 15;
+
+    // Initialize Services Rack UI
+    function renderServicesList(filter = '') {
+      const container = document.getElementById('service-list-container');
+      const filtered = services.filter(s => 
+        s.name.toLowerCase().includes(filter.toLowerCase()) || 
+        s.category.toLowerCase().includes(filter.toLowerCase()) ||
+        s.replaces.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      container.innerHTML = filtered.map(s => {
+        const isSelected = s.id === currentSelectedId;
+        return `
+          <div 
+            onclick="selectService('${s.id}')"
+            class="p-3 cursor-pointer transition flex items-start justify-between ${
+              isSelected 
+                ? 'bg-braun-surface border-l-4 border-l-braun-orange' 
+                : 'bg-braun-chassis hover:bg-braun-surface/50 border-l-4 border-l-transparent'
+            }"
+          >
+            <div class="space-y-1">
+              <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full ${s.status === 'online' ? 'bg-braun-green' : 'bg-braun-yellow'} inline-block"></span>
+                <span class="text-xs font-mono font-bold ${isSelected ? 'text-braun-bone' : 'text-braun-bone/80'}">${s.name}</span>
+              </div>
+              <p class="text-[11px] text-braun-metal leading-tight line-clamp-1">${s.hook}</p>
+              <div class="text-[9px] font-mono text-braun-metal flex gap-2 pt-0.5">
+                <span class="text-braun-bone/60">${s.replaces}</span>
+              </div>
+            </div>
+            <div class="text-right font-mono">
+              <span class="text-[10px] text-braun-metal bg-braun-charcoal px-1.5 py-0.5 border border-braun-border rounded-none">
+                ${s.mem}
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectService(id) {
+      currentSelectedId = id;
+      renderServicesList(document.getElementById('service-search').value);
+      renderInspector(id);
+    }
+
+    function renderInspector(id) {
+      const s = services.find(x => x.id === id) || services[0];
+      const section = document.getElementById('inspector-content');
+      document.getElementById('inspector-port').innerText = `SPEC: ${s.docker} // ${s.port}`;
+
+      section.innerHTML = `
+        <div class="p-3 bg-braun-surface border border-braun-border">
+          <div class="text-[10px] font-mono text-braun-metal uppercase">SERVICE IDENTITY</div>
+          <div class="text-sm font-bold text-braun-bone mt-1">${s.name}</div>
+          <p class="text-xs text-braun-metal mt-1">${s.hook}</p>
+        </div>
+
+        <div class="p-3 bg-braun-surface border border-braun-border">
+          <div class="text-[10px] font-mono text-braun-metal uppercase">REPLACES EXPENSIVE CLOUD</div>
+          <div class="text-xs font-bold text-braun-orange mt-1">${s.replaces}</div>
+          <p class="text-[10px] font-mono text-braun-metal mt-1">SLA Uptime: ${s.uptime} on local hardware</p>
+        </div>
+
+        <div class="p-3 bg-braun-surface border border-braun-border flex flex-col justify-between">
+          <div>
+            <div class="text-[10px] font-mono text-braun-metal uppercase">RUNBOOK ACTION</div>
+            <div class="text-xs font-mono text-braun-bone mt-1">CONTAINER PORT: ${s.port}</div>
+          </div>
+          <button onclick="triggerAppAction('${s.name}')" class="mt-2 w-full py-1.5 px-3 bg-braun-bone text-braun-charcoal hover:bg-white text-xs font-mono font-bold text-center transition">
+            OPEN SERVICE CONSOLE ↗
+          </button>
+        </div>
+      `;
+    }
+
+    function filterServices(val) {
+      renderServicesList(val);
+    }
+
+    // Interactive Financial Calculation Engine
+    function setSeats(n) {
+      currentSeats = parseInt(n);
+      document.getElementById('seat-slider').value = n;
+      updatePresetPills();
+      calculateFinancials();
+    }
+
+    function onSeatSlider(val) {
+      currentSeats = parseInt(val);
+      updatePresetPills();
+      calculateFinancials();
+    }
+
+    function updatePresetPills() {
+      ['5', '15', '50'].forEach(p => {
+        const btn = document.getElementById('preset-' + p);
+        if (parseInt(p) === currentSeats) {
+          btn.className = "py-1.5 px-2 text-xs font-mono border border-braun-orange bg-braun-orange/10 font-bold text-braun-bone transition";
+        } else {
+          btn.className = "py-1.5 px-2 text-xs font-mono border border-braun-border bg-braun-surface hover:bg-braun-border text-braun-metal transition";
+        }
+      });
+      document.getElementById('seat-display').innerText = `${currentSeats} SEATS`;
+    }
+
+    function calculateFinancials() {
+      const seats = currentSeats;
+      const officeChecked = document.getElementById('check-office').checked;
+      const acctChecked = document.getElementById('check-accounting').checked;
+      const storageChecked = document.getElementById('check-storage').checked;
+      const autoChecked = document.getElementById('check-auto').checked;
+
+      // Base rates
+      let monthlyBase = 0;
+      if (officeChecked) monthlyBase += (32 * seats);
+      if (acctChecked) monthlyBase += 80; // per company
+      if (storageChecked) monthlyBase += (27 * seats);
+      if (autoChecked) monthlyBase += 150; // per company
+
+      // Malaysian 8% Digital Service Tax
+      const sst = monthlyBase * 0.08;
+      const grossMonthlySaaS = monthlyBase + sst;
+
+      // Homelab OpEx (65W continuous power consumption in TNB Commercial Tariff B ~RM 24)
+      const homelabOpEx = 24.10;
+      const netMonthlySavings = Math.max(0, grossMonthlySaaS - homelabOpEx);
+
+      // Hardware CapEx sizing
+      let capex = 10000;
+      let tierLabel = '15-Seat SME Appliance';
+      if (seats <= 5) {
+        capex = 6500;
+        tierLabel = 'Micro SME Appliance (5 Seats)';
+      } else if (seats > 30) {
+        capex = 18000;
+        tierLabel = 'Enterprise Multi-Node Appliance (50+ Seats)';
+      }
+
+      // Breakeven Months Calculation
+      const breakevenMonths = netMonthlySavings > 0 ? (capex / netMonthlySavings).toFixed(1) : '∞';
+      
+      // 3-Year Projection
+      const threeYearCloudCost = grossMonthlySaaS * 36;
+      const threeYearHomelabCost = capex + (homelabOpEx * 36);
+      const threeYearNetSavings = Math.max(0, threeYearCloudCost - threeYearHomelabCost);
+
+      // DOM Updates
+      document.getElementById('calc-saas-total').innerText = `RM ${Math.round(grossMonthlySaaS).toLocaleString()}`;
+      document.getElementById('calc-sst-note').innerText = `Incl. 8% Digital SST (RM ${Math.round(sst).toLocaleString()})`;
+      document.getElementById('calc-net-monthly').innerText = `RM ${Math.round(netMonthlySavings).toLocaleString()}`;
+      document.getElementById('calc-capex').innerText = `RM ${capex.toLocaleString()}`;
+      document.getElementById('calc-capex-tier').innerText = tierLabel;
+
+      document.getElementById('matrix-breakeven-banner').innerText = `${breakevenMonths} MONTHS`;
+      document.getElementById('matrix-net-banner').innerText = `Then RM ${Math.round(netMonthlySavings).toLocaleString()}/mo retained`;
+      document.getElementById('calc-breakeven-text').innerText = `Payback achieved in ${breakevenMonths} Months`;
+      document.getElementById('calc-3yr-savings').innerText = `RM ${Math.round(threeYearNetSavings).toLocaleString()}`;
+    }
+
+    // View Mode Toggle (Executive vs Sysadmin)
+    function setViewMode(mode) {
+      const execBtn = document.getElementById('view-exec-btn');
+      const sysBtn = document.getElementById('view-sys-btn');
+
+      if (mode === 'exec') {
+        execBtn.className = "px-2.5 py-1 rounded-none font-semibold transition-all bg-braun-cream text-braun-charcoal";
+        sysBtn.className = "px-2.5 py-1 rounded-none font-semibold transition-all text-braun-metal hover:text-braun-bone";
+      } else {
+        sysBtn.className = "px-2.5 py-1 rounded-none font-semibold transition-all bg-braun-orange text-white";
+        execBtn.className = "px-2.5 py-1 rounded-none font-semibold transition-all text-braun-metal hover:text-braun-bone";
+      }
+    }
+
+    // Trigger simulation feedback
+    function triggerAction(action) {
+      if (action === 'tour') {
+        selectService('nextcloud');
+        window.scrollTo({ top: document.getElementById('service-inspector-section').offsetTop - 60, behavior: 'smooth' });
+      } else if (action === 'launch') {
+        selectService('nextcloud');
+      } else if (action === 'audit') {
+        // Quick subtle notification
+        const banner = document.getElementById('quorum-stat');
+        const old = banner.innerText;
+        banner.innerText = 'EXPORTING PDF...';
+        setTimeout(() => { banner.innerText = old; }, 1500);
+      }
+    }
+
+    function triggerAppAction(name) {
+      const banner = document.getElementById('quorum-stat');
+      const old = banner.innerText;
+      banner.innerText = `ROUTING TO ${name.toUpperCase()}...`;
+      setTimeout(() => { banner.innerText = old; }, 1500);
+    }
+
+    function rebootSimulation() {
+      const banner = document.getElementById('quorum-stat');
+      banner.innerHTML = '<span class="text-braun-orange">WARM CYCLING...</span>';
+      setTimeout(() => {
+        banner.innerText = '23 / 23 OK';
+      }, 900);
+    }
+
+    // Live ticking savings counter simulation
+    let counterVal = 2000034;
+    setInterval(() => {
+      counterVal += Math.floor(Math.random() * 3) + 1;
+      const el = document.getElementById('live-tax-saved');
+      if (el) el.innerText = `RM ${counterVal.toLocaleString()}`;
+    }, 3800);
+
+    // Initial render on boot
+    window.onload = function() {
+      renderServicesList();
+      renderInspector(currentSelectedId);
+      calculateFinancials();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMELAB.MY // FORENSIC FINANCIAL AUDIT LEDGER [REF: AUD-2026-MYS]</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Space Grotesk, Syne, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@500;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['"JetBrains Mono"', 'Courier New', 'monospace'],
+            brutal: ['"Space Grotesk"', 'sans-serif'],
+            syne: ['"Syne"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ======================================================================= */
+    /* BRUTALIST TABULAR MONOLITH DESIGN TOKENS (ZERO RADII, 2PX HAIRLINES)   */
+    /* ======================================================================= */
+    :root {
+      --bg-color: #f8f9fa;
+      --text-color: #050505;
+      --border-color: #000000;
+      --panel-bg: #ffffff;
+      --highlight-bg: #000000;
+      --highlight-text: #ffffff;
+      --accent-yellow: #fff01f;
+      --accent-orange: #ff5500;
+      --muted-gray: #71717a;
+      --grid-line: #e4e4e7;
+    }
+
+    .dark-monolith {
+      --bg-color: #080808;
+      --text-color: #f4f4f5;
+      --border-color: #ffffff;
+      --panel-bg: #111111;
+      --highlight-bg: #ffffff;
+      --highlight-text: #000000;
+      --accent-yellow: #ffee00;
+      --accent-orange: #ff6622;
+      --muted-gray: #a1a1aa;
+      --grid-line: #27272a;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      border-radius: 0 !important;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    * {
+      border-radius: 0 !important; /* STRICT BRUTALIST RULE: ZERO ROUNDING */
+    }
+
+    .tabular-numbers {
+      font-variant-numeric: tabular-nums;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Heavy Stark Border Utilities */
+    .b-solid {
+      border: 2px solid var(--border-color);
+    }
+    .b-solid-thick {
+      border: 4px solid var(--border-color);
+    }
+    .b-top {
+      border-top: 2px solid var(--border-color);
+    }
+    .b-bottom {
+      border-bottom: 2px solid var(--border-color);
+    }
+    .b-right {
+      border-right: 2px solid var(--border-color);
+    }
+    .b-left {
+      border-left: 2px solid var(--border-color);
+    }
+
+    /* Inverted brutalist hover */
+    .btn-brutal {
+      background-color: var(--panel-bg);
+      color: var(--text-color);
+      border: 2px solid var(--border-color);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.05s linear;
+      box-shadow: 3px 3px 0px var(--border-color);
+    }
+    .btn-brutal:hover {
+      background-color: var(--highlight-bg);
+      color: var(--highlight-text);
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0px var(--border-color);
+    }
+    .btn-brutal:active, .btn-brutal.active {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px var(--border-color);
+      background-color: var(--highlight-bg);
+      color: var(--highlight-text);
+    }
+
+    /* Stark Raw Range Slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      width: 100%;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 8px;
+      background: var(--panel-bg);
+      border: 2px solid var(--border-color);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 24px;
+      width: 16px;
+      background: var(--border-color);
+      border: 2px solid var(--border-color);
+      cursor: ew-resize;
+      margin-top: -10px;
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 24px;
+      width: 16px;
+      background: var(--border-color);
+      border: 2px solid var(--border-color);
+      cursor: ew-resize;
+    }
+
+    /* Print Formatting */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .b-solid, .b-solid-thick, .btn-brutal {
+        border-color: #000000 !important;
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body id="monolith-root" class="min-h-screen p-2 sm:p-4 md:p-8 flex flex-col justify-between selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP BRUTALIST MASTHEAD & FORENSIC DISPATCH TICKER                      -->
+  <!-- ========================================================================= -->
+  <header class="w-full b-solid-thick bg-[var(--panel-bg)] mb-6">
+    
+    <!-- Top Blackout Audit Status Banner -->
+    <div class="px-3 py-1.5 b-bottom bg-[var(--highlight-bg)] text-[var(--highlight-text)] flex flex-wrap items-center justify-between text-xs font-mono tracking-widest gap-2">
+      <div class="flex items-center space-x-3">
+        <span class="font-black bg-[var(--accent-yellow)] text-black px-1.5 py-0.5">[AUDIT-LEGAL]</span>
+        <span class="font-bold">MALAYSIAN PDPA 2010 SOVEREIGNTY REPORT</span>
+        <span class="hidden md:inline text-[var(--muted-gray)]">// ZERO FOREIGN CLOUD CROSS-BORDER JURISDICTION</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span>REF: <span class="underline font-bold">AUD-2026-MYS-KL01</span></span>
+        <span class="font-bold">[QUORUM: 23/23 ONLINE]</span>
+      </div>
+    </div>
+
+    <!-- Main Stark Title & Financial Forensic Stats Header -->
+    <div class="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+      
+      <!-- Monolithic Logo & Narrative -->
+      <div class="lg:col-span-7 space-y-2">
+        <div class="flex items-center space-x-3">
+          <span class="px-2 py-1 bg-black text-white font-mono font-black text-sm tracking-tighter dark:bg-white dark:text-black">
+            HL.MY
+          </span>
+          <span class="font-mono text-xs tracking-widest font-bold uppercase text-[var(--muted-gray)]">
+            FORM 10-K SOVEREIGN INFRASTRUCTURE LEDGER
+          </span>
+        </div>
+        
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-none uppercase font-syne">
+          FORENSIC BALANCE-SHEET AUDIT.
+        </h1>
+        
+        <p class="font-mono text-xs sm:text-sm text-[var(--muted-gray)] max-w-2xl leading-relaxed">
+          Comparing perpetual foreign SaaS rental fees (M365, Google Workspace, Zapier, Xero) with one-time depreciable hardware capital under statutory Malaysian digital tax frameworks.
+        </p>
+      </div>
+
+      <!-- Live Ringgit Ticker & High-Contrast Switcher -->
+      <div class="lg:col-span-5 flex flex-col items-start lg:items-end justify-between space-y-3">
+        
+        <div class="w-full sm:w-auto p-3 b-solid bg-[var(--panel-bg)] space-y-1">
+          <div class="text-[10px] font-mono tracking-widest text-[var(--muted-gray)] uppercase">
+            [CUMULATIVE SOFTWARE TAX RETRACTED (20+ SMES)]
+          </div>
+          <div class="text-2xl sm:text-3xl font-black font-mono tracking-tight text-[var(--accent-orange)] tabular-numbers" id="live-tax-counter">
+            RM 2,000,034.00
+          </div>
+          <div class="text-[10px] font-mono text-[var(--muted-gray)] flex items-center justify-between">
+            <span>[+] REAL-TIME SAVINGS ACCRUAL</span>
+            <span class="font-bold text-black dark:text-white">MALAYSIA</span>
+          </div>
+        </div>
+
+        <!-- Controls: Audio & Theme -->
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="toggleAudio()" id="btn-audio" class="btn-brutal text-xs py-1 px-3">
+            <span id="audio-indicator">[+] AUDIO: CLICK (ON)</span>
+          </button>
+          <button onclick="toggleContrastMode()" id="btn-contrast" class="btn-brutal text-xs py-1 px-3 bg-black text-white dark:bg-white dark:text-black">
+            <span id="contrast-label">MODE: STARK INVERT</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MASTER ACCOUNTING LEDGER: PARAMETRIC SAAS AUDIT (INTERACTIVE TABLE)     -->
+  <!-- ========================================================================= -->
+  <main class="w-full space-y-8 flex-1">
+    
+    <!-- HEADCOUNT CALIBRATOR DECK -->
+    <section class="w-full b-solid bg-[var(--panel-bg)] p-4 sm:p-6 space-y-4">
+      
+      <div class="flex flex-wrap items-center justify-between border-b-2 border-[var(--border-color)] pb-3 gap-2">
+        <div>
+          <span class="font-mono text-xs font-black tracking-widest uppercase bg-black text-white px-2 py-0.5 dark:bg-white dark:text-black">
+            VARIABLE 01
+          </span>
+          <h2 class="text-lg sm:text-xl font-black uppercase tracking-tight mt-1">
+            HEADCOUNT TENANCY CALIBRATION (USER SEATS)
+          </h2>
+        </div>
+        
+        <!-- Live Selected Tag -->
+        <div class="font-mono text-sm sm:text-base font-bold bg-[var(--accent-yellow)] text-black px-3 py-1 b-solid">
+          CURRENT AUDIT SIZE: <span id="seat-readout-top">15 SEATS</span>
+        </div>
+      </div>
+
+      <!-- Quick Preset Macro Buttons -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+        <button onclick="setSeats(5)" id="btn-seat-5" class="btn-brutal">
+          [ 05 SEATS: MICRO ]
+        </button>
+        <button onclick="setSeats(15)" id="btn-seat-15" class="btn-brutal active">
+          [ 15 SEATS: SME ]
+        </button>
+        <button onclick="setSeats(50)" id="btn-seat-50" class="btn-brutal">
+          [ 50 SEATS: MID-CORP ]
+        </button>
+        <button onclick="setSeats(100)" id="btn-seat-100" class="btn-brutal">
+          [ 100 SEATS: CAMPUS ]
+        </button>
+      </div>
+
+      <!-- Raw Stark Range Slider -->
+      <div class="pt-2 space-y-1">
+        <input 
+          type="range" 
+          id="seatSlider" 
+          min="1" 
+          max="100" 
+          value="15" 
+          oninput="handleSeatInput(this.value)"
+        >
+        <div class="flex justify-between font-mono text-[10px] text-[var(--muted-gray)]">
+          <span>01 UNIT (SOLE PROPRIETOR)</span>
+          <span>25 UNITS</span>
+          <span>50 UNITS</span>
+          <span>75 UNITS</span>
+          <span>100 UNITS (MAX APPLIANCE TIER)</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- FORENSIC SAAS LINE-ITEM AUDIT TABLE -->
+    <section class="w-full b-solid-thick bg-[var(--panel-bg)] overflow-hidden">
+      
+      <div class="p-3 b-bottom bg-[var(--highlight-bg)] text-[var(--highlight-text)] flex justify-between items-center text-xs font-mono font-bold tracking-wider">
+        <span>[TABLE 1.0] THIRD-PARTY SAAS REPLACEMENT MATRIX & STATUTORY 8% SST AUDIT</span>
+        <span class="hidden sm:inline">LEGAL FRAMEWORK: LHDN E-INVOICE MANDATE</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left font-mono text-xs border-collapse">
+          <thead>
+            <tr class="b-bottom bg-[var(--panel-bg)] text-[var(--muted-gray)] font-bold text-[11px]">
+              <th class="p-3 b-right w-12 text-center">#</th>
+              <th class="p-3 b-right">THIRD-PARTY SAAS SERVICE & ALTERNATIVE</th>
+              <th class="p-3 b-right">SOVEREIGN ON-PREM REPLACEMENT</th>
+              <th class="p-3 b-right text-right">BENCHMARK UNIT COST</th>
+              <th class="p-3 b-right text-right">GROSS MONTHLY</th>
+              <th class="p-3 b-right text-right">8% SST TAX</th>
+              <th class="p-3 text-center w-36">INTERCEPTION STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="audit-table-body" class="divide-y-2 divide-[var(--border-color)]">
+            <!-- Dynamically Rendered by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table Subtotal Ledger Footer -->
+      <div class="grid grid-cols-1 md:grid-cols-12 b-top bg-[var(--panel-bg)] text-xs font-mono">
+        <div class="md:col-span-6 p-4 b-bottom md:b-bottom-0 md:b-right space-y-1">
+          <span class="font-bold uppercase tracking-wider block">[AUDIT FINDING NOTE 04]</span>
+          <p class="text-[11px] text-[var(--muted-gray)] leading-relaxed">
+            All foreign software subscription charges are subject to mandatory 8% Service Tax on Digital Services under Royal Malaysian Customs Department guidelines. On-premise self-hosted bare metal is 100% exempt from recurring SST drain.
+          </p>
+        </div>
+        <div class="md:col-span-6 p-4 space-y-2 font-bold">
+          <div class="flex justify-between items-center">
+            <span class="text-[var(--muted-gray)]">NET DISPLACED SOFTWARE BILL:</span>
+            <span class="text-sm tabular-numbers" id="table-raw-sum">RM 1,107.00 / mo</span>
+          </div>
+          <div class="flex justify-between items-center text-[var(--accent-orange)]">
+            <span>+ 8% DIGITAL SST AVOIDED:</span>
+            <span class="text-sm tabular-numbers" id="table-sst-sum">RM 88.56 / mo</span>
+          </div>
+          <div class="flex justify-between items-center b-top pt-2 text-base font-black">
+            <span>GROSS CLOUD TENANCY LEAKAGE:</span>
+            <span class="text-lg tabular-numbers underline text-red-600 dark:text-red-400" id="table-gross-sum">RM 1,195.56 / mo</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 3. FINANCIAL FORENSIC AMORTIZATION BALANCE SHEET                        -->
+    <!-- ======================================================================= -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Big Numbers Monolith Ledger (Cols 1-7) -->
+      <div class="lg:col-span-7 b-solid-thick bg-[var(--panel-bg)] p-4 sm:p-6 space-y-6">
+        
+        <div>
+          <span class="font-mono text-xs font-black tracking-widest uppercase bg-black text-white px-2 py-0.5 dark:bg-white dark:text-black">
+            SCHEDULE C
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tight mt-1">
+            CAPITAL RECOVERY & CASH AMORTIZATION LEDGER
+          </h3>
+        </div>
+
+        <!-- Brutalist Metric Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono">
+          
+          <!-- Box 1: Displaced SaaS -->
+          <div class="p-4 b-solid space-y-1">
+            <span class="text-[10px] text-[var(--muted-gray)] uppercase tracking-wider block">[-] MONTHLY CLOUD DRAIN</span>
+            <div class="text-2xl font-black tabular-numbers text-red-600 dark:text-red-400" id="stat-cloud-drain">
+              RM 1,195.56
+            </div>
+            <span class="text-[10px] text-[var(--muted-gray)] block">Perpetual foreign tenancy</span>
+          </div>
+
+          <!-- Box 2: Local TNB Power OpEx -->
+          <div class="p-4 b-solid space-y-1">
+            <span class="text-[10px] text-[var(--muted-gray)] uppercase tracking-wider block">[+] LOCAL ELECTRICITY OPEX</span>
+            <div class="text-2xl font-black tabular-numbers">
+              RM 24.30
+            </div>
+            <span class="text-[10px] text-[var(--muted-gray)] block">65W continuous @ TNB Tariff B</span>
+          </div>
+
+          <!-- Box 3: Retained Cashflow -->
+          <div class="p-4 b-solid space-y-1 bg-[var(--accent-yellow)] text-black">
+            <span class="text-[10px] uppercase tracking-wider block font-bold">[=] NET MONTHLY CASH RETAINED</span>
+            <div class="text-2xl sm:text-3xl font-black tabular-numbers" id="stat-net-retained">
+              RM 1,171.26
+            </div>
+            <span class="text-[10px] font-bold block">100% added to cash reserves</span>
+          </div>
+
+          <!-- Box 4: One-time Capex -->
+          <div class="p-4 b-solid space-y-1">
+            <span class="text-[10px] text-[var(--muted-gray)] uppercase tracking-wider block">[#] 1X HARDWARE CAPEX ASSET</span>
+            <div class="text-2xl font-black tabular-numbers text-black dark:text-white" id="stat-hardware-capex">
+              RM 10,000.00
+            </div>
+            <span class="text-[10px] text-[var(--muted-gray)] block" id="stat-capex-tier">SME Appliance (15 Seats)</span>
+          </div>
+
+        </div>
+
+        <!-- Breakeven Callout Banner -->
+        <div class="p-4 b-solid bg-[var(--highlight-bg)] text-[var(--highlight-text)] flex flex-wrap items-center justify-between gap-3 font-mono">
+          <div>
+            <div class="text-xs uppercase tracking-widest text-[var(--muted-gray)]">EXACT CAPITAL BREAKEVEN MILESTONE:</div>
+            <div class="text-2xl sm:text-3xl font-black text-[var(--accent-yellow)] tabular-numbers mt-0.5" id="stat-breakeven-horizon">
+              8.5 MONTHS
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs uppercase tracking-widest text-[var(--muted-gray)]">36-MONTH REVENUE RECOVERY:</div>
+            <div class="text-xl sm:text-2xl font-black text-green-400 tabular-numbers mt-0.5" id="stat-3yr-cumulative">
+              +RM 32,165.36
+            </div>
+          </div>
+        </div>
+
+        <p class="font-mono text-xs text-[var(--muted-gray)]">
+          *Following month 9, hardware amortization completes to RM 0.00 debt basis. Operating cost drops strictly to local utility electricity with perpetual asset ownership.
+        </p>
+
+      </div>
+
+      <!-- Stark ASCII Step-Stair Trajectory Chart (Cols 8-12) -->
+      <div class="lg:col-span-5 b-solid-thick bg-[var(--panel-bg)] p-4 sm:p-6 space-y-4">
+        
+        <div class="flex justify-between items-center b-bottom pb-2 font-mono text-xs font-bold">
+          <span>[DIAGRAM 2.0] 36-MONTH ACCRUAL PLOT</span>
+          <span class="text-[var(--accent-orange)]" id="chart-crossover-tag">CROSSOVER: M9</span>
+        </div>
+
+        <!-- SVG Pure High-Contrast Vector Chart -->
+        <div class="p-3 b-solid bg-[var(--panel-bg)]">
+          <svg id="brutalist-chart" viewBox="0 0 360 160" class="w-full h-44 overflow-visible">
+            <!-- Dynamic SVG elements rendered by JS -->
+          </svg>
+          
+          <div class="mt-3 pt-2 b-top flex justify-between font-mono text-[10px] text-[var(--muted-gray)]">
+            <span class="flex items-center gap-1">
+              <span class="w-3 h-1 bg-red-600 inline-block"></span>
+              <span>CLOUD CUMULATIVE (EXPONENT)</span>
+            </span>
+            <span class="flex items-center gap-1">
+              <span class="w-3 h-1 bg-black dark:bg-white inline-block"></span>
+              <span>HOMELAB FLAT (AMORTIZED)</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Forensic Discretionary Verdict -->
+        <div class="p-3 b-solid text-xs font-mono space-y-1 bg-[var(--panel-bg)]">
+          <span class="font-bold block">[FORENSIC SUMMARY VERDICT]</span>
+          <p class="text-[11px] text-[var(--muted-gray)] leading-relaxed">
+            By shifting from software operational tenancy (OpEx) to depreciable on-premise technology infrastructure (CapEx), your SME creates balance-sheet value while completely eliminating foreign currency FX risks and statutory SST overhead.
+          </p>
+        </div>
+
+        <!-- Action CTAs -->
+        <div class="flex flex-col sm:flex-row gap-2 pt-2 no-print">
+          <button onclick="reconcileLedger()" class="btn-brutal flex-1 py-3 text-xs">
+            [+] RECONCILE LEDGER
+          </button>
+          <button onclick="printAuditMemo()" class="btn-brutal flex-1 py-3 text-xs bg-black text-white dark:bg-white dark:text-black">
+            [REC] PRINT AUDIT MEMO
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 4. SOVEREIGN FLEET MONOLITH LEDGER (ACCORDION LINES)                     -->
+    <!-- ======================================================================= -->
+    <section class="w-full b-solid-thick bg-[var(--panel-bg)] space-y-0">
+      
+      <div class="p-3 b-bottom bg-[var(--highlight-bg)] text-[var(--highlight-text)] flex justify-between items-center text-xs font-mono font-bold">
+        <span>[SCHEDULE D] AUDITED SOVEREIGN APPLIANCE FLEET (7 CORE WORKHORSE NODES)</span>
+        <span>CLICK ROW TO INSPECT TECHNICAL RUNBOOK</span>
+      </div>
+
+      <div class="divide-y-2 divide-[var(--border-color)] font-mono text-xs" id="fleet-accordion-container">
+        <!-- Rendered via JS -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 5. STARK BRUTALIST AUDIT FOOTER                                           -->
+  <!-- ========================================================================= -->
+  <footer class="mt-12 w-full b-solid p-3 bg-[var(--panel-bg)] flex flex-wrap items-center justify-between font-mono text-xs text-[var(--muted-gray)] gap-3">
+    <div class="flex items-center space-x-3">
+      <span class="font-bold text-black dark:text-white">MALAYSIA SOVEREIGN REPOSITORY</span>
+      <span>|</span>
+      <span>ISO/IEC 27001 AUDIT SPEC</span>
+      <span class="hidden sm:inline">|</span>
+      <span class="hidden sm:inline">STATUTORY PDPA 2010 COMPLIANCE: 100%</span>
+    </div>
+    
+    <div class="flex items-center space-x-2">
+      <span class="px-1.5 py-0.5 b-solid text-[10px] text-black dark:text-white font-bold">
+        END OF STATEMENT
+      </span>
+      <span>NO CLOUD LEAKAGE DETECTED</span>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: BRUTALIST AUDIO SYNTHESIS & FORENSIC ACCOUNTING ENGINE        -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. Web Audio API Engine: Brutalist Mechanical Punchcard & Typewriter SFX
+    // -------------------------------------------------------------------------
+    let audioActive = true;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playMechanicalClick(freq = 1400, duration = 0.015, noiseGain = 0.08) {
+      if (!audioActive) return;
+      try {
+        initAudio();
+        const t = audioCtx.currentTime;
+        
+        // Fast impulsive pitch blip
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, t);
+        osc.frequency.exponentialRampToValueAtTime(100, t + duration);
+        gain.gain.setValueAtTime(noiseGain, t);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + duration);
+      } catch (e) {
+        // Fallback silence
+      }
+    }
+
+    function toggleAudio() {
+      audioActive = !audioActive;
+      const ind = document.getElementById('audio-indicator');
+      if (audioActive) {
+        initAudio();
+        ind.innerText = '[+] AUDIO: CLICK (ON)';
+        playMechanicalClick(1800, 0.03);
+      } else {
+        ind.innerText = '[-] AUDIO: MUTED (OFF)';
+      }
+    }
+
+    // High Contrast Black/White Monolith Mode Toggle
+    function toggleContrastMode() {
+      playMechanicalClick(900, 0.02);
+      const root = document.getElementById('monolith-root');
+      root.classList.toggle('dark-monolith');
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Master Forensic SaaS Database (Malaysian Ringgit Benchmark)
+    // -------------------------------------------------------------------------
+    const auditSaaSCatalog = [
+      {
+        id: 'saas-office',
+        name: 'Office Productivity & Collaboration Suite',
+        alt: 'Microsoft 365 Business / Google Workspace',
+        sovereign: 'Nextcloud Hub 30 (Deck, Files, Talk)',
+        unitCost: 32.00,
+        type: 'seat',
+        active: true
+      },
+      {
+        id: 'saas-acct',
+        name: 'Accounting, Invoicing & LHDN e-Invoice Gateway',
+        alt: 'Xero Cloud / QuickBooks Online / AutoCount Cloud',
+        sovereign: 'Invoice Ninja + AutoCount Win10 KVM',
+        unitCost: 80.00,
+        type: 'fixed',
+        active: true
+      },
+      {
+        id: 'saas-storage',
+        name: 'High-Density Cloud Drive & Sharing (1TB/User)',
+        alt: 'Microsoft OneDrive / SharePoint / Google Drive 1TB',
+        sovereign: 'Nextcloud On-Prem ZFS Encrypted Storage',
+        unitCost: 27.00,
+        type: 'seat',
+        active: true
+      },
+      {
+        id: 'saas-auto',
+        name: 'Workflow Automation & Webhook Engine',
+        alt: 'Zapier Team Plan / Make.com Enterprise',
+        sovereign: 'n8n Workflow Automation Engine',
+        unitCost: 150.00,
+        type: 'fixed',
+        active: true
+      },
+      {
+        id: 'saas-wiki',
+        name: 'Corporate Engineering Wiki & Knowledge Base',
+        alt: 'Notion Team / Atlassian Confluence Standard',
+        sovereign: 'Docmost Team Knowledge Base',
+        unitCost: 45.00,
+        type: 'seat',
+        active: true
+      },
+      {
+        id: 'saas-pdf',
+        name: 'Document Redaction & PDF OCR Utilities',
+        alt: 'Adobe Acrobat Pro DC Cloud / Smallpdf Pro',
+        sovereign: 'BentoPDF Client-Side WASM Tool Suite',
+        unitCost: 65.00,
+        type: 'seat',
+        active: false
+      },
+      {
+        id: 'saas-whiteboard',
+        name: 'Visual Architecture Whiteboard & Canvas',
+        alt: 'Miro Team Plan / Mural Workspace',
+        sovereign: 'Excalidraw Collaborative Whiteboard',
+        unitCost: 40.00,
+        type: 'seat',
+        active: true
+      }
+    ];
+
+    // -------------------------------------------------------------------------
+    // 3. Sovereign Fleet Ledger (Accordion Specification)
+    // -------------------------------------------------------------------------
+    const sovereignFleet = [
+      {
+        id: 'fleet-nc',
+        name: 'Nextcloud Hub 30',
+        replaces: 'Microsoft 365 / Google Workspace / Box',
+        port: '8443 / TLS 1.3',
+        memory: '1024 MB DDR5 ECC REG',
+        pdpaRating: 'CLASS 1 // 100% AIR-GAP LOCAL DATA RESIDENCY',
+        hook: 'Sovereign productivity platform replacing Google Workspace & Microsoft 365. Integrates Files, Deck (Kanban), and Talk (Chat/Video) with total data sovereignty on local NVMe ZFS.',
+        launchUrl: '#launch-nextcloud'
+      },
+      {
+        id: 'fleet-dm',
+        name: 'Docmost Team Wiki',
+        replaces: 'Notion Team / Atlassian Confluence',
+        port: '3000 / HTTP',
+        memory: '512 MB DDR5 ECC REG',
+        pdpaRating: 'CLASS 1 // LOCAL POSTGRESQL INSTANCE',
+        hook: 'Open-source collaborative team wiki and knowledge base with hierarchical page trees, real-time Markdown editing, and organizational space management without per-seat licenses.',
+        launchUrl: '#launch-docmost'
+      },
+      {
+        id: 'fleet-bp',
+        name: 'BentoPDF Tool Suite',
+        replaces: 'Adobe Acrobat Pro DC / PDFfiller',
+        port: '8080 / WASM',
+        memory: '128 MB CLIENT VRAM',
+        pdpaRating: 'CLASS 1 // ZERO CLOUD FILE UPLOADS (ON-DEVICE WASM)',
+        hook: 'Client-side PDF manipulation suite offering merging, splitting, OCR, watermarking, and format conversion without cloud exposure or third-party telemetry.',
+        launchUrl: '#launch-bentopdf'
+      },
+      {
+        id: 'fleet-in',
+        name: 'Invoice Ninja Enterprise',
+        replaces: 'Xero / QuickBooks Online',
+        port: '8000 / HTTP',
+        memory: '512 MB DDR5 ECC REG',
+        pdpaRating: 'CLASS 1 // LHDN E-INVOICE MANDATE COMPLIANT',
+        hook: 'Self-hosted invoicing, billing, expense tracking, and e-invoice compliance management portal for small and medium enterprises with automated PDF generation.',
+        launchUrl: '#launch-invoiceninja'
+      },
+      {
+        id: 'fleet-ac',
+        name: 'AutoCount Win10 KVM Hypervisor',
+        replaces: 'Azure Virtual Desktop / Windows Server Cloud',
+        port: '3389 / RDP (TLS)',
+        memory: '8192 MB BARE-METAL KVM',
+        pdpaRating: 'CLASS 1 // DEDICATED VM BARE METAL HARDWARE',
+        hook: 'Dedicated Windows 10 virtual machine running AutoCount Accounting Server, SQL database, and multi-user SME financial system on high-speed internal bridge networks.',
+        launchUrl: '#launch-autocount'
+      },
+      {
+        id: 'fleet-n8',
+        name: 'n8n Workflow Automation',
+        replaces: 'Zapier Team ($150/mo) / Make.com',
+        port: '5678 / WEBHOOK',
+        memory: '512 MB DDR5 ECC REG',
+        pdpaRating: 'CLASS 1 // LOCAL DB TRIGGER ORCHESTRATION',
+        hook: 'Extendable workflow automation engine with node-based execution graphs and webhook triggers without transaction-volume penalties or per-task surcharges.',
+        launchUrl: '#launch-n8n'
+      },
+      {
+        id: 'fleet-ex',
+        name: 'Excalidraw Collaborative Whiteboard',
+        replaces: 'Miro Team / Mural Enterprise',
+        port: '5000 / HTTP',
+        memory: '256 MB DDR5 ECC REG',
+        pdpaRating: 'CLASS 1 // END-TO-END ENCRYPTED WEBRTC',
+        hook: 'Collaborative virtual whiteboard for system architecture diagramming, hand-drawn wireframes, and live team brainstorming sessions with instant room sharing.',
+        launchUrl: '#launch-excalidraw'
+      }
+    ];
+
+    let currentSeats = 15;
+    let expandedFleetId = 'fleet-nc';
+
+    // -------------------------------------------------------------------------
+    // 4. Render Table Matrix & Checkbox Actions
+    // -------------------------------------------------------------------------
+    function renderAuditTable() {
+      const tbody = document.getElementById('audit-table-body');
+      tbody.innerHTML = auditSaaSCatalog.map((item, idx) => {
+        const isSeat = item.type === 'seat';
+        const rawMonthly = item.active ? (isSeat ? item.unitCost * currentSeats : item.unitCost) : 0;
+        const sst = item.active ? rawMonthly * 0.08 : 0;
+        const gross = rawMonthly + sst;
+
+        return `
+          <tr class="hover:bg-black/5 dark:hover:bg-white/5 transition ${!item.active ? 'opacity-40' : ''}">
+            <td class="p-3 b-right text-center font-bold text-[var(--muted-gray)]">[${idx + 1}]</td>
+            <td class="p-3 b-right">
+              <span class="font-bold text-black dark:text-white block">${item.name}</span>
+              <span class="text-[10px] text-[var(--muted-gray)] block">BENCHMARK: ${item.alt}</span>
+            </td>
+            <td class="p-3 b-right">
+              <span class="font-bold text-black dark:text-white block">${item.sovereign}</span>
+              <span class="text-[10px] text-green-600 dark:text-green-400 block font-bold">[100% OWNED ASSET]</span>
+            </td>
+            <td class="p-3 b-right text-right tabular-numbers">
+              RM ${item.unitCost.toFixed(2)} ${isSeat ? '/ seat' : '/ co'}
+            </td>
+            <td class="p-3 b-right text-right tabular-numbers font-bold">
+              RM ${rawMonthly.toFixed(2)}
+            </td>
+            <td class="p-3 b-right text-right tabular-numbers text-[var(--accent-orange)]">
+              RM ${sst.toFixed(2)}
+            </td>
+            <td class="p-3 text-center">
+              <button 
+                onclick="toggleSaaSRow(${idx})" 
+                class="btn-brutal text-[10px] py-1 px-2.5 w-full ${item.active ? 'bg-black text-white dark:bg-white dark:text-black font-black' : ''}"
+              >
+                ${item.active ? '[+] ACTIVE' : '[-] BYPASS'}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleSaaSRow(idx) {
+      auditSaaSCatalog[idx].active = !auditSaaSCatalog[idx].active;
+      playMechanicalClick(1100, 0.02);
+      renderAuditTable();
+      calculateLedger();
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Headcount Controls & Calculations
+    // -------------------------------------------------------------------------
+    function handleSeatInput(val) {
+      currentSeats = parseInt(val);
+      document.getElementById('seat-readout-top').innerText = `${currentSeats < 10 ? '0' + currentSeats : currentSeats} SEATS`;
+      updatePresetButtonHighlight();
+      playMechanicalClick(500 + currentSeats * 10, 0.015);
+      renderAuditTable();
+      calculateLedger();
+    }
+
+    function setSeats(n) {
+      currentSeats = n;
+      document.getElementById('seatSlider').value = n;
+      document.getElementById('seat-readout-top').innerText = `${currentSeats < 10 ? '0' + currentSeats : currentSeats} SEATS`;
+      updatePresetButtonHighlight();
+      playMechanicalClick(1500, 0.03);
+      renderAuditTable();
+      calculateLedger();
+    }
+
+    function updatePresetButtonHighlight() {
+      [5, 15, 50, 100].forEach(p => {
+        const btn = document.getElementById(`btn-seat-${p}`);
+        if (p === currentSeats) {
+          btn.className = "btn-brutal active";
+        } else {
+          btn.className = "btn-brutal";
+        }
+      });
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. Forensic Balance Sheet Ledger Calculation
+    // -------------------------------------------------------------------------
+    function calculateLedger() {
+      const seats = currentSeats;
+      let rawSum = 0;
+
+      auditSaaSCatalog.forEach(item => {
+        if (item.active) {
+          if (item.type === 'seat') rawSum += item.unitCost * seats;
+          else rawSum += item.unitCost;
+        }
+      });
+
+      const sstSum = rawSum * 0.08;
+      const grossSum = rawSum + sstSum;
+      const homelabOpex = 24.30; // TNB Commercial Tariff B continuous load
+      const netMonthlyRetained = Math.max(0, grossSum - homelabOpex);
+
+      let capex = 10000;
+      let capexLabel = 'SME Appliance (15 Seats)';
+      if (seats <= 5) {
+        capex = 6500;
+        capexLabel = 'Micro SME Appliance (5 Seats)';
+      } else if (seats > 30) {
+        capex = 18000;
+        capexLabel = 'Campus Cluster Appliance (50+ Seats)';
+      }
+
+      const breakeven = netMonthlyRetained > 0 ? (capex / netMonthlyRetained).toFixed(1) : '∞';
+      const cumulative3Yr = (netMonthlyRetained * 36) - capex;
+
+      // Table Footer updates
+      document.getElementById('table-raw-sum').innerText = `RM ${rawSum.toFixed(2)} / mo`;
+      document.getElementById('table-sst-sum').innerText = `RM ${sstSum.toFixed(2)} / mo`;
+      document.getElementById('table-gross-sum').innerText = `RM ${grossSum.toFixed(2)} / mo`;
+
+      // Big Schedule C Ledger Readouts
+      document.getElementById('stat-cloud-drain').innerText = `RM ${grossSum.toFixed(2)}`;
+      document.getElementById('stat-net-retained').innerText = `RM ${netMonthlyRetained.toFixed(2)}`;
+      document.getElementById('stat-hardware-capex').innerText = `RM ${capex.toFixed(2)}`;
+      document.getElementById('stat-capex-tier').innerText = capexLabel;
+      document.getElementById('stat-breakeven-horizon').innerText = `${breakeven} MONTHS`;
+      document.getElementById('stat-3yr-cumulative').innerText = `+RM ${Math.max(0, cumulative3Yr).toFixed(2)}`;
+
+      renderBrutalistChart(grossSum, capex, homelabOpex, parseFloat(breakeven) || 8.5);
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. Pure High-Contrast Brutalist Step-Stair Vector Chart
+    // -------------------------------------------------------------------------
+    function renderBrutalistChart(monthlyCloud, capex, monthlyOpex, breakevenMonths) {
+      const svg = document.getElementById('brutalist-chart');
+      const w = 360;
+      const h = 150;
+      const padLeft = 30;
+      const padBottom = 24;
+      const padTop = 16;
+      const padRight = 20;
+
+      const chartW = w - padLeft - padRight;
+      const chartH = h - padTop - padBottom;
+
+      const maxVal = Math.max(monthlyCloud * 36, capex + (monthlyOpex * 36), 15000);
+      const getX = (m) => padLeft + (m / 36) * chartW;
+      const getY = (val) => padTop + chartH - (val / maxVal) * chartH;
+
+      const be = Math.min(36, Math.max(0, breakevenMonths));
+      const crossX = getX(be);
+      const crossY = getY(monthlyCloud * be);
+
+      document.getElementById('chart-crossover-tag').innerText = 
+        be < 36 ? `CROSSOVER: MONTH ${be.toFixed(1)}` : 'EXTENDED AMORTIZATION';
+
+      svg.innerHTML = `
+        <!-- Background Grid Rules -->
+        <line x1="${padLeft}" y1="${getY(0)}" x2="${w - padRight}" y2="${getY(0)}" stroke="currentColor" stroke-width="2" />
+        <line x1="${padLeft}" y1="${getY(maxVal/2)}" x2="${w - padRight}" y2="${getY(maxVal/2)}" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" opacity="0.3" />
+        <line x1="${padLeft}" y1="${getY(maxVal)}" x2="${w - padRight}" y2="${getY(maxVal)}" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" opacity="0.3" />
+
+        <!-- Vertical Month Calipers -->
+        <line x1="${getX(0)}" y1="${padTop}" x2="${getX(0)}" y2="${padTop + chartH}" stroke="currentColor" stroke-width="1" opacity="0.3" />
+        <line x1="${getX(12)}" y1="${padTop}" x2="${getX(12)}" y2="${padTop + chartH}" stroke="currentColor" stroke-width="1" opacity="0.3" />
+        <line x1="${getX(24)}" y1="${padTop}" x2="${getX(24)}" y2="${padTop + chartH}" stroke="currentColor" stroke-width="1" opacity="0.3" />
+        <line x1="${getX(36)}" y1="${padTop}" x2="${getX(36)}" y2="${padTop + chartH}" stroke="currentColor" stroke-width="1" opacity="0.3" />
+
+        <!-- Cloud Spend Trajectory (Red Stark Solid) -->
+        <line x1="${getX(0)}" y1="${getY(0)}" x2="${getX(36)}" y2="${getY(monthlyCloud * 36)}" stroke="#dc2626" stroke-width="3" />
+
+        <!-- Sovereign Homelab Hardware CapEx Line -->
+        <line x1="${getX(0)}" y1="${getY(capex)}" x2="${getX(36)}" y2="${getY(capex + (monthlyOpex * 36))}" stroke="currentColor" stroke-width="3" />
+
+        ${be < 36 ? `
+          <!-- Crossover Point Marker -->
+          <line x1="${crossX}" y1="${padTop + chartH}" x2="${crossX}" y2="${crossY}" stroke="#ff5500" stroke-width="2" stroke-dasharray="2,2" />
+          <rect x="${crossX - 4}" y="${crossY - 4}" width="8" height="8" fill="#fff01f" stroke="#000" stroke-width="2" />
+          <text x="${Math.min(w - 90, crossX + 8)}" y="${crossY - 6}" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="900" fill="currentColor">
+            [BE: M${be.toFixed(1)}]
+          </text>
+        ` : ''}
+
+        <!-- X Axis Labels -->
+        <text x="${getX(0)}" y="${h - 6}" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="currentColor">0M</text>
+        <text x="${getX(12)}" y="${h - 6}" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="currentColor">12M</text>
+        <text x="${getX(24)}" y="${h - 6}" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="currentColor">24M</text>
+        <text x="${getX(36) - 18}" y="${h - 6}" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="currentColor">36M</text>
+      `;
+    }
+
+    // -------------------------------------------------------------------------
+    // 8. Render Sovereign Fleet Accordion
+    // -------------------------------------------------------------------------
+    function renderFleetAccordion() {
+      const container = document.getElementById('fleet-accordion-container');
+      container.innerHTML = sovereignFleet.map((node, idx) => {
+        const isExpanded = node.id === expandedFleetId;
+        return `
+          <div class="bg-[var(--panel-bg)] transition">
+            
+            <!-- Accordion Header Line -->
+            <div 
+              onclick="toggleFleetRow('${node.id}')"
+              class="p-3.5 flex flex-wrap items-center justify-between cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition select-none gap-2 ${isExpanded ? 'bg-black text-white dark:bg-white dark:text-black font-black' : ''}"
+            >
+              <div class="flex items-center space-x-3">
+                <span class="font-bold text-[11px]">${isExpanded ? '[-] CLOSE' : '[+] EXPAND'}</span>
+                <span class="font-bold text-sm uppercase">[NODE ${idx + 1}] ${node.name}</span>
+              </div>
+              <div class="flex items-center space-x-4 text-[11px]">
+                <span class="hidden sm:inline">DISPLACES: ${node.replaces}</span>
+                <span class="px-2 py-0.5 b-solid text-[10px] ${isExpanded ? 'border-white text-white dark:border-black dark:text-black' : 'border-black text-black dark:border-white dark:text-white'}">
+                  PORT: ${node.port}
+                </span>
+              </div>
+            </div>
+
+            <!-- Accordion Body Inset -->
+            ${isExpanded ? `
+              <div class="p-4 sm:p-6 b-top bg-[var(--panel-bg)] text-black dark:text-white space-y-4">
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
+                  <div class="p-3 b-solid space-y-1">
+                    <span class="text-[10px] text-[var(--muted-gray)] uppercase block">COMMUNICATION PORT BINDING:</span>
+                    <span class="font-bold text-sm block">${node.port}</span>
+                    <span class="text-[10px] text-[var(--muted-gray)] block">Isolated Docker bridge container</span>
+                  </div>
+
+                  <div class="p-3 b-solid space-y-1">
+                    <span class="text-[10px] text-[var(--muted-gray)] uppercase block">HARDWARE MEMORY RSS ALLOCATION:</span>
+                    <span class="font-bold text-sm block">${node.memory}</span>
+                    <span class="text-[10px] text-[var(--muted-gray)] block">Dedicated RAM allocation</span>
+                  </div>
+
+                  <div class="p-3 b-solid space-y-1">
+                    <span class="text-[10px] text-[var(--muted-gray)] uppercase block">MALAYSIAN PDPA 2010 STATUS:</span>
+                    <span class="font-bold text-xs text-green-600 dark:text-green-400 block">${node.pdpaRating}</span>
+                    <span class="text-[10px] text-[var(--muted-gray)] block">Zero US Cloud Act subpoena risk</span>
+                  </div>
+                </div>
+
+                <div class="p-3 b-solid space-y-1">
+                  <span class="font-bold uppercase text-[11px] block">[OPERATIONAL RUNBOOK SPECIFICATION]</span>
+                  <p class="text-xs text-[var(--muted-gray)] leading-relaxed">
+                    ${node.hook}
+                  </p>
+                </div>
+
+                <div class="flex justify-between items-center pt-2">
+                  <span class="text-[10px] text-[var(--muted-gray)]">JURISDICTION: MALAYSIA (ON-PREMISE AIR-GAP)</span>
+                  <button onclick="launchApplianceNode('${node.name}')" class="btn-brutal text-xs py-1.5 px-4 bg-[var(--accent-yellow)] text-black font-black">
+                    [▶ LAUNCH APPLICATION SOCKET]
+                  </button>
+                </div>
+
+              </div>
+            ` : ''}
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleFleetRow(id) {
+      playMechanicalClick(1200, 0.02);
+      expandedFleetId = expandedFleetId === id ? '' : id;
+      renderFleetAccordion();
+    }
+
+    function launchApplianceNode(name) {
+      playMechanicalClick(1800, 0.05);
+      alert(`[SYSTEM DISPATCH] Initiating secure on-premise socket handshake for: ${name.toUpperCase()}`);
+    }
+
+    function reconcileLedger() {
+      playMechanicalClick(1600, 0.04);
+      calculateLedger();
+      alert('[STATEMENT RECONCILED] 23/23 cluster quorum confirmed. Zero cloud leakage detected across audited seats.');
+    }
+
+    function printAuditMemo() {
+      playMechanicalClick(1400, 0.04);
+      window.print();
+    }
+
+    // -------------------------------------------------------------------------
+    // 9. Accrual Savings Real-Time Counter
+    // -------------------------------------------------------------------------
+    function startAccrualTicker() {
+      let saved = 2000034;
+      setInterval(() => {
+        saved += Math.floor(Math.random() * 3) + 1;
+        document.getElementById('live-tax-counter').innerText = `RM ${saved.toLocaleString()}.00`;
+      }, 3500);
+    }
+
+    // -------------------------------------------------------------------------
+    // 10. Initialization
+    // -------------------------------------------------------------------------
+    window.onload = function() {
+      renderAuditTable();
+      renderFleetAccordion();
+      calculateLedger();
+      startAccrualTicker();
+    };
+  </script>
+</body>
+</html>

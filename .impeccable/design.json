@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-05T00:39:00.000Z",
+  "title": "Design System: OpenKuasa",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Brand Emerald",
+        "canonical": "oklch(0.52 0.125 164)",
+        "tonalRamp": [
+          "oklch(0.20 0.05 164)",
+          "oklch(0.30 0.08 164)",
+          "oklch(0.40 0.11 164)",
+          "oklch(0.52 0.125 164)",
+          "oklch(0.65 0.11 164)",
+          "oklch(0.78 0.09 164)",
+          "oklch(0.90 0.05 164)",
+          "oklch(0.96 0.02 164)"
+        ]
+      },
+      "neutral-bg": {
+        "role": "neutral",
+        "displayName": "Canvas White",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": [
+          "oklch(0.17 0.01 240)",
+          "oklch(0.25 0.01 240)",
+          "oklch(0.42 0.015 200)",
+          "oklch(0.60 0.01 200)",
+          "oklch(0.75 0.008 165)",
+          "oklch(0.90 0.006 165)",
+          "oklch(0.97 0.004 240)",
+          "oklch(1 0 0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero metrics and page-level titles." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings and modal titles." },
+      "body": { "displayName": "Body", "purpose": "Standard operational copy and tabular cell contents." },
+      "label": { "displayName": "Label", "purpose": "Input labels, metadata tags, and column headers." }
+    },
+    "shadows": [
+      {
+        "name": "popover-elevation",
+        "value": "0 4px 16px -2px rgba(0, 0, 0, 0.08)",
+        "purpose": "Floating dropdowns and popover menus only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "State and color transitions."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Standard high-density primary action button.",
+      "html": "<button class=\"ds-btn-primary\">Simpan Maklumat</button>",
+      "css": ".ds-btn-primary { background: oklch(0.52 0.125 164); color: oklch(0.985 0 0); height: 32px; padding: 0 10px; border-radius: 8px; font-family: var(--font-sans), Lexend, sans-serif; font-size: 14px; font-weight: 500; border: 1px solid transparent; cursor: pointer; transition: background 0.15s ease, opacity 0.15s ease; outline: none; } .ds-btn-primary:hover { opacity: 0.88; } .ds-btn-primary:focus-visible { outline: 2px solid oklch(0.52 0.125 164); outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary neutral button with light 1px border.",
+      "html": "<button class=\"ds-btn-outline\">Batal</button>",
+      "css": ".ds-btn-outline { background: #ffffff; color: #22252a; height: 32px; padding: 0 10px; border-radius: 8px; font-family: var(--font-sans), Lexend, sans-serif; font-size: 14px; font-weight: 500; border: 1px solid oklch(0.9 0.006 165); cursor: pointer; transition: background 0.15s ease; outline: none; } .ds-btn-outline:hover { background: oklch(0.97 0.004 240); } .ds-btn-outline:focus-visible { outline: 2px solid oklch(0.52 0.125 164); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Compact single-line form text input field.",
+      "html": "<input class=\"ds-input\" placeholder=\"Contoh: Cergas Jaya Sdn Bhd\" />",
+      "css": ".ds-input { background: transparent; color: #22252a; height: 32px; padding: 4px 10px; border-radius: 8px; font-family: var(--font-sans), Lexend, sans-serif; font-size: 14px; border: 1px solid oklch(0.9 0.006 165); width: 100%; box-sizing: border-box; outline: none; transition: border-color 0.15s ease, box-shadow 0.15s ease; } .ds-input:focus-visible { border-color: oklch(0.52 0.125 164); box-shadow: 0 0 0 3px oklch(0.52 0.125 164 / 0.18); }"
+    },
+    {
+      "name": "Operational Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Standard dashboard content container with subtle perimeter ring.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Ringkasan Jualan</div><div class=\"ds-card-metric\">RM 48,250.00</div></div>",
+      "css": ".ds-card { background: #ffffff; border-radius: 12px; padding: 16px; border: 1px solid oklch(0.17 0.01 240 / 0.1); font-family: var(--font-sans), Lexend, sans-serif; } .ds-card-title { font-size: 14px; font-weight: 500; color: #68707a; margin-bottom: 8px; } .ds-card-metric { font-family: var(--font-mono), Geist Mono, monospace; font-size: 24px; font-weight: 600; color: #22252a; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Clear Operating Canvas",
+    "overview": "OpenKuasa balances Scandinavian-inspired operational restraint with surgical Malaysian enterprise precision. Surfaces are quiet, disciplined, and deliberately low-noise so critical business data — sales figures, payroll runs, pipeline conversions, and cash flows — remains immediately scanable. Rather than relying on heavy ornaments, visual hierarchy is established through meticulous typography, structured tabular rhythms, and deliberate product module identity tokens. Every screen is built for high-throughput daily operation by business owners and teams.",
+    "keyCharacteristics": [
+      "Calm, High-Information Surfaces: Clean neutral canvas with light gray borders, micro-spacing grids, and low visual vibration.",
+      "Module-Scoped Accents: Purposeful color anchors identify active domains (Command Jade, Reach Coral-Red, CRM Teal, People Blue, Hire Amber, Finance Gold).",
+      "Subtle Tonal Depth: Strictly restrained elevation; zero heavy drop shadows, relying instead on clean 1px borders, muted fills, and delicate focus outlines."
+    ],
+    "rules": [
+      {
+        "name": "The Single-Accent Scope Rule",
+        "body": "Inside any given product module, all interactive focus rings, primary actions, and badge accents inherit exclusively from that module's designated --pc accent variable ([data-product=\"...\"]). The global Brand Emerald never collides with a module's accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Monospace Figure Rule",
+        "body": "All currency values (e.g., RM 12,450.00), invoice numbers, dates, and quantitative table cells MUST render in font-mono with tabular numbers (tabular-nums) to maintain strict vertical scanning alignment.",
+        "section": "typography"
+      },
+      {
+        "name": "The Border-Over-Shadow Rule",
+        "body": "Never use drop shadows to distinguish adjacent cards or table sections. Use structural 1px border lines (border-border) or background shift (bg-muted/50).",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do wrap numbers, currencies (RM), timestamps, and financial figures in font-mono tabular-nums.",
+      "Do scope interactive component accents (--pc) to the active module ([data-product=\"...\"]).",
+      "Do preserve 32px (h-8) standard compact button and field heights for high-density administrative workflows.",
+      "Do use 1px border lines and subtle surface tonal shifts instead of drop shadows for card separation."
+    ],
+    "donts": [
+      "Don't add decorative gradients, heavy drop shadows, or skeuomorphic bevels to standard dashboard cards.",
+      "Don't mix inconsistent font families; reserve Lexend for sans and Geist Mono for tabular figures.",
+      "Don't introduce arbitrary accent colors outside the defined module palette without a semantic purpose (e.g. destructive red)."
+    ]
+  }
+}

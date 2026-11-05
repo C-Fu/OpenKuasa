@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOMELAB.MY // INDUSTRIAL TELEMETRY CONSOLE v2.4</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: VT323 & JetBrains Mono / Space Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['"Chivo Mono"', 'JetBrains Mono', 'Courier New', 'monospace'],
+            crt: ['"VT323"', 'monospace']
+          },
+          colors: {
+            tele: {
+              pitch: '#050806',
+              carbon: '#090d0a',
+              bezel: '#0d130f',
+              surface: '#111713',
+              border: '#1c2820',
+              borderBright: '#2d3f33',
+              green: '#00ff66',
+              greenMuted: '#00cc52',
+              greenDark: '#083319',
+              greenGlow: 'rgba(0, 255, 102, 0.25)',
+              amber: '#ffb000',
+              amberDark: '#382600',
+              amberGlow: 'rgba(255, 176, 0, 0.25)',
+              red: '#ff3344',
+              dim: '#4f6b58',
+              white: '#d6edd9'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --phosphor-green: #00ff66;
+      --phosphor-amber: #ffb000;
+      --bg-dark: #060907;
+      --crt-flicker-opacity: 0.03;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: #00ff66;
+      font-family: 'Chivo Mono', monospace;
+      text-shadow: 0 0 4px rgba(0, 255, 102, 0.45);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Phosphor Glow Utilities */
+    .glow-green {
+      text-shadow: 0 0 6px rgba(0, 255, 102, 0.65), 0 0 14px rgba(0, 255, 102, 0.3);
+    }
+    .glow-amber {
+      text-shadow: 0 0 6px rgba(255, 176, 0, 0.65), 0 0 14px rgba(255, 176, 0, 0.3);
+      color: #ffb000;
+    }
+    .box-glow-green {
+      box-shadow: inset 0 0 10px rgba(0, 255, 102, 0.08), 0 0 10px rgba(0, 255, 102, 0.15);
+    }
+    .box-glow-amber {
+      box-shadow: inset 0 0 10px rgba(255, 176, 0, 0.08), 0 0 10px rgba(255, 176, 0, 0.15);
+    }
+
+    /* Dashed Industrial Telemetry Borders */
+    .border-tele-dashed {
+      border: 1px dashed #203527;
+    }
+    .border-tele-solid {
+      border: 1px solid #1c2820;
+    }
+
+    /* CRT Scanlines Overlay */
+    .crt-overlay::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+      background-size: 100% 3px;
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0.65;
+    }
+
+    /* CRT Screen Vignette / Curvature */
+    .crt-vignette::after {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: radial-gradient(circle at center, transparent 65%, rgba(0, 0, 0, 0.8) 100%);
+      pointer-events: none;
+      z-index: 998;
+    }
+
+    /* Custom Terminal Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090d0a;
+      border-left: 1px dashed #1c2820;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1c2820;
+      border: 1px solid #00ff66;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00ff66;
+    }
+
+    /* Telemetry Slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 6px;
+      background: #0d1410;
+      border: 1px solid #00ff66;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 18px;
+      width: 10px;
+      background: #ffb000;
+      border: 1px solid #000;
+      cursor: ew-resize;
+      margin-top: -7px;
+      box-shadow: 0 0 6px #ffb000;
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 18px;
+      width: 10px;
+      background: #ffb000;
+      border: 1px solid #000;
+      cursor: ew-resize;
+      box-shadow: 0 0 6px #ffb000;
+    }
+
+    /* Terminal Blink cursor animation */
+    @keyframes term-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .term-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: #00ff66;
+      vertical-align: middle;
+      animation: term-blink 1s infinite;
+    }
+
+    /* Segmented Bar Gauge */
+    .led-meter-cell {
+      display: inline-block;
+      width: 6px;
+      height: 12px;
+      margin-right: 2px;
+      background: #15241b;
+    }
+    .led-meter-cell.active-green {
+      background: #00ff66;
+      box-shadow: 0 0 4px #00ff66;
+    }
+    .led-meter-cell.active-amber {
+      background: #ffb000;
+      box-shadow: 0 0 4px #ffb000;
+    }
+    .led-meter-cell.active-red {
+      background: #ff3344;
+      box-shadow: 0 0 4px #ff3344;
+    }
+  </style>
+</head>
+
+<body id="crt-root" class="crt-overlay crt-vignette min-h-screen flex flex-col bg-tele-pitch selection:bg-tele-green selection:text-black">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP TELEMETRY HUD // RACK HEADER BEZEL                                 -->
+  <!-- ========================================================================= -->
+  <header class="bg-tele-carbon border-b border-tele-border sticky top-0 z-50">
+    
+    <!-- Top System Diagnostic Ribbon -->
+    <div class="px-3 py-1 bg-tele-pitch border-b border-tele-border text-[10px] font-mono flex flex-wrap items-center justify-between text-tele-dim gap-2">
+      <div class="flex items-center space-x-3">
+        <span class="text-tele-white">[NODE_ID: HOMELAB-MY-KL01]</span>
+        <span>LATENCY: <span class="text-tele-green">2.4ms (MYIX-KUL)</span></span>
+        <span class="hidden md:inline">KERNEL: 6.8.4-SOVEREIGN-ZFS</span>
+        <span class="hidden lg:inline">POWER: TNB TARIFF B (65W CONT.)</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="text-tele-amber" id="live-time-utc">UTC: --:--:--</span>
+        <span class="text-tele-green animate-pulse">● TELEMETRY_LINK_ESTABLISHED</span>
+      </div>
+    </div>
+
+    <!-- Main Bezel Toolbar -->
+    <div class="px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Console Title & Machine Tag -->
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 bg-tele-surface border border-tele-green flex items-center justify-center font-crt text-xl font-bold text-tele-green shadow-[0_0_8px_rgba(0,255,102,0.4)]">
+          HL
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-sm font-bold tracking-wider uppercase text-tele-green glow-green">
+              HOMELAB.MY // TELEMETRY CONSOLE
+            </h1>
+            <span class="text-[9px] bg-tele-greenDark text-tele-green px-1.5 py-0.2 border border-tele-green/40">
+              BUILD 2026.11-RC2
+            </span>
+          </div>
+          <p class="text-[10px] text-tele-dim tracking-tight">
+            PHYSICAL ON-PREMISE HYPERVISOR APPLIANCE // PDPA-2010 SOVEREIGN
+          </p>
+        </div>
+      </div>
+
+      <!-- Live Rack Instrumentation Cluster -->
+      <div class="flex flex-wrap items-center gap-2.5 text-xs font-mono">
+        
+        <!-- Quorum Stat -->
+        <div class="bg-tele-surface px-2.5 py-1.5 border border-tele-border flex items-center space-x-2">
+          <span class="text-[10px] text-tele-dim">QUORUM:</span>
+          <span class="text-tele-green font-bold" id="header-quorum">23/23 ONLINE</span>
+        </div>
+
+        <!-- Uptime Clock -->
+        <div class="bg-tele-surface px-2.5 py-1.5 border border-tele-border flex items-center space-x-2">
+          <span class="text-[10px] text-tele-dim">UPTIME:</span>
+          <span class="text-tele-amber font-mono font-bold" id="header-uptime">142D 18H 34M</span>
+        </div>
+
+        <!-- SST Tax Status -->
+        <div class="hidden sm:flex bg-tele-surface px-2.5 py-1.5 border border-tele-border items-center space-x-1.5">
+          <span class="text-[10px] text-tele-dim">DIGITAL SST:</span>
+          <span class="text-tele-amber font-bold">0.00% [EXEMPT]</span>
+        </div>
+
+        <!-- Audio FX Toggle -->
+        <button 
+          onclick="toggleAudio()" 
+          id="btn-audio-toggle"
+          class="bg-tele-surface border border-tele-border hover:border-tele-green px-2.5 py-1.5 text-[11px] text-tele-dim hover:text-tele-green transition flex items-center space-x-1"
+          title="Toggle synthetic relay click SFX"
+        >
+          <span id="audio-icon">🔇</span>
+          <span id="audio-label">RELAY_SFX: OFF</span>
+        </button>
+
+        <!-- CRT Raster FX Toggle -->
+        <button 
+          onclick="toggleCRT()" 
+          id="btn-crt-toggle"
+          class="bg-tele-surface border border-tele-green px-2.5 py-1.5 text-[11px] text-tele-green transition flex items-center space-x-1 shadow-[0_0_6px_rgba(0,255,102,0.3)]"
+          title="Toggle Phosphor Scanlines & Bloom"
+        >
+          <span>📺</span>
+          <span id="crt-label">CRT_RASTER: ON</span>
+        </button>
+
+        <!-- Power Cycle Action -->
+        <button 
+          onclick="cycleDaemon()" 
+          class="bg-tele-amberDark border border-tele-amber text-tele-amber hover:bg-tele-amber hover:text-black px-2.5 py-1.5 text-[11px] font-bold tracking-wider transition active:translate-y-0.5"
+        >
+          [REBOOT_DAEMON]
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Quick Mode Navigation Deck -->
+    <div class="px-4 py-1.5 bg-tele-bezel border-t border-tele-border flex flex-wrap items-center justify-between text-xs font-mono">
+      <div class="flex items-center space-x-2">
+        <button onclick="setTab('executive')" id="tab-exec" class="px-2.5 py-0.5 bg-tele-green text-black font-bold uppercase tracking-tight">
+          [1] BUSINESS_EXECUTIVE_AUDIT
+        </button>
+        <button onclick="setTab('sysadmin')" id="tab-sys" class="px-2.5 py-0.5 text-tele-dim hover:text-tele-green border border-transparent hover:border-tele-border uppercase tracking-tight">
+          [2] SYSADMIN_TOPOLOGY
+        </button>
+        <button onclick="runQuickTour()" class="px-2.5 py-0.5 text-tele-amber hover:bg-tele-amber/10 border border-tele-amber/40 uppercase tracking-tight">
+          [3] RUN_2MIN_EXECUTIVE_SCAN
+        </button>
+      </div>
+
+      <div class="text-[10px] text-tele-dim hidden lg:flex items-center space-x-2">
+        <span>MEM RSS: 14.2GB / 32GB</span>
+        <span>|</span>
+        <span>ZFS POOL: HEALTHY (4.8TB FREE)</span>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN SPLIT CONSOLE (1px Telemetry Grid Infrastructure)                 -->
+  <!-- ========================================================================= -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-0 border-b border-tele-border">
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- LEFT PANEL: NODE INVENTORY RACK (Cols 1-4)                            -->
+    <!-- --------------------------------------------------------------------- -->
+    <aside class="lg:col-span-4 bg-tele-carbon border-b lg:border-b-0 lg:border-r border-tele-border flex flex-col overflow-hidden">
+      
+      <!-- Panel HUD Label -->
+      <div class="p-3 bg-tele-bezel border-b border-tele-border flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-tele-green text-xs">■</span>
+          <span class="text-xs font-mono font-bold tracking-wider text-tele-white uppercase">
+            CLUSTER RACK INVENTORY (23 NODES)
+          </span>
+        </div>
+        <span class="text-[10px] font-mono text-tele-dim">[FILTER: ACTIVE]</span>
+      </div>
+
+      <!-- Quick Search Terminal Prompt -->
+      <div class="p-2 bg-tele-pitch border-b border-tele-border flex items-center space-x-2 text-xs font-mono">
+        <span class="text-tele-green">>_</span>
+        <input 
+          type="text" 
+          id="node-filter-input"
+          placeholder="SEARCH RACK BY SERVICE / PORT / SAAS..." 
+          oninput="handleSearch(this.value)"
+          class="w-full bg-transparent border-0 text-tele-green text-xs placeholder:text-tele-dim focus:outline-none font-mono"
+        >
+        <button onclick="clearSearch()" class="text-[10px] text-tele-dim hover:text-tele-white">[CLR]</button>
+      </div>
+
+      <!-- Tree / Node List Container -->
+      <div class="flex-1 overflow-y-auto divide-y divide-tele-border/60 text-xs font-mono" id="rack-list-container">
+        <!-- Rendered reactively via JS -->
+      </div>
+
+      <!-- Node Bottom Gauge Footprint -->
+      <div class="p-2.5 bg-tele-bezel border-t border-tele-border flex items-center justify-between text-[10px] font-mono text-tele-dim">
+        <div class="flex items-center space-x-1">
+          <span>SOCKET: DOCKER.SOCK</span>
+          <span class="text-tele-green">● LINKED</span>
+        </div>
+        <div>
+          <span class="text-tele-amber" id="selected-shortname">NEXTCLOUD_HUB</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- CENTER/RIGHT: AMORTIZATION MATRIX & TELEMETRIC HUD (Cols 5-12)        -->
+    <!-- --------------------------------------------------------------------- -->
+    <main class="lg:col-span-8 bg-tele-pitch flex flex-col overflow-y-auto">
+
+      <!-- HERO TELEMETRIC BRIEFING BANNER -->
+      <section class="p-5 lg:p-6 border-b border-tele-border bg-tele-carbon">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <span class="text-[10px] font-mono text-tele-amber bg-tele-amberDark px-2 py-0.5 border border-tele-amber/40">
+            [STRATEGIC DIRECTIVE: ZERO-SUBSCRIPTION SOVEREIGN TRANSITION]
+          </span>
+          <span class="text-[10px] font-mono text-tele-dim">SYS_VER: KVM-QEMU-DOCKER // MALAYSIA</span>
+        </div>
+
+        <h2 class="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-tele-white">
+          THE POWER OF A DATACENTER. <br>
+          <span class="text-tele-green glow-green">INSIDE YOUR HEADQUARTERS. ZERO CLOUD RENT.</span>
+        </h2>
+
+        <p class="mt-2 text-xs sm:text-sm text-tele-dim leading-relaxed max-w-3xl">
+          Why pay recurring foreign currency cloud subscriptions when your business already maintains high-speed commercial fibre and office infrastructure? Run local, multi-user enterprise systems with zero data residency exposure.
+        </p>
+
+        <!-- Mechanical Quick Action Ribbons -->
+        <div class="mt-4 flex flex-wrap items-center gap-2.5 pt-2 border-t border-tele-border/80">
+          <button onclick="triggerQuickAction('launch')" class="px-3.5 py-1.5 bg-tele-green text-black font-bold text-xs font-mono tracking-wider hover:bg-white active:translate-y-0.5 transition">
+            [▶ LAUNCH SELECTED NODE]
+          </button>
+          <button onclick="triggerQuickAction('export')" class="px-3.5 py-1.5 bg-tele-surface border border-tele-border hover:border-tele-green text-tele-green text-xs font-mono tracking-wider transition">
+            [DOWNLOAD SME AUDIT MEMO]
+          </button>
+          <button onclick="triggerQuickAction('pdpa')" class="px-3.5 py-1.5 bg-tele-surface border border-tele-border hover:border-tele-amber text-tele-amber text-xs font-mono tracking-wider transition">
+            [VERIFY PDPA 2010 COMPLIANCE]
+          </button>
+        </div>
+      </section>
+
+      <!-- 3-PILLAR TELEMETRY GAUGES -->
+      <section class="grid grid-cols-1 sm:grid-cols-3 border-b border-tele-border">
+        
+        <!-- Gauge 1: Live Ticking Saved -->
+        <div class="p-4 bg-tele-surface border-b sm:border-b-0 sm:border-r border-tele-border">
+          <div class="text-[10px] font-mono text-tele-dim uppercase">CUMULATIVE TAX AVOIDED (20+ SMES)</div>
+          <div class="text-2xl font-mono font-bold text-tele-green glow-green mt-1" id="live-tax-ticker">
+            RM 2,000,034
+          </div>
+          <div class="text-[10px] font-mono text-tele-dim mt-0.5 flex items-center space-x-1">
+            <span class="text-tele-green">▲</span>
+            <span>REAL-TIME AUDIT ACCRUAL</span>
+          </div>
+        </div>
+
+        <!-- Gauge 2: Data Sovereignty -->
+        <div class="p-4 bg-tele-surface border-b sm:border-b-0 sm:border-r border-tele-border">
+          <div class="text-[10px] font-mono text-tele-dim uppercase">LOCAL DATA RESIDENCY</div>
+          <div class="text-2xl font-mono font-bold text-tele-white mt-1">
+            100.00%
+          </div>
+          <div class="text-[10px] font-mono text-tele-dim mt-0.5">
+            ZERO US CLOUD ACT JURISDICTION
+          </div>
+        </div>
+
+        <!-- Gauge 3: Breakeven Horizon -->
+        <div class="p-4 bg-tele-surface">
+          <div class="text-[10px] font-mono text-tele-dim uppercase">EST. BREAKEVEN MILESTONE</div>
+          <div class="text-2xl font-mono font-bold text-tele-amber glow-amber mt-1" id="gauge-breakeven">
+            6.2 MONTHS
+          </div>
+          <div class="text-[10px] font-mono text-tele-dim mt-0.5" id="gauge-monthly-save">
+            THEN RM 1,612 / MO RETAINED
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SAAS COST SAVINGS & HARDWARE AMORTIZATION CALCULATOR -->
+      <section class="p-5 lg:p-6 border-b border-tele-border flex-1">
+        
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-5 border-b border-tele-border">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-tele-amber">⚡</span>
+              <h3 class="text-sm font-mono font-bold uppercase tracking-wider text-tele-white">
+                RECURRING CLOUD DRAIN VS. HOMELAB AMORTIZATION MATRIX
+              </h3>
+            </div>
+            <p class="text-xs text-tele-dim mt-0.5">
+              Simulate actual Malaysian Ringgit software displacement by adjusting headcounts and tools
+            </p>
+          </div>
+          <span class="text-[10px] font-mono bg-tele-bezel px-2.5 py-1 border border-tele-border text-tele-green">
+            CURRENCY: MYR // TNB TARIFF B
+          </span>
+        </div>
+
+        <!-- Calculator Grid Layout -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+
+          <!-- Left Interactive Inputs (Cols 1-7) -->
+          <div class="xl:col-span-7 space-y-5">
+            
+            <!-- SME Presets & Team Slider -->
+            <div class="p-4 bg-tele-surface border border-tele-border">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono font-bold text-tele-white">
+                  [1] WORKFORCE SEAT ALLOCATION:
+                </span>
+                <span class="text-sm font-mono font-bold text-tele-amber bg-tele-pitch px-2.5 py-0.5 border border-tele-amber/40" id="seat-badge">
+                  15 SEATS
+                </span>
+              </div>
+
+              <!-- Preset Macro Buttons -->
+              <div class="grid grid-cols-3 gap-2 mb-4 text-xs font-mono">
+                <button onclick="setSeats(5)" id="btn-seat-5" class="p-1.5 bg-tele-pitch border border-tele-border hover:border-tele-green text-tele-dim hover:text-tele-green transition">
+                  [MICRO (5)]
+                </button>
+                <button onclick="setSeats(15)" id="btn-seat-15" class="p-1.5 bg-tele-amberDark border border-tele-amber text-tele-amber font-bold transition">
+                  [GROWING (15)]
+                </button>
+                <button onclick="setSeats(50)" id="btn-seat-50" class="p-1.5 bg-tele-pitch border border-tele-border hover:border-tele-green text-tele-dim hover:text-tele-green transition">
+                  [MID-MARKET (50)]
+                </button>
+              </div>
+
+              <!-- Range Slider -->
+              <div class="space-y-1">
+                <input 
+                  type="range" 
+                  id="seat-range" 
+                  min="1" 
+                  max="100" 
+                  value="15" 
+                  oninput="onSeatInput(this.value)"
+                  class="w-full"
+                >
+                <div class="flex justify-between text-[10px] font-mono text-tele-dim">
+                  <span>1 SEAT (SOLO)</span>
+                  <span>50 SEATS</span>
+                  <span>100 SEATS (CAMPUS)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Replaceable SaaS Toggles (Categorized Matrix) -->
+            <div class="p-4 bg-tele-surface border border-tele-border">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-mono font-bold text-tele-white">
+                  [2] SELECT DISPLACED CLOUD SAAS LICENSES:
+                </span>
+                <span class="text-[10px] text-tele-dim font-mono">TOGGLE TO RECALCULATE</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-mono" id="saas-checklist">
+                <!-- Checkboxes populated via JS -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Financial Amortization Ledger (Cols 8-12) -->
+          <div class="xl:col-span-5 bg-tele-bezel border border-tele-border p-4 flex flex-col justify-between">
+            
+            <div>
+              <div class="pb-2 mb-3 border-b border-tele-border flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-tele-white">[FINANCIAL RECOVERY AUDIT]</span>
+                <span class="text-[10px] text-tele-green font-mono">STATUS: CALCULATED</span>
+              </div>
+
+              <!-- Amortization Breakdown Line Items -->
+              <div class="space-y-2.5 font-mono text-xs">
+                
+                <!-- Cloud SaaS Total -->
+                <div class="flex justify-between items-baseline">
+                  <span class="text-tele-dim">MONTHLY CLOUD SAAS BILL:</span>
+                  <div class="text-right">
+                    <span class="text-sm font-bold text-tele-red" id="calc-cloud-saas">RM 1,636</span>
+                    <span class="text-[9px] text-tele-dim block" id="calc-cloud-sst">Incl. 8% Digital SST (RM 121)</span>
+                  </div>
+                </div>
+
+                <!-- Homelab Local OpEx -->
+                <div class="flex justify-between items-baseline pt-1.5 border-t border-tele-border/50">
+                  <span class="text-tele-dim">HOMELAB LOCAL OPEX:</span>
+                  <div class="text-right">
+                    <span class="text-sm font-bold text-tele-green">RM 24</span>
+                    <span class="text-[9px] text-tele-dim block">65W continuous @ TNB Tariff B</span>
+                  </div>
+                </div>
+
+                <!-- Net Monthly Savings -->
+                <div class="flex justify-between items-baseline pt-1.5 border-t border-tele-border/50">
+                  <span class="text-tele-white font-bold">NET MONTHLY RECOVERY:</span>
+                  <div class="text-right">
+                    <span class="text-base font-bold text-tele-green glow-green" id="calc-net-monthly">RM 1,612</span>
+                    <span class="text-[9px] text-tele-dim block">Retained cash flow</span>
+                  </div>
+                </div>
+
+                <!-- One Time Hardware Capex -->
+                <div class="flex justify-between items-baseline pt-1.5 border-t border-tele-border/50">
+                  <span class="text-tele-dim">1X HARDWARE INVESTMENT:</span>
+                  <div class="text-right">
+                    <span class="text-sm font-bold text-tele-amber" id="calc-capex">RM 10,000</span>
+                    <span class="text-[9px] text-tele-dim block" id="calc-capex-tier">15-Seat Redundant Appliance</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Breakeven Gauge Segment Bar Display -->
+              <div class="mt-4 p-3 bg-tele-pitch border border-tele-border">
+                <div class="flex justify-between items-center text-[10px] font-mono mb-1.5">
+                  <span class="text-tele-dim">AMORTIZATION HORIZON:</span>
+                  <span class="text-tele-amber font-bold" id="calc-breakeven-pill">6.2 MONTHS</span>
+                </div>
+                
+                <!-- Analog Segment LED Bar -->
+                <div class="flex items-center" id="led-meter">
+                  <!-- LED Cells rendered via JS -->
+                </div>
+
+                <div class="mt-2 text-[10px] text-tele-dim leading-snug font-mono">
+                  From month 7 onwards, your organization operates at near-zero software licensing overhead.
+                </div>
+              </div>
+
+              <!-- ASCII Telemetric Comparative Graph -->
+              <div class="mt-4 p-3 bg-tele-pitch border border-tele-border font-mono text-[10px]">
+                <div class="text-tele-dim flex justify-between mb-1">
+                  <span>36-MONTH COST COMPARATIVE PROJECTION</span>
+                  <span class="text-tele-green font-bold" id="calc-3yr-savings">+RM 48,032 SAVED</span>
+                </div>
+                <div class="space-y-1 pt-1 border-t border-tele-border/50">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-16 text-tele-red">CLOUD:</span>
+                    <div class="flex-1 bg-tele-surface h-2 border border-tele-border">
+                      <div class="bg-tele-red h-full" style="width: 100%;"></div>
+                    </div>
+                    <span class="w-16 text-right text-tele-dim" id="bar-cloud-cost">RM 58.8K</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <span class="w-16 text-tele-green">HOMELAB:</span>
+                    <div class="flex-1 bg-tele-surface h-2 border border-tele-border">
+                      <div class="bg-tele-green h-full" id="bar-homelab-width" style="width: 18%;"></div>
+                    </div>
+                    <span class="w-16 text-right text-tele-green" id="bar-homelab-cost">RM 10.8K</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Footer Action Button -->
+            <button onclick="triggerQuickAction('launch')" class="mt-4 w-full py-2 bg-tele-surface border border-tele-green hover:bg-tele-green hover:text-black text-tele-green text-xs font-mono font-bold tracking-wider transition active:translate-y-0.5">
+              [COMMISSION HOMELAB CLUSTER SPECIFICATION]
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ACTIVE TELEMETRY NODE RUNBOOK INSPECTOR -->
+      <section class="p-5 lg:p-6 bg-tele-carbon border-b border-tele-border" id="node-inspector-pane">
+        
+        <div class="flex flex-wrap items-center justify-between pb-2 mb-3 border-b border-tele-border">
+          <div class="flex items-center space-x-2 text-xs font-mono">
+            <span class="text-tele-green animate-pulse">◆</span>
+            <span class="font-bold text-tele-white uppercase tracking-wider">
+              HARDWARE RUNBOOK TELEMETRY INSPECTOR
+            </span>
+          </div>
+          <span class="text-[10px] font-mono text-tele-dim" id="inspector-socket-uri">
+            SOCKET: unix:///var/run/docker.sock [CONTAINER_ONLINE]
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-xs" id="inspector-cards">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Terminal Diagnostic Stream Console -->
+        <div class="mt-3 p-2.5 bg-tele-pitch border border-tele-border text-[11px] font-mono">
+          <div class="text-tele-dim flex justify-between text-[10px] pb-1 border-b border-tele-border/40 mb-1.5">
+            <span>LIVE CONTAINER KERNEL LOG STREAM</span>
+            <span class="text-tele-green">[STREAM_ACTIVE]</span>
+          </div>
+          <div class="text-tele-dim space-y-0.5 overflow-hidden" id="terminal-log-output">
+            <div><span class="text-tele-dim">[00:00:01]</span> <span class="text-tele-green">init_hypervisor:</span> mounting sovereign overlay on /mnt/zpool/appdata</div>
+            <div><span class="text-tele-dim">[00:00:02]</span> <span class="text-tele-amber">wireguard_mesh:</span> 23/23 internal node tunnels verified healthy</div>
+            <div><span class="text-tele-dim">[00:00:03]</span> <span class="text-tele-green">caddy_ingress:</span> automated ACME local certificate chain issued</div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. FOOTER TELEMETRY STATUS TICKER                                         -->
+  <!-- ========================================================================= -->
+  <footer class="bg-tele-carbon border-t border-tele-border py-1.5 px-4 text-[11px] font-mono text-tele-dim flex flex-wrap items-center justify-between gap-2">
+    <div class="flex items-center space-x-3">
+      <span class="flex items-center space-x-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-tele-green animate-ping"></span>
+        <span class="text-tele-white font-bold">DAEMON_PID: 1042</span>
+      </span>
+      <span>|</span>
+      <span>RAID-Z1: 4X NVME (SCRUB: PASS)</span>
+      <span class="hidden sm:inline">|</span>
+      <span class="hidden sm:inline">UPS: APC SMART-UPS 1500VA [100% BATT]</span>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <span class="text-tele-white">MALAYSIAN SOVEREIGN INFRASTRUCTURE</span>
+      <span class="text-tele-green glow-green">ALL SYSTEMS OPERATIONAL</span>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- AUDIO & INTERACTIVITY LOGIC (Vanilla JS)                                  -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. Synthetic Web Audio Engine (Mechanical Relay Clicks & Bleeps)
+    // -------------------------------------------------------------------------
+    let audioEnabled = false;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playRelayClick(freq = 800, duration = 0.02, type = 'square') {
+      if (!audioEnabled) return;
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Audio error suppression
+      }
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const btn = document.getElementById('btn-audio-toggle');
+      const icon = document.getElementById('audio-icon');
+      const label = document.getElementById('audio-label');
+      
+      if (audioEnabled) {
+        initAudio();
+        icon.innerText = '🔊';
+        label.innerText = 'RELAY_SFX: ON';
+        btn.classList.add('border-tele-green', 'text-tele-green');
+        playRelayClick(1200, 0.05);
+      } else {
+        icon.innerText = '🔇';
+        label.innerText = 'RELAY_SFX: OFF';
+        btn.classList.remove('border-tele-green', 'text-tele-green');
+      }
+    }
+
+    // Toggle CRT Scanlines & Screen Vignette
+    function toggleCRT() {
+      playRelayClick(600, 0.03);
+      const root = document.getElementById('crt-root');
+      const label = document.getElementById('crt-label');
+      const isCRT = root.classList.contains('crt-overlay');
+
+      if (isCRT) {
+        root.classList.remove('crt-overlay', 'crt-vignette');
+        label.innerText = 'CRT_RASTER: OFF';
+        document.getElementById('btn-crt-toggle').classList.remove('border-tele-green', 'text-tele-green');
+        document.getElementById('btn-crt-toggle').classList.add('border-tele-border', 'text-tele-dim');
+      } else {
+        root.classList.add('crt-overlay', 'crt-vignette');
+        label.innerText = 'CRT_RASTER: ON';
+        document.getElementById('btn-crt-toggle').classList.add('border-tele-green', 'text-tele-green');
+        document.getElementById('btn-crt-toggle').classList.remove('border-tele-border', 'text-tele-dim');
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Full 23-Node Cluster Inventory (Categorized)
+    // -------------------------------------------------------------------------
+    const clusterNodes = [
+      // CATEGORY 01: OFFICE & COLLABORATION
+      {
+        id: 'nextcloud',
+        group: '01 // OFFICE & COLLAB',
+        name: 'Nextcloud Hub',
+        port: '8443 / TLS',
+        mem: '1024 MB',
+        replaces: 'Microsoft 365 / Google Workspace (RM 32 / seat)',
+        hook: 'Sovereign private cloud replacing Google Workspace & OneDrive.',
+        docker: 'nextcloud:29-fpm-alpine',
+        uptime: '99.98%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'docmost',
+        group: '01 // OFFICE & COLLAB',
+        name: 'Docmost Wiki',
+        port: '3000 / HTTP',
+        mem: '512 MB',
+        replaces: 'Notion Team / Confluence (RM 45 / seat)',
+        hook: 'Centralized company wiki, SOP hub, and real-time markdown editor.',
+        docker: 'docmost/docmost:latest',
+        uptime: '100%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'cathedra',
+        group: '01 // OFFICE & COLLAB',
+        name: 'Cathedra Journal (Ghost)',
+        port: '2368 / HTTP',
+        mem: '384 MB',
+        replaces: 'Substack Pro / Medium Cloud (RM 150 / mo)',
+        hook: 'Ghost publishing engine for corporate editorial & member newsletters.',
+        docker: 'ghost:5-alpine',
+        uptime: '99.95%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'bentopdf',
+        group: '01 // OFFICE & COLLAB',
+        name: 'BentoPDF Suite',
+        port: '8080 / WASM',
+        mem: '128 MB',
+        replaces: 'Adobe Acrobat Pro DC (RM 65 / seat)',
+        hook: 'Client-side PDF merge, split, OCR & redaction without cloud leakage.',
+        docker: 'bentopdf/standalone:v2',
+        uptime: '100%',
+        status: 'ONLINE'
+      },
+
+      // CATEGORY 02: SME FINANCE & INVOICING
+      {
+        id: 'invoiceninja',
+        group: '02 // FINANCE & AUDIT',
+        name: 'Invoice Ninja',
+        port: '8000 / HTTP',
+        mem: '512 MB',
+        replaces: 'Xero / QuickBooks Online (RM 80 / mo)',
+        hook: 'Audit-ready invoicing, customer portal & LHDN e-invoicing compliance.',
+        docker: 'invoiceninja/invoiceninja:latest',
+        uptime: '99.99%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'autocount',
+        group: '02 // FINANCE & AUDIT',
+        name: 'AutoCount Win10 VM',
+        port: '3389 / RDP',
+        mem: '8192 MB',
+        replaces: 'Azure Virtual Desktop (RM 350 / mo)',
+        hook: 'KVM hypervisor instance running AutoCount Desktop Server & SQL.',
+        docker: 'qemu/kvm:win10-autocount',
+        uptime: '99.91%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'itiktudung',
+        group: '02 // FINANCE & AUDIT',
+        name: 'itik Tudung Boutique',
+        port: '443 / NGINX',
+        mem: '768 MB',
+        replaces: 'Shopify Advanced + 2% Cut (RM 450 / mo)',
+        hook: 'High-traffic WooCommerce boutique with local FPX/DuitNow gateways.',
+        docker: 'wordpress:php8.2-fpm-woo',
+        uptime: '100%',
+        status: 'ONLINE'
+      },
+
+      // CATEGORY 03: OPERATIONS & AUTOMATION
+      {
+        id: 'n8n',
+        group: '03 // AUTOMATION & OPS',
+        name: 'n8n Workflow Automation',
+        port: '5678 / WEBHOOK',
+        mem: '512 MB',
+        replaces: 'Zapier Team / Make.com (RM 150 / mo)',
+        hook: 'Self-hosted visual workflow engine triggering cross-app pipelines.',
+        docker: 'n8nio/n8n:latest',
+        uptime: '100%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'netronome',
+        group: '03 // AUTOMATION & OPS',
+        name: 'Netronome Speedtest',
+        port: '8081 / HTTP',
+        mem: '128 MB',
+        replaces: 'Datadog Synthetics (RM 120 / mo)',
+        hook: 'WAN latency and ISP SLA monitoring with automated outage audit logs.',
+        docker: 'librespeed/speedtest:latest',
+        uptime: '100%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'agencywp',
+        group: '03 // AUTOMATION & OPS',
+        name: 'Creative Agency WP',
+        port: '8082 / HTTP',
+        mem: '512 MB',
+        replaces: 'Webflow Workspace (RM 140 / mo)',
+        hook: 'Corporate fast-loading block showcase capturing inbound inquiries.',
+        docker: 'wordpress:fpm-alpine',
+        uptime: '99.96%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'links',
+        group: '03 // AUTOMATION & OPS',
+        name: 'LinkStack Directory',
+        port: '8008 / HTTP',
+        mem: '64 MB',
+        replaces: 'Linktree Pro (RM 35 / mo)',
+        hook: 'Branded digital business cards and employee directory hub.',
+        docker: 'linkstack/linkstack:latest',
+        uptime: '100%',
+        status: 'ONLINE'
+      },
+
+      // CATEGORY 04: SOVEREIGN AI & COMPUTE
+      {
+        id: 'opencode',
+        group: '04 // SOVEREIGN AI & COMPUTE',
+        name: 'Opencode AI Assistant',
+        port: '11434 / REST',
+        mem: '4096 MB',
+        replaces: 'GitHub Copilot Enterprise (RM 85 / seat)',
+        hook: 'Private local code generation running on isolated hardware accelerators.',
+        docker: 'ollama/ollama:rocm-vLLM',
+        uptime: '99.88%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'excalidraw',
+        group: '04 // SOVEREIGN AI & COMPUTE',
+        name: 'Excalidraw Whiteboard',
+        port: '80 / HTTP',
+        mem: '128 MB',
+        replaces: 'Miro Team Plan (RM 40 / seat)',
+        hook: 'Real-time collaborative diagramming and wireframing whiteboard.',
+        docker: 'excalidraw/excalidraw:latest',
+        uptime: '100%',
+        status: 'ONLINE'
+      },
+
+      // CATEGORY 05: DATA VAULT & STORAGE
+      {
+        id: 'synology',
+        group: '05 // STORAGE & VAULT',
+        name: 'Synology DSM 7 Storage',
+        port: '5001 / HTTPS',
+        mem: '2048 MB',
+        replaces: 'AWS S3 Enterprise Gateway (RM 450 / mo)',
+        hook: 'Hardware NAS manager for shared hot folders & multi-version backups.',
+        docker: 'virtual:synology-dsm7',
+        uptime: '100%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'truenas',
+        group: '05 // STORAGE & VAULT',
+        name: 'TrueNAS SCALE Storage',
+        port: '443 / HTTPS',
+        mem: '4096 MB',
+        replaces: 'Google Cloud Filestore (RM 600 / mo)',
+        hook: 'Enterprise ZFS mirror array with instant snapshots & bit-rot repair.',
+        docker: 'truenas/scale:zfs-core',
+        uptime: '100%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'paperless',
+        group: '05 // STORAGE & VAULT',
+        name: 'Paperless-ngx Archive',
+        port: '8000 / HTTP',
+        mem: '512 MB',
+        replaces: 'DocuSign Document Vault (RM 120 / mo)',
+        hook: 'Automated OCR document indexing with semantic full-text search.',
+        docker: 'paperless-ngx:latest',
+        uptime: '99.99%',
+        status: 'ONLINE'
+      },
+      {
+        id: 'pihole',
+        group: '05 // STORAGE & VAULT',
+        name: 'Pi-hole Shield DNS',
+        port: '53 / UDP',
+        mem: '128 MB',
+        replaces: 'Cisco Umbrella DNS (RM 85 / mo)',
+        hook: 'Network-wide telemetry blocking, ad filtering & malicious domain sink.',
+        docker: 'pihole/pihole:latest',
+        uptime: '100%',
+        status: 'ONLINE'
+      }
+    ];
+
+    let currentSelectedId = 'nextcloud';
+    let currentSeats = 15;
+
+    // SaaS Catalog with Cost Weights
+    const saasCategories = [
+      { id: 'saas-office', name: 'Office & Productivity Suite', alt: 'M365 / Google Workspace', price: 32, type: 'seat', checked: true },
+      { id: 'saas-acct', name: 'Accounting & e-Invoicing', alt: 'Xero / QuickBooks / AutoCount', price: 80, type: 'company', checked: true },
+      { id: 'saas-storage', name: 'Cloud Storage (1TB/user)', alt: 'Dropbox / OneDrive / Drive', price: 27, type: 'seat', checked: true },
+      { id: 'saas-auto', name: 'Automation & Dev Engine', alt: 'Zapier / Make / GitHub Pro', price: 150, type: 'company', checked: true },
+      { id: 'saas-wiki', name: 'Team Knowledge Base', alt: 'Notion Team / Confluence', price: 45, type: 'seat', checked: true },
+      { id: 'saas-pub', name: 'Digital Publishing / Newsletter', alt: 'Substack Pro / Ghost Cloud', price: 150, type: 'company', checked: false },
+      { id: 'saas-whiteboard', name: 'Visual Whiteboard / Diagramming', alt: 'Miro / Mural Enterprise', price: 40, type: 'seat', checked: true },
+      { id: 'saas-pdf', name: 'PDF Security & OCR Utilities', alt: 'Adobe Acrobat Pro DC', price: 65, type: 'seat', checked: false },
+    ];
+
+    // -------------------------------------------------------------------------
+    // 3. UI Render Engines
+    // -------------------------------------------------------------------------
+    function renderRackList(filterText = '') {
+      const container = document.getElementById('rack-list-container');
+      const filtered = clusterNodes.filter(n => 
+        n.name.toLowerCase().includes(filterText.toLowerCase()) ||
+        n.group.toLowerCase().includes(filterText.toLowerCase()) ||
+        n.replaces.toLowerCase().includes(filterText.toLowerCase())
+      );
+
+      // Grouping by Node Group
+      const groups = {};
+      filtered.forEach(node => {
+        if (!groups[node.group]) groups[node.group] = [];
+        groups[node.group].push(node);
+      });
+
+      let html = '';
+      for (const [groupName, nodes] of Object.entries(groups)) {
+        html += `
+          <div class="px-3 py-1 bg-tele-pitch border-y border-tele-border text-[10px] text-tele-dim font-bold tracking-wider flex justify-between">
+            <span>[${groupName}]</span>
+            <span>${nodes.length} ONLINE</span>
+          </div>
+        `;
+
+        nodes.forEach(n => {
+          const isSelected = n.id === currentSelectedId;
+          html += `
+            <div 
+              onclick="selectNode('${n.id}')"
+              class="p-2.5 cursor-pointer transition flex items-start justify-between ${
+                isSelected 
+                  ? 'bg-tele-surface border-l-4 border-l-tele-green' 
+                  : 'bg-tele-carbon hover:bg-tele-surface/60 border-l-4 border-l-transparent'
+              }"
+            >
+              <div class="space-y-0.5">
+                <div class="flex items-center space-x-2">
+                  <span class="w-1.5 h-1.5 rounded-full ${n.status === 'ONLINE' ? 'bg-tele-green shadow-[0_0_4px_#00ff66]' : 'bg-tele-amber'} inline-block"></span>
+                  <span class="font-bold text-xs ${isSelected ? 'text-tele-white glow-green' : 'text-tele-dim'}">${n.name}</span>
+                </div>
+                <div class="text-[10px] text-tele-dim line-clamp-1">${n.hook}</div>
+                <div class="text-[9px] text-tele-green/70">REPLACES: ${n.replaces.split('(')[0]}</div>
+              </div>
+              <div class="text-right font-mono">
+                <span class="text-[9px] text-tele-amber bg-tele-pitch px-1.5 py-0.5 border border-tele-border">
+                  ${n.port.split(' ')[0]}
+                </span>
+                <span class="block text-[8px] text-tele-dim mt-1">${n.mem}</span>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = html;
+    }
+
+    function selectNode(id) {
+      playRelayClick(950, 0.02);
+      currentSelectedId = id;
+      const node = clusterNodes.find(x => x.id === id) || clusterNodes[0];
+      document.getElementById('selected-shortname').innerText = node.name.toUpperCase().replace(/\s+/g, '_');
+      renderRackList(document.getElementById('node-filter-input').value);
+      renderInspector(node);
+      appendTerminalLog(`inspect_node: active socket switched to ${node.id} (${node.port})`);
+    }
+
+    function renderInspector(node) {
+      document.getElementById('inspector-socket-uri').innerText = `IMAGE: ${node.docker} // SOCKET: ${node.port}`;
+      const cards = document.getElementById('inspector-cards');
+      cards.innerHTML = `
+        <div class="p-3 bg-tele-pitch border border-tele-border">
+          <div class="text-[10px] text-tele-dim uppercase">NODE IDENTITY & UPTIME</div>
+          <div class="text-sm font-bold text-tele-white mt-1">${node.name}</div>
+          <div class="text-[10px] text-tele-green mt-0.5">SLA: ${node.uptime} LOCAL RELIABILITY</div>
+          <div class="text-[10px] text-tele-dim mt-2">${node.hook}</div>
+        </div>
+
+        <div class="p-3 bg-tele-pitch border border-tele-border">
+          <div class="text-[10px] text-tele-dim uppercase">ANNUAL RECURRING SAVINGS</div>
+          <div class="text-xs font-bold text-tele-amber mt-1">${node.replaces}</div>
+          <div class="text-[10px] text-tele-dim mt-1">Sovereign Data Storage: /mnt/zpool/${node.id}</div>
+          <div class="text-[10px] text-tele-green mt-1">● ZERO CLOUD VENDOR ACCESS</div>
+        </div>
+
+        <div class="p-3 bg-tele-pitch border border-tele-border flex flex-col justify-between">
+          <div>
+            <div class="text-[10px] text-tele-dim uppercase">OPERATIONAL ACTIONS</div>
+            <div class="text-[11px] text-tele-dim mt-1">PORT BINDING: ${node.port}</div>
+          </div>
+          <button onclick="launchSocketDirect('${node.name}')" class="mt-2 w-full py-1.5 bg-tele-green text-black hover:bg-white text-xs font-mono font-bold tracking-tight transition active:translate-y-0.5">
+            [LAUNCH ${node.name.toUpperCase()}]
+          </button>
+        </div>
+      `;
+    }
+
+    function renderSaaSToggles() {
+      const container = document.getElementById('saas-checklist');
+      container.innerHTML = saasCategories.map((item, idx) => `
+        <label class="flex items-start space-x-2.5 p-2 bg-tele-pitch border border-tele-border cursor-pointer hover:border-tele-borderBright transition">
+          <input 
+            type="checkbox" 
+            id="${item.id}" 
+            ${item.checked ? 'checked' : ''} 
+            onchange="onSaaSToggle(${idx})" 
+            class="mt-0.5 accent-tele-green"
+          >
+          <div class="flex-1">
+            <div class="font-bold text-tele-white flex justify-between">
+              <span>${item.name}</span>
+              <span class="text-tele-amber">RM ${item.price}</span>
+            </div>
+            <div class="text-[10px] text-tele-dim">Replaces: ${item.alt}</div>
+          </div>
+        </label>
+      `).join('');
+    }
+
+    function onSaaSToggle(index) {
+      playRelayClick(850, 0.02);
+      saasCategories[index].checked = !saasCategories[index].checked;
+      calculateMatrix();
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Financial Amortization Calculation Engine
+    // -------------------------------------------------------------------------
+    function setSeats(n) {
+      playRelayClick(1100, 0.02);
+      currentSeats = parseInt(n);
+      document.getElementById('seat-range').value = n;
+      updateSeatPresetsUI();
+      calculateMatrix();
+    }
+
+    function onSeatInput(val) {
+      currentSeats = parseInt(val);
+      updateSeatPresetsUI();
+      calculateMatrix();
+    }
+
+    function updateSeatPresetsUI() {
+      ['5', '15', '50'].forEach(p => {
+        const btn = document.getElementById('btn-seat-' + p);
+        if (parseInt(p) === currentSeats) {
+          btn.className = "p-1.5 bg-tele-amberDark border border-tele-amber text-tele-amber font-bold transition";
+        } else {
+          btn.className = "p-1.5 bg-tele-pitch border border-tele-border hover:border-tele-green text-tele-dim hover:text-tele-green transition";
+        }
+      });
+      document.getElementById('seat-badge').innerText = `${currentSeats} SEATS`;
+    }
+
+    function calculateMatrix() {
+      const seats = currentSeats;
+
+      // Sum active cloud tools
+      let rawMonthly = 0;
+      saasCategories.forEach(cat => {
+        if (cat.checked) {
+          if (cat.type === 'seat') {
+            rawMonthly += (cat.price * seats);
+          } else {
+            rawMonthly += cat.price; // company-wide flat rate
+          }
+        }
+      });
+
+      // Malaysian 8% Digital SST
+      const sst = rawMonthly * 0.08;
+      const grossCloudMonthly = rawMonthly + sst;
+
+      // Local Continuous Homelab OpEx (65W continuous load @ TNB Commercial B ~RM 24)
+      const homelabOpEx = 24.10;
+      const netMonthlySavings = Math.max(0, grossCloudMonthly - homelabOpEx);
+
+      // Hardware CapEx Tiers
+      let capex = 10000;
+      let capexLabel = '15-Seat Redundant Appliance';
+      if (seats <= 5) {
+        capex = 6500;
+        capexLabel = 'Micro SME Appliance (5 Seats)';
+      } else if (seats > 30) {
+        capex = 18000;
+        capexLabel = 'Campus Cluster Appliance (50+ Seats)';
+      }
+
+      // Breakeven Months
+      const breakeven = netMonthlySavings > 0 ? (capex / netMonthlySavings).toFixed(1) : '∞';
+
+      // 36-Month Projections
+      const threeYrCloud = grossCloudMonthly * 36;
+      const threeYrHomelab = capex + (homelabOpEx * 36);
+      const threeYrNet = Math.max(0, threeYrCloud - threeYrHomelab);
+
+      // DOM Updates
+      document.getElementById('calc-cloud-saas').innerText = `RM ${Math.round(grossCloudMonthly).toLocaleString()}`;
+      document.getElementById('calc-cloud-sst').innerText = `Incl. 8% Digital SST (RM ${Math.round(sst).toLocaleString()})`;
+      document.getElementById('calc-net-monthly').innerText = `RM ${Math.round(netMonthlySavings).toLocaleString()}`;
+      document.getElementById('calc-capex').innerText = `RM ${capex.toLocaleString()}`;
+      document.getElementById('calc-capex-tier').innerText = capexLabel;
+
+      document.getElementById('gauge-breakeven').innerText = `${breakeven} MONTHS`;
+      document.getElementById('gauge-monthly-save').innerText = `THEN RM ${Math.round(netMonthlySavings).toLocaleString()} / MO RETAINED`;
+      document.getElementById('calc-breakeven-pill').innerText = `${breakeven} MONTHS`;
+
+      document.getElementById('calc-3yr-savings').innerText = `+RM ${Math.round(threeYrNet).toLocaleString()} SAVED`;
+      document.getElementById('bar-cloud-cost').innerText = `RM ${(threeYrCloud / 1000).toFixed(1)}K`;
+      document.getElementById('bar-homelab-cost').innerText = `RM ${(threeYrHomelab / 1000).toFixed(1)}K`;
+
+      const homelabPct = Math.min(100, Math.max(8, (threeYrHomelab / (threeYrCloud || 1)) * 100));
+      document.getElementById('bar-homelab-width').style.width = `${homelabPct}%`;
+
+      renderLedBar(parseFloat(breakeven) || 12);
+    }
+
+    // Render Analog Style LED Segments
+    function renderLedBar(breakevenMonths) {
+      const container = document.getElementById('led-meter');
+      const totalCells = 20;
+      // Faster payback = more green lights
+      const activeCount = Math.max(1, Math.min(20, Math.round((1 - (breakevenMonths / 24)) * 20)));
+
+      let html = '';
+      for (let i = 0; i < totalCells; i++) {
+        let stateClass = '';
+        if (i < activeCount) {
+          if (i < 12) stateClass = 'active-green';
+          else if (i < 17) stateClass = 'active-amber';
+          else stateClass = 'active-red';
+        }
+        html += `<span class="led-meter-cell ${stateClass}"></span>`;
+      }
+      container.innerHTML = html;
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Terminal Search & Log Emulation
+    // -------------------------------------------------------------------------
+    function handleSearch(val) {
+      renderRackList(val);
+    }
+
+    function clearSearch() {
+      document.getElementById('node-filter-input').value = '';
+      renderRackList();
+    }
+
+    function appendTerminalLog(msg) {
+      const logBox = document.getElementById('terminal-log-output');
+      const time = new Date().toTimeString().split(' ')[0];
+      const div = document.createElement('div');
+      div.innerHTML = `<span class="text-tele-dim">[${time}]</span> <span class="text-tele-green">hypervisor_exec:</span> ${msg}`;
+      logBox.appendChild(div);
+      if (logBox.children.length > 5) {
+        logBox.removeChild(logBox.children[0]);
+      }
+    }
+
+    function cycleDaemon() {
+      playRelayClick(400, 0.1);
+      const quorum = document.getElementById('header-quorum');
+      quorum.innerHTML = '<span class="text-tele-amber animate-pulse">CYCLING_PODS...</span>';
+      appendTerminalLog('warning: issuing warm SIGUSR1 to container supervisor');
+      setTimeout(() => {
+        quorum.innerText = '23/23 ONLINE';
+        appendTerminalLog('success: all 23 nodes resumed under sovereign lock');
+      }, 1100);
+    }
+
+    function setTab(tab) {
+      playRelayClick(1000, 0.02);
+      const exec = document.getElementById('tab-exec');
+      const sys = document.getElementById('tab-sys');
+      if (tab === 'executive') {
+        exec.className = "px-2.5 py-0.5 bg-tele-green text-black font-bold uppercase tracking-tight";
+        sys.className = "px-2.5 py-0.5 text-tele-dim hover:text-tele-green border border-transparent hover:border-tele-border uppercase tracking-tight";
+        appendTerminalLog('view_mode: loaded executive audit view matrix');
+      } else {
+        sys.className = "px-2.5 py-0.5 bg-tele-amber text-black font-bold uppercase tracking-tight";
+        exec.className = "px-2.5 py-0.5 text-tele-dim hover:text-tele-green border border-transparent hover:border-tele-border uppercase tracking-tight";
+        appendTerminalLog('view_mode: loaded raw sysadmin telemetry view');
+      }
+    }
+
+    function runQuickTour() {
+      playRelayClick(1200, 0.04);
+      appendTerminalLog('tour: initiating 2-minute sovereign executive walk');
+      selectNode('nextcloud');
+      window.scrollTo({ top: document.getElementById('node-inspector-pane').offsetTop - 60, behavior: 'smooth' });
+    }
+
+    function triggerQuickAction(type) {
+      playRelayClick(900, 0.03);
+      if (type === 'launch') {
+        const node = clusterNodes.find(x => x.id === currentSelectedId) || clusterNodes[0];
+        appendTerminalLog(`dispatch: launching socket route for ${node.name}`);
+      } else if (type === 'export') {
+        appendTerminalLog('audit: compiling PDPA-2010 financial report memo in background');
+      } else if (type === 'pdpa') {
+        appendTerminalLog('compliance: Malaysian PDPA 2010 local residency verification: PASS (100%)');
+      }
+    }
+
+    function launchSocketDirect(name) {
+      playRelayClick(1100, 0.03);
+      appendTerminalLog(`tunnel_open: opening TLS session to ${name} on local port`);
+    }
+
+    // Clock update & Savings Ticker
+    function startSystemClocks() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById('live-time-utc').innerText = `UTC: ${now.toUTCString().split(' ')[4]}`;
+      }, 1000);
+
+      let saved = 2000034;
+      setInterval(() => {
+        saved += Math.floor(Math.random() * 4) + 1;
+        document.getElementById('live-tax-ticker').innerText = `RM ${saved.toLocaleString()}`;
+      }, 3500);
+    }
+
+    // Initialization
+    window.onload = function() {
+      renderRackList();
+      renderInspector(clusterNodes[0]);
+      renderSaaSToggles();
+      calculateMatrix();
+      startSystemClocks();
+    }
+  </script>
+</body>
+</html>

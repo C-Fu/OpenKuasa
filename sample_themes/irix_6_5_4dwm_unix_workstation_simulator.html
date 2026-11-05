@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGI IRIX 6.5 // 4Dwm Sovereign Workstation // HomeLAB.my</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ======================================================================= */
+    /* 1. SGI IRIX 6.5 MOTIF 4DWM COLOR SCHEME & 3D CHISEL BEVELS             */
+    /* ======================================================================= */
+    :root {
+      --sgi-bg: #2d4852;
+      --sgi-panel: #4a6874;
+      --sgi-panel-light: #5d7e8b;
+      --sgi-bevel-light: #8ea8b3;
+      --sgi-bevel-dark: #1b2f36;
+      --sgi-bevel-black: #0c1619;
+      --sgi-title-active: #153c4d;
+      --sgi-title-inactive: #38515c;
+      --sgi-indigo: #5c4382;
+      --sgi-amber: #f8cf48;
+      --sgi-cyan: #3fe0d0;
+      --sgi-text: #ffffff;
+      --sgi-text-dark: #000000;
+      --sgi-text-dim: #cadfe7;
+      --sgi-well: #1b2a30;
+    }
+
+    body {
+      background-color: var(--sgi-bg);
+      color: var(--sgi-text);
+      font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      /* Classic SGI Desktop Stipple Pattern */
+      background-image: radial-gradient(rgba(0, 0, 0, 0.25) 15%, transparent 16%);
+      background-size: 4px 4px;
+    }
+
+    .sgi-mono {
+      font-family: 'Chivo Mono', monospace;
+    }
+
+    /* Motif 3D Outset (Buttons, Window Frames, Dialogs) */
+    .motif-outset {
+      background-color: var(--sgi-panel);
+      border-top: 2px solid var(--sgi-bevel-light);
+      border-left: 2px solid var(--sgi-bevel-light);
+      border-right: 2px solid var(--sgi-bevel-dark);
+      border-bottom: 2px solid var(--sgi-bevel-dark);
+      box-shadow: 1px 1px 0px var(--sgi-bevel-black);
+    }
+
+    .motif-outset-deep {
+      background-color: var(--sgi-panel);
+      border-top: 3px solid var(--sgi-bevel-light);
+      border-left: 3px solid var(--sgi-bevel-light);
+      border-right: 3px solid var(--sgi-bevel-dark);
+      border-bottom: 3px solid var(--sgi-bevel-dark);
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    }
+
+    /* Motif 3D Inset (Text Wells, Sunken Views, Display Insets) */
+    .motif-inset {
+      background-color: var(--sgi-well);
+      border-top: 2px solid var(--sgi-bevel-dark);
+      border-left: 2px solid var(--sgi-bevel-dark);
+      border-right: 2px solid var(--sgi-bevel-light);
+      border-bottom: 2px solid var(--sgi-bevel-light);
+    }
+
+    .motif-inset-deep {
+      background-color: #0e181c;
+      border-top: 2px solid #060c0e;
+      border-left: 2px solid #060c0e;
+      border-right: 2px solid var(--sgi-bevel-light);
+      border-bottom: 2px solid var(--sgi-bevel-light);
+    }
+
+    /* Motif Button Active State */
+    .motif-btn {
+      background-color: var(--sgi-panel);
+      border-top: 2px solid var(--sgi-bevel-light);
+      border-left: 2px solid var(--sgi-bevel-light);
+      border-right: 2px solid var(--sgi-bevel-dark);
+      border-bottom: 2px solid var(--sgi-bevel-dark);
+      color: #ffffff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .motif-btn:active, .motif-btn.active {
+      border-top: 2px solid var(--sgi-bevel-dark);
+      border-left: 2px solid var(--sgi-bevel-dark);
+      border-right: 2px solid var(--sgi-bevel-light);
+      border-bottom: 2px solid var(--sgi-bevel-light);
+      background-color: #3b545e;
+      padding-top: 2px;
+      padding-left: 2px;
+    }
+
+    /* Square Window Titlebar Buttons */
+    .sgi-win-btn {
+      width: 18px;
+      height: 18px;
+      background-color: var(--sgi-panel);
+      border-top: 1.5px solid var(--sgi-bevel-light);
+      border-left: 1.5px solid var(--sgi-bevel-light);
+      border-right: 1.5px solid var(--sgi-bevel-dark);
+      border-bottom: 1.5px solid var(--sgi-bevel-dark);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 900;
+      color: #fff;
+      cursor: pointer;
+    }
+    .sgi-win-btn:active {
+      border-top: 1.5px solid var(--sgi-bevel-dark);
+      border-left: 1.5px solid var(--sgi-bevel-dark);
+      border-right: 1.5px solid var(--sgi-bevel-light);
+      border-bottom: 1.5px solid var(--sgi-bevel-light);
+      background-color: #2e434b;
+    }
+
+    /* Custom Checkbox Inset */
+    .motif-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background-color: var(--sgi-well);
+      border-top: 2px solid var(--sgi-bevel-dark);
+      border-left: 2px solid var(--sgi-bevel-dark);
+      border-right: 2px solid var(--sgi-bevel-light);
+      border-bottom: 2px solid var(--sgi-bevel-light);
+      cursor: pointer;
+      display: inline-grid;
+      place-content: center;
+    }
+    .motif-checkbox:checked::before {
+      content: '■';
+      color: var(--sgi-amber);
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    /* SGI Native Range Slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+      width: 100%;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 8px;
+      background: var(--sgi-well);
+      border-top: 1.5px solid var(--sgi-bevel-dark);
+      border-left: 1.5px solid var(--sgi-bevel-dark);
+      border-right: 1.5px solid var(--sgi-bevel-light);
+      border-bottom: 1.5px solid var(--sgi-bevel-light);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 22px;
+      width: 14px;
+      background: var(--sgi-panel);
+      border-top: 2px solid var(--sgi-bevel-light);
+      border-left: 2px solid var(--sgi-bevel-light);
+      border-right: 2px solid var(--sgi-bevel-dark);
+      border-bottom: 2px solid var(--sgi-bevel-dark);
+      cursor: pointer;
+      margin-top: -7px;
+      box-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 22px;
+      width: 14px;
+      background: var(--sgi-panel);
+      border-top: 2px solid var(--sgi-bevel-light);
+      border-left: 2px solid var(--sgi-bevel-light);
+      border-right: 2px solid var(--sgi-bevel-dark);
+      border-bottom: 2px solid var(--sgi-bevel-dark);
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col text-slate-100 pb-8">
+
+  <!-- ========================================================================= -->
+  <!-- 1. IRIX TOP TOOLCHEST / SYSTEM MENU BAR                                   -->
+  <!-- ========================================================================= -->
+  <header class="motif-outset px-2 py-1 flex flex-wrap items-center justify-between text-xs font-semibold z-40 sticky top-0 shadow-md">
+    
+    <!-- Left: SGI 3D Cube & Toolchest Menus -->
+    <div class="flex items-center space-x-1">
+      
+      <!-- SGI Logo Cube Icon -->
+      <div class="px-2 py-1 bg-black text-[#3fe0d0] font-bold sgi-mono flex items-center gap-1 border border-cyan-800 shadow-inner mr-1">
+        <svg class="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span class="tracking-wider">sgi</span>
+      </div>
+
+      <!-- Toolchest Buttons -->
+      <button onclick="playChirp(600)" class="motif-btn px-2.5 py-1 text-xs">Toolchest ▼</button>
+      <button onclick="playChirp(700)" class="motif-btn px-2.5 py-1 text-xs">Desktop ▼</button>
+      <button onclick="playChirp(800)" class="motif-btn px-2.5 py-1 text-xs">Selected ▼</button>
+      <button onclick="playChirp(900)" class="motif-btn px-2.5 py-1 text-xs hidden sm:inline">Workspace ▼</button>
+
+      <!-- Active Workspace Pill -->
+      <div class="motif-inset px-2 py-0.5 text-[11px] sgi-mono text-cyan-300 ml-2 hidden md:flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block animate-pulse"></span>
+        <span>WS: SOVEREIGN-4D</span>
+      </div>
+
+    </div>
+
+    <!-- Right: Hardware Telemetry Diagnostics & Live Clock -->
+    <div class="flex items-center space-x-2 text-xs">
+      
+      <div class="motif-inset px-2.5 py-0.5 text-[11px] sgi-mono text-amber-300 hidden lg:block">
+        MIPS R12000 @ 400MHz // OCTANE2
+      </div>
+
+      <div class="motif-inset px-2.5 py-0.5 text-[11px] sgi-mono text-emerald-300 hidden sm:block">
+        ZFS-POOL: 100% SECURE
+      </div>
+
+      <!-- Workstation Audio Bell Mute/Toggle -->
+      <button onclick="toggleAudio()" id="btn-audio" class="motif-btn px-2 py-0.5 text-xs text-amber-200" title="Workstation Relay Audio">
+        🔊 AUDIO: ON
+      </button>
+
+      <!-- Digital System Clock -->
+      <div class="motif-inset px-2.5 py-0.5 sgi-mono text-[11px] text-white font-bold" id="irix-clock">
+        12:00:00
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. IRIX 4DWM WORKSPACE CANVAS (2 PARALLEL SYSTEM WINDOWS)                 -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 p-3 md:p-6 grid grid-cols-1 xl:grid-cols-12 gap-6 items-start max-w-[1700px] mx-auto w-full">
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- WINDOW 1: SOVEREIGN CLUSTER FILE MANAGER & APPLIANCE BROWSER (Cols 1-6)-->
+    <!-- --------------------------------------------------------------------- -->
+    <div class="xl:col-span-6 motif-outset-deep flex flex-col shadow-2xl">
+      
+      <!-- SGI Window 1 Titlebar -->
+      <div class="bg-[var(--sgi-title-active)] p-1.5 flex items-center justify-between text-xs font-bold border-b-2 border-[var(--sgi-bevel-dark)]">
+        <div class="flex items-center space-x-2 pl-1">
+          <span class="w-2.5 h-2.5 bg-cyan-400 inline-block shadow"></span>
+          <span class="tracking-wide">File Manager: /usr/people/homelab/appliances</span>
+        </div>
+        <div class="flex items-center space-x-1">
+          <button onclick="playChirp(500)" class="sgi-win-btn" title="Minimize">_</button>
+          <button onclick="playChirp(750)" class="sgi-win-btn" title="Maximize">□</button>
+          <button onclick="playChirp(350)" class="sgi-win-btn text-rose-300" title="Close">✕</button>
+        </div>
+      </div>
+
+      <!-- Window 1 Menu / Path Strip -->
+      <div class="px-2 py-1 bg-[var(--sgi-panel-light)] border-b border-[var(--sgi-bevel-dark)] flex items-center justify-between text-[11px] sgi-mono">
+        <div class="flex items-center space-x-3">
+          <span class="text-white font-bold">DIRECTORY:</span>
+          <span class="motif-inset px-2 py-0.5 text-cyan-200">/dev/zpool0/sovereign-fleet/</span>
+        </div>
+        <span class="text-amber-300 font-bold hidden sm:inline">[23 NODES DISCOVERED]</span>
+      </div>
+
+      <!-- Icon File Grid (Scrollable Viewport) -->
+      <div class="p-3 bg-[var(--sgi-well)] border-t border-[var(--sgi-bevel-dark)] border-b border-[var(--sgi-bevel-light)]">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-[380px] overflow-y-auto pr-1" id="node-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Active Node Runbook Telemetry / Inspector (Bottom Well) -->
+      <div class="p-3 bg-[var(--sgi-panel)] flex flex-col space-y-2 text-xs">
+        
+        <div class="flex items-center justify-between border-b border-[var(--sgi-bevel-dark)] pb-1">
+          <span class="font-bold text-amber-300 uppercase tracking-wide sgi-mono flex items-center gap-1.5">
+            <span>▶</span> ACTIVE PROCESS INSPECTOR
+          </span>
+          <span class="motif-inset px-2 py-0.5 text-[10px] sgi-mono text-emerald-400" id="inspect-status">
+            PROCESS ID: 1042 // STATE: EXECUTING
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sgi-mono text-[11px]">
+          <div class="motif-inset p-2">
+            <span class="text-slate-400 block text-[10px]">APPLIANCE TARGET:</span>
+            <span class="font-bold text-white text-xs truncate block" id="inspect-name">Nextcloud Hub 30</span>
+          </div>
+          <div class="motif-inset p-2">
+            <span class="text-slate-400 block text-[10px]">SOCKET BINDING:</span>
+            <span class="font-bold text-cyan-300 text-xs truncate block" id="inspect-port">PORT: 8443 / TLS 1.3</span>
+          </div>
+          <div class="motif-inset p-2">
+            <span class="text-slate-400 block text-[10px]">THIRD-PARTY DISPLACEMENT:</span>
+            <span class="font-bold text-rose-300 text-xs truncate block" id="inspect-replaces">M365 / Google Workspace</span>
+          </div>
+        </div>
+
+        <!-- Node Description Callout -->
+        <div class="motif-inset p-2.5 text-slate-200 text-xs leading-relaxed" id="inspect-desc">
+          Enterprise sovereign productivity suite. Replaces Microsoft 365 and Google Workspace with local on-premise Files, Deck, Talk, and Document suites without foreign cloud leaks.
+        </div>
+
+        <!-- Launch & Terminal Diagnostics CTA -->
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-[10px] sgi-mono text-slate-300">PDPA 2010 SOVEREIGN GUARANTEE</span>
+          <div class="flex space-x-2">
+            <button onclick="triggerNodeAction('inspect')" class="motif-btn px-3 py-1 text-xs">
+              View Runbook
+            </button>
+            <button onclick="triggerNodeAction('launch')" class="motif-btn px-3 py-1 text-xs text-amber-300 font-bold bg-[#1d3d4b]">
+              ▶ Execute Binary
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Window 1 Status Footer -->
+      <div class="px-2 py-0.5 bg-[var(--sgi-panel-light)] border-t border-[var(--sgi-bevel-light)] flex justify-between text-[10px] sgi-mono text-slate-300">
+        <span>IRIX FS: EFS/XFS 64-BIT</span>
+        <span>READ/WRITE: ROOT</span>
+        <span>7 APPS SHOWN</span>
+      </div>
+
+    </div>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- WINDOW 2: IRIX SAAS AMORTIZATION & OPEX AUDIT ANALYZER (Cols 7-12)    -->
+    <!-- --------------------------------------------------------------------- -->
+    <div class="xl:col-span-6 motif-outset-deep flex flex-col shadow-2xl">
+      
+      <!-- SGI Window 2 Titlebar -->
+      <div class="bg-[var(--sgi-indigo)] p-1.5 flex items-center justify-between text-xs font-bold border-b-2 border-[var(--sgi-bevel-dark)]">
+        <div class="flex items-center space-x-2 pl-1">
+          <span class="w-2.5 h-2.5 bg-amber-400 inline-block shadow"></span>
+          <span class="tracking-wide">IRIX Tool: SaaS Cost Amortization & ROI Ledger (MYR)</span>
+        </div>
+        <div class="flex items-center space-x-1">
+          <button onclick="playChirp(500)" class="sgi-win-btn" title="Minimize">_</button>
+          <button onclick="playChirp(750)" class="sgi-win-btn" title="Maximize">□</button>
+          <button onclick="playChirp(350)" class="sgi-win-btn text-rose-300" title="Close">✕</button>
+        </div>
+      </div>
+
+      <!-- Window 2 Toolbar -->
+      <div class="px-3 py-1.5 bg-[var(--sgi-panel-light)] border-b border-[var(--sgi-bevel-dark)] flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center space-x-2">
+          <span class="font-bold text-white">TAX JURISDICTION:</span>
+          <span class="motif-inset px-2 py-0.5 text-[11px] sgi-mono text-emerald-300">MALAYSIAN 8% DIGITAL SST</span>
+        </div>
+        <div class="flex items-center space-x-1">
+          <button onclick="setSeats(5)" id="btn-seat-5" class="motif-btn px-2 py-0.5 text-[11px] sgi-mono">Micro (5)</button>
+          <button onclick="setSeats(15)" id="btn-seat-15" class="motif-btn px-2 py-0.5 text-[11px] sgi-mono active">SME (15)</button>
+          <button onclick="setSeats(50)" id="btn-seat-50" class="motif-btn px-2 py-0.5 text-[11px] sgi-mono">Mid (50)</button>
+        </div>
+      </div>
+
+      <!-- Main Financial Workbench Grid -->
+      <div class="p-4 bg-[var(--sgi-panel)] space-y-4">
+
+        <!-- Parametric Seat Calibrator Control -->
+        <div class="motif-inset p-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-200">
+              [1] WORKFORCE SEAT HEADCOUNT CALIBRATOR
+            </span>
+            <span class="motif-outset px-2.5 py-0.5 text-xs sgi-mono font-bold text-amber-300" id="seat-readout">
+              15 SEATS
+            </span>
+          </div>
+
+          <input 
+            type="range" 
+            id="seatSlider" 
+            min="1" 
+            max="100" 
+            value="15" 
+            oninput="handleSeatSlider(this.value)"
+          >
+
+          <div class="flex justify-between text-[10px] sgi-mono text-slate-400">
+            <span>01 SEAT (FOUNDER)</span>
+            <span>25 SEATS</span>
+            <span>50 SEATS (MID-CORP)</span>
+            <span>100 SEATS</span>
+          </div>
+        </div>
+
+        <!-- Replaceable SaaS License Checkboxes -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-200">
+              [2] THIRD-PARTY SAAS REPLACEMENTS
+            </span>
+            <span class="text-[10px] sgi-mono text-slate-400">SELECT AUDITED TOOLS</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="saas-checklist">
+            <!-- Populated via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Big Diagnostic Breakeven & Cumulative Summary Panel -->
+        <div class="motif-inset-deep p-4 space-y-3 sgi-mono">
+          
+          <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+            <span class="text-xs text-slate-400 uppercase">CAPITAL INVESTMENT RECOVERY AUDIT</span>
+            <span class="text-xs text-emerald-400 font-bold">STATUS: RECOVERED</span>
+          </div>
+
+          <!-- Numbers Line Items -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            
+            <div class="space-y-1">
+              <div class="text-[11px] text-slate-400">MONTHLY CLOUD SAAS DRAIN:</div>
+              <div class="text-lg font-bold text-rose-400" id="stat-cloud-saas">RM 1,196 / mo</div>
+              <div class="text-[10px] text-slate-400" id="stat-sst-breakdown">Includes 8% Digital SST (RM 89)</div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="text-[11px] text-slate-400">LOCAL HOMELAB OPEX (TNB 65W):</div>
+              <div class="text-lg font-bold text-slate-200">RM 24.00 / mo</div>
+              <div class="text-[10px] text-emerald-400">Continuous TNB Tariff B</div>
+            </div>
+
+            <div class="space-y-1 pt-2 border-t border-slate-800">
+              <div class="text-[11px] text-slate-400">NET MONTHLY RECOVERY:</div>
+              <div class="text-xl font-bold text-emerald-300" id="stat-net-monthly">RM 1,172 / mo</div>
+              <div class="text-[10px] text-slate-400">Retained inside corporate treasury</div>
+            </div>
+
+            <div class="space-y-1 pt-2 border-t border-slate-800">
+              <div class="text-[11px] text-slate-400">ONE-TIME HARDWARE CAPEX:</div>
+              <div class="text-xl font-bold text-amber-300" id="stat-hardware-capex">RM 10,000</div>
+              <div class="text-[10px] text-slate-400" id="stat-capex-tier">Tier: 15-Seat Redundant Appliance</div>
+            </div>
+
+          </div>
+
+          <!-- Breakeven Bar Display -->
+          <div class="pt-2 border-t border-slate-700">
+            <div class="flex justify-between items-center text-xs mb-1">
+              <span class="text-slate-300 font-bold">BREAKEVEN PAYBACK MILESTONE:</span>
+              <span class="text-amber-400 font-bold text-sm" id="stat-breakeven-badge">8.5 MONTHS</span>
+            </div>
+
+            <!-- Segmented Gauge Bar -->
+            <div class="motif-inset p-1 bg-black flex gap-1 h-6 items-center" id="gauge-bar">
+              <!-- Rendered via JS -->
+            </div>
+
+            <div class="flex justify-between items-center text-[10px] text-slate-400 mt-1">
+              <span>0 MO</span>
+              <span class="text-amber-300 font-bold">CROSSOVER ZONE</span>
+              <span>24 MO</span>
+            </div>
+          </div>
+
+          <!-- 3-Year Return Highlight -->
+          <div class="p-2.5 bg-[#122329] border border-cyan-800 flex justify-between items-center text-xs">
+            <div>
+              <span class="text-slate-300 block font-bold">36-MONTH CUMULATIVE VALUE:</span>
+              <span class="text-[10px] text-slate-400">36mo Cloud vs. (CapEx + 36mo OpEx)</span>
+            </div>
+            <div class="text-right">
+              <span class="text-base font-bold text-cyan-300" id="stat-3yr-cumulative">RM 32,187</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Commission Appliance Spec Action -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <div class="text-[11px] sgi-mono text-slate-300">
+            <span>READY TO EXPORT FOR BOARD APPROVAL</span>
+          </div>
+          <button onclick="triggerExportAudit()" class="motif-btn px-4 py-1.5 text-xs text-amber-200 font-bold bg-[#27424d] tracking-wide">
+            [PRINT SGI EXECUTIVE BRIEFING]
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Window 2 Status Footer -->
+      <div class="px-2 py-0.5 bg-[var(--sgi-panel-light)] border-t border-[var(--sgi-bevel-light)] flex justify-between text-[10px] sgi-mono text-slate-300">
+        <span>MATH KERNEL: IEEE-754 DP FLOAT</span>
+        <span>PDPA AUDITED</span>
+        <span>SAVINGS: REAL-TIME</span>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 3. IRIX DESKTOP STATUS DOCK (BOTTOM APM MONITOR)                         -->
+  <!-- ========================================================================= -->
+  <footer class="mt-auto px-4 py-1.5 motif-outset mx-4 text-xs sgi-mono flex flex-wrap items-center justify-between text-slate-300 gap-2">
+    <div class="flex items-center space-x-3">
+      <span class="text-cyan-300 font-bold">sgi-octane2%</span>
+      <span>uptime: 142 days, 18:34</span>
+      <span class="hidden md:inline">load average: 0.12, 0.08, 0.04</span>
+    </div>
+    <div class="flex items-center space-x-3 text-[11px]">
+      <span class="text-emerald-300">● 23 CLUSTER PROCESSES HEALTHY</span>
+      <span class="text-slate-400">|</span>
+      <span>HOMELAB.MY SOVEREIGN ARCHITECTURE</span>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: SOUND ENGINE, MOTIF INTERACTION & FINANCIAL CALCULATION       -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------------------
+    // 1. Web Audio API Synthesis: Retro Workstation Chirp & Click
+    // -------------------------------------------------------------------------
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playChirp(freq = 600, duration = 0.03, type = 'sine') {
+      if (!audioEnabled) return;
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToTimeConstant?.(freq * 1.5, audioCtx.currentTime + duration);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToTimeConstant?.(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Fallback silence
+      }
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const btn = document.getElementById('btn-audio');
+      if (audioEnabled) {
+        btn.innerText = '🔊 AUDIO: ON';
+        playChirp(880, 0.05);
+      } else {
+        btn.innerText = '🔇 AUDIO: OFF';
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 2. Sovereign Cluster Node Catalog
+    // -------------------------------------------------------------------------
+    const sovereignNodes = [
+      {
+        id: 'nextcloud',
+        name: 'Nextcloud Hub 30',
+        port: '8443/TLS',
+        replaces: 'Google Workspace / M365',
+        desc: 'Files, Talk, Deck, and Docs with full sovereign zero-trust encryption on local NVMe.',
+        icon: '📁'
+      },
+      {
+        id: 'docmost',
+        name: 'Docmost Wiki',
+        port: '3000/TCP',
+        replaces: 'Notion Team / Confluence',
+        desc: 'Collaborative engineering knowledge base with hierarchical trees and live Markdown sync.',
+        icon: '📖'
+      },
+      {
+        id: 'bentopdf',
+        name: 'BentoPDF Suite',
+        port: '8080/WASM',
+        replaces: 'Adobe Acrobat Pro DC',
+        desc: 'WASM-accelerated client-side PDF manipulation. Merge, split, OCR, and redact without uploads.',
+        icon: '📑'
+      },
+      {
+        id: 'invoiceninja',
+        name: 'Invoice Ninja',
+        port: '8000/TCP',
+        replaces: 'Xero / QuickBooks Online',
+        desc: 'Complete invoicing, payments ledger, expense tracking, and Malaysian LHDN e-invoicing ready.',
+        icon: '💼'
+      },
+      {
+        id: 'autocount',
+        name: 'AutoCount Win10',
+        port: '3389/RDP',
+        replaces: 'Azure Windows Cloud VM',
+        desc: 'Bare-metal virtual machine running AutoCount Accounting Server and MS SQL Database.',
+        icon: '🖥️'
+      },
+      {
+        id: 'n8n',
+        name: 'n8n Automation',
+        port: '5678/WEBHOOK',
+        replaces: 'Zapier / Make ($150/mo)',
+        desc: 'Self-hosted visual pipeline engine triggering automated cross-app webhook workflows.',
+        icon: '⚡'
+      },
+      {
+        id: 'excalidraw',
+        name: 'Excalidraw Board',
+        port: '5000/TCP',
+        replaces: 'Miro / Mural Enterprise',
+        desc: 'Infinite hand-drawn collaborative whiteboard for system flows and team architecture sprints.',
+        icon: '✏️'
+      }
+    ];
+
+    let activeNodeIndex = 0;
+
+    // -------------------------------------------------------------------------
+    // 3. SaaS Replacement Pricing Matrix (Malaysian Ringgit Benchmark)
+    // -------------------------------------------------------------------------
+    const saasItems = [
+      { id: 'saas-office', name: 'Office & Productivity Suite', alt: 'M365 / Google Workspace', price: 32, type: 'seat', checked: true },
+      { id: 'saas-acct', name: 'Accounting & e-Invoicing', alt: 'Xero / QuickBooks / AutoCount', price: 80, type: 'fixed', checked: true },
+      { id: 'saas-storage', name: 'Cloud Storage (1TB/User)', alt: 'OneDrive / Google Drive / Dropbox', price: 27, type: 'seat', checked: true },
+      { id: 'saas-auto', name: 'Automation & Dev Tools', alt: 'Zapier Team / Make.com', price: 150, type: 'fixed', checked: true },
+      { id: 'saas-wiki', name: 'Team Knowledge Base', alt: 'Notion Team / Confluence', price: 45, type: 'seat', checked: false },
+      { id: 'saas-pdf', name: 'PDF Utilities & Security', alt: 'Adobe Acrobat Pro DC', price: 65, type: 'seat', checked: false }
+    ];
+
+    let currentSeats = 15;
+
+    // -------------------------------------------------------------------------
+    // 4. Render Node Icons & Inspector
+    // -------------------------------------------------------------------------
+    function renderNodeGrid() {
+      const container = document.getElementById('node-grid');
+      container.innerHTML = sovereignNodes.map((node, idx) => `
+        <div 
+          onclick="selectNode(${idx})" 
+          class="motif-outset p-2 text-center cursor-pointer transition flex flex-col items-center justify-between ${activeNodeIndex === idx ? 'bg-[#5b7e8d] border-t-2 border-l-2 border-white' : 'hover:bg-[#527380]'}"
+        >
+          <div class="text-2xl mb-1">${node.icon}</div>
+          <div class="text-xs font-bold text-white truncate w-full">${node.name}</div>
+          <div class="motif-inset px-1 py-0.5 text-[9px] sgi-mono text-cyan-200 mt-1 w-full truncate">
+            ${node.port}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectNode(idx) {
+      activeNodeIndex = idx;
+      playChirp(700 + (idx * 50), 0.03);
+      const node = sovereignNodes[idx];
+      document.getElementById('inspect-name').innerText = node.name;
+      document.getElementById('inspect-port').innerText = `PORT: ${node.port}`;
+      document.getElementById('inspect-replaces').innerText = node.replaces;
+      document.getElementById('inspect-desc').innerText = node.desc;
+      document.getElementById('inspect-status').innerText = `PROCESS ID: ${1000 + idx * 42} // STATE: EXECUTING`;
+      renderNodeGrid();
+    }
+
+    function triggerNodeAction(action) {
+      playChirp(action === 'launch' ? 950 : 600, 0.05);
+      const node = sovereignNodes[activeNodeIndex];
+      if (action === 'launch') {
+        alert(`IRIX EXEC: Initializing socket session for ${node.name} on ${node.port}. Cluster link active.`);
+      } else {
+        alert(`IRIX RUNBOOK: Viewing technical specification for ${node.name}. Replaces: ${node.replaces}.`);
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 5. Render SaaS Checkboxes & Recalculate Financials
+    // -------------------------------------------------------------------------
+    function renderSaaSChecklist() {
+      const container = document.getElementById('saas-checklist');
+      container.innerHTML = saasItems.map((item, idx) => `
+        <label class="motif-inset p-2 flex items-start space-x-2 cursor-pointer hover:bg-[#22353d] transition">
+          <input 
+            type="checkbox" 
+            class="motif-checkbox mt-0.5" 
+            ${item.checked ? 'checked' : ''} 
+            onchange="toggleSaaS(${idx})"
+          >
+          <div class="flex-1 leading-tight">
+            <div class="flex justify-between items-baseline font-bold text-white">
+              <span>${item.name}</span>
+              <span class="text-amber-300 sgi-mono text-[11px]">RM ${item.price}</span>
+            </div>
+            <div class="text-[10px] text-slate-400 mt-0.5">Displaces: ${item.alt}</div>
+          </div>
+        </label>
+      `).join('');
+    }
+
+    function toggleSaaS(idx) {
+      saasItems[idx].checked = !saasItems[idx].checked;
+      playChirp(650, 0.02);
+      calculateROI();
+    }
+
+    function handleSeatSlider(val) {
+      currentSeats = parseInt(val);
+      document.getElementById('seat-readout').innerText = `${currentSeats < 10 ? '0' + currentSeats : currentSeats} SEATS`;
+      updateSeatPresetButtons();
+      playChirp(500 + currentSeats * 4, 0.015);
+      calculateROI();
+    }
+
+    function setSeats(val) {
+      currentSeats = val;
+      document.getElementById('seatSlider').value = val;
+      document.getElementById('seat-readout').innerText = `${currentSeats < 10 ? '0' + currentSeats : currentSeats} SEATS`;
+      updateSeatPresetButtons();
+      playChirp(800, 0.03);
+      calculateROI();
+    }
+
+    function updateSeatPresetButtons() {
+      [5, 15, 50].forEach(s => {
+        const btn = document.getElementById(`btn-seat-${s}`);
+        if (s === currentSeats) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function calculateROI() {
+      const seats = currentSeats;
+      let rawCloud = 0;
+
+      saasItems.forEach(item => {
+        if (item.checked) {
+          if (item.type === 'seat') rawCloud += item.price * seats;
+          else rawCloud += item.price;
+        }
+      });
+
+      const sst = rawCloud * 0.08;
+      const totalCloud = Math.round(rawCloud + sst);
+      const localOpex = 24.00; // TNB 65W
+      const netMonthly = Math.max(0, totalCloud - localOpex);
+
+      let capex = 10000;
+      let capexTier = 'Tier: 15-Seat Redundant Appliance';
+      if (seats <= 5) {
+        capex = 6500;
+        capexTier = 'Tier: Micro SME 5-Seat Mini Node';
+      } else if (seats > 30) {
+        capex = 18000;
+        capexTier = 'Tier: Mid-Market 50-Seat High Availability';
+      }
+
+      const breakeven = netMonthly > 0 ? (capex / netMonthly).toFixed(1) : '∞';
+      const cumulative3Yr = (netMonthly * 36) - capex;
+
+      // Update DOM Readouts
+      document.getElementById('stat-cloud-saas').innerText = `RM ${totalCloud.toLocaleString()} / mo`;
+      document.getElementById('stat-sst-breakdown').innerText = `Includes 8% Digital SST (RM ${Math.round(sst).toLocaleString()})`;
+      document.getElementById('stat-net-monthly').innerText = `RM ${Math.round(netMonthly).toLocaleString()} / mo`;
+      document.getElementById('stat-hardware-capex').innerText = `RM ${capex.toLocaleString()}`;
+      document.getElementById('stat-capex-tier').innerText = capexTier;
+      document.getElementById('stat-breakeven-badge').innerText = `${breakeven} MONTHS`;
+      document.getElementById('stat-3yr-cumulative').innerText = `RM ${Math.max(0, Math.round(cumulative3Yr)).toLocaleString()}`;
+
+      renderGaugeBar(parseFloat(breakeven) || 12);
+    }
+
+    function renderGaugeBar(breakevenMonths) {
+      const container = document.getElementById('gauge-bar');
+      const totalBars = 24;
+      // Faster payback = more green indicator blocks
+      const activeBlocks = Math.max(1, Math.min(24, Math.round((1 - (breakevenMonths / 24)) * 24)));
+
+      let html = '';
+      for (let i = 0; i < totalBars; i++) {
+        let colorClass = 'bg-slate-800';
+        if (i < activeBlocks) {
+          if (i < 14) colorClass = 'bg-emerald-400 shadow-[0_0_3px_#34d399]';
+          else if (i < 19) colorClass = 'bg-amber-400 shadow-[0_0_3px_#fbbf24]';
+          else colorClass = 'bg-rose-400 shadow-[0_0_3px_#f87171]';
+        }
+        html += `<span class="flex-1 h-full ${colorClass} inline-block"></span>`;
+      }
+      container.innerHTML = html;
+    }
+
+    function triggerExportAudit() {
+      playChirp(900, 0.05);
+      window.print();
+    }
+
+    // -------------------------------------------------------------------------
+    // 6. System Real-time Clock
+    // -------------------------------------------------------------------------
+    function startClock() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById('irix-clock').innerText = now.toTimeString().split(' ')[0];
+      }, 1000);
+    }
+
+    // Init Workstation
+    window.onload = function() {
+      renderNodeGrid();
+      selectNode(0);
+      renderSaaSChecklist();
+      calculateROI();
+      startClock();
+    };
+  </script>
+</body>
+</html>
