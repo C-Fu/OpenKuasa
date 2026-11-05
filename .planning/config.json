@@ -3,6 +3,10 @@
   "workflow": {
     "commit_docs": true,
     "compact_content": false,
-    "research_before_questions": false
+    "research_before_questions": false,
+    "ui_safety_gate": false
+  },
+  "git": {
+    "allow_default_branch_commits": true
   }
 }
