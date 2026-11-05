@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ChevronDown, Menu, X, ArrowRight } from 'lucide-react';
 import { Logo } from '@/components/brand/logo';
 import { GitHubIcon } from '@/components/brand/github-icon';
-import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { ThemeSelector } from '@/components/theme/theme-selector';
 import { Button } from '@/components/ui/button';
 import { GetAppButton } from '@/components/pwa/install-app';
 import { MEGA_MENU, NAV_LINKS, REPO_URL } from '@/config/marketing';
@@ -63,7 +63,7 @@ export function MarketingHeader() {
         </div>
 
         <div className="hidden items-center gap-4 xl:flex">
-          <ThemeToggle className="text-mk-fg/75 hover:bg-mk-fg/10 hover:text-mk-fg dark:hover:bg-mk-fg/10" />
+          <ThemeSelector className="text-mk-fg/75 hover:bg-mk-fg/10 hover:text-mk-fg dark:hover:bg-mk-fg/10" />
           <a
             href={REPO_URL}
             target="_blank"
@@ -195,7 +195,7 @@ export function MarketingHeader() {
             </a>
             <GetAppButton className="flex items-center gap-2 py-2" />
             <div className="mt-3 flex items-center gap-3">
-              <ThemeToggle className="shrink-0 text-mk-fg/80 hover:bg-mk-fg/10 hover:text-mk-fg dark:hover:bg-mk-fg/10" />
+              <ThemeSelector className="shrink-0 text-mk-fg/80 hover:bg-mk-fg/10 hover:text-mk-fg dark:hover:bg-mk-fg/10" />
               <Button
                 asChild
                 variant="outline"

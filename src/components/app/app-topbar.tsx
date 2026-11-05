@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { UserMenu } from '@/components/app/user-menu';
 import { NotificationsMenu } from '@/components/app/notifications-menu';
 import { NavSearch } from '@/components/app/nav-search';
-import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { ThemeSelector } from '@/components/theme/theme-selector';
 import { GitHubIcon } from '@/components/brand/github-icon';
 import { REPO_URL } from '@/config/marketing';
 import { useIconHover } from '@animateicons/react';
@@ -63,7 +63,7 @@ export function AppTopbar({
       <NavSearch />
 
       <div className="ml-auto flex items-center gap-2 max-[359px]:gap-1">
-        <ThemeToggle />
+        <ThemeSelector />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
