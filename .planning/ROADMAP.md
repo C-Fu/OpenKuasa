@@ -37,6 +37,12 @@ Plans:
 
 ### Phase 4: Curated Themes Implementation & Sample Parity
 **Goal:** Implement the full collection of curated themes from `.planning/THEMES_LIST.md` and reference prototypes in `sample_themes/`.
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Core Typography (`next/font/google` in layout) + Scoped Skeuomorphic CSS & Visual Personality across all 12 themes
+- [ ] 04-02-PLAN.md — Tactile UI Widget Library (`src/components/theme-widgets/*`), tests, and Appearance Gallery parity showcase
+
 - Batch 1 (Tech & Minimalist):
   - Enterprise Hypervisor (Proxmox VE dense charcoal)
   - Monochromatic Swiss / Minimal (High-contrast hairline grid)
