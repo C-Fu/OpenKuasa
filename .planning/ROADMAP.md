@@ -40,7 +40,10 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
+**Wave 1**
 - [ ] 04-01-PLAN.md — Core Typography (`next/font/google` in layout) + Scoped Skeuomorphic CSS & Visual Personality across all 12 themes
+
+**Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 04-02-PLAN.md — Tactile UI Widget Library (`src/components/theme-widgets/*`), tests, and Appearance Gallery parity showcase
 
 - Batch 1 (Tech & Minimalist):
